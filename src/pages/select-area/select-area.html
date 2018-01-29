@@ -1,0 +1,126 @@
+<!--
+  Generated template for the SelectAreaPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header class="blue-header" no-border>
+    <ion-toolbar color="primary" *ngIf="!isSearching">
+    <button ion-button (click)="openMenu()" class="men_btn">
+      <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
+    </button> 
+  
+    <ion-title>Select Area</ion-title>
+      
+    <ion-buttons end *ngIf="!isSearching">
+      <button ion-button clear (click)="isSearching = !isSearching">
+        <ion-icon ios="ios-search" md="md-search" class="ion-md-new-toggle"></ion-icon>
+      </button> 
+    </ion-buttons>
+  
+    </ion-toolbar>
+
+    <ion-toolbar *ngIf="isSearching">
+        <ion-searchbar
+        [(ngModel)]="searchInput"
+        [showCancelButton]="true"
+        [animated]="true"
+        (ionInput)="onSearchInput($event)"
+        (ionCancel)="isSearching = !isSearching">
+      </ion-searchbar>
+    </ion-toolbar>
+</ion-header>
+
+
+<ion-content>
+
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+            pullingIcon="arrow-dropdown"
+            pullingText="Pull to refresh">
+        </ion-refresher-content>
+    </ion-refresher>
+
+      <div class="blue-header">
+        <timer></timer>
+      </div>
+      
+      <ion-toolbar class="sub-header bottom-border" [hidden]="isFiltering">
+        <ion-grid>
+          <ion-row>
+            <ion-col col-6>
+              <div class="sub-heading">Select Area</div>
+            </ion-col>
+            <ion-col col-6 text-right (click)="sortData()">
+              <div class="sub-heading">FILTER &nbsp; <ion-icon name="options"></ion-icon></div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        
+      </ion-toolbar>
+  
+      <!-- SHOWING WHEN FILTER BUTTON IS CLICKED -->
+      <ion-toolbar class="sub-header bottom-border" [hidden]="!isFiltering">
+          <ion-grid>
+            <ion-row>
+              <ion-col col-6>
+                <div class="sub-heading">Sort by</div>
+              </ion-col>
+              <ion-col col-6 text-right (click)="sortData()">
+                <div class="sub-heading">
+                  <ion-icon name="close"></ion-icon>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+      </ion-toolbar>
+  
+      <ion-toolbar class="sub-header bottom-border" [hidden]="!isFiltering">
+          <ion-segment [(ngModel)]="filter">
+              <ion-segment-button value="recently_added">
+                RECENTLY ADDED
+              </ion-segment-button>
+              <ion-segment-button value="most_popular">
+                MOST POPULAR
+              </ion-segment-button>
+            </ion-segment>
+      </ion-toolbar>
+
+    <ion-list class="list_items" *ngIf="!isFiltering" padding>
+
+        <ion-item *ngFor="let area of areas; let i=index;" (click)="selectArea(area)" [ngClass]="getStyle(area)">
+          <p>{{ area.areaname}}</p>
+        </ion-item>
+        
+    </ion-list>
+
+    <div [ngSwitch]="filter" *ngIf="isFiltering">
+
+        <ion-list class="list_items" *ngSwitchCase="'most_popular'" padding>
+            <ion-row class="sub-header bottom-border" padding>
+                <ion-col>
+                  <div class="sub-heading">Position</div>
+                </ion-col>              
+            </ion-row>
+            <ion-item *ngFor="let area of areas | sort : ['popularity_number']; let i=index;" [ngClass]="getStyle(area)" (click)="selectArea(area)">
+              <p>{{ area.areaname }}</p>
+            </ion-item>
+        </ion-list>
+      
+        <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
+          <ion-item *ngFor="let area of areas | reverse; let i=index;" (click)="selectArea(area)" [ngClass]="getStyle(area)">
+              <p>{{ area.areaname }}</p>
+            </ion-item>
+      </ion-list>
+    </div>
+
+</ion-content>
+
+
+<ion-footer no-border padding>
+    <ion-row>
+        <ion-col col-12>
+          <button ion-button block no-margin class="theme-btn no-radius" (click)="createArea()" >Create Area</button>
+        </ion-col> 
+    </ion-row>
+</ion-footer>

@@ -1,0 +1,32 @@
+<ion-header class="blue-header"> 
+    <header title="Efficiency Study" sub_title="Projects" button="toggle"></header>
+</ion-header> 
+
+<ion-content padding>
+
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="arrow-dropdown"
+          pullingText="Pull to refresh">
+        </ion-refresher-content>
+    </ion-refresher>
+  
+    <ion-list class="avatar-list" *ngIf="show">
+
+      <ng-template ngFor let-project [ngForOf]="projects" let-i="index">
+        <ion-item (click)="gotoLocations(project)">
+            <ion-avatar item-start>
+              <img [src]="getCustomerImage(project.logo)" alt="avatar">
+            </ion-avatar>
+            <h2>{{ project.customer_name }}</h2>
+            <p>
+              {{ project.name }}
+            </p>
+        </ion-item>
+      </ng-template>
+
+    </ion-list>
+
+   
+    
+</ion-content>

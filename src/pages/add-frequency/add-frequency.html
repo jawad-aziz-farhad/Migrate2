@@ -1,0 +1,79 @@
+<!--
+  Generated template for the AddFrequencyPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!-- <ion-header class="blue-header" no-border>
+  
+<ion-toolbar color="primary">
+  <button ion-button navPop>
+    <ion-icon name="arrow-back"></ion-icon>
+  </button>
+  <ion-title>Boots Store RAS</ion-title>
+  <ion-buttons end>
+    <div class="header-img-btn" margin-right>
+      <img src="assets/images/user-img.png" alt="header-icon">
+    </div>
+  </ion-buttons>
+</ion-toolbar>
+<!--
+<ion-toolbar color="primary" class="header-divider">
+  <ion-title><ion-icon name="stopwatch"></ion-icon> <span>02</span>m : <span>21</span>s</ion-title>
+  <div class="progress-bar-timer">
+    <div class="progress-done" style="width:55%;"></div>
+  </div>
+</ion-toolbar>
+--
+<timer #timer [timeInSeconds]="roundTime"></timer>
+
+</ion-header> -->
+
+<ion-header class="blue-header"> 
+    <!-- <header title="Enter Frequency" button="menu"></header>  -->
+    <in-study-header title="Enter Frequency"></in-study-header>
+ </ion-header>
+
+
+<ion-content class="white-bg">
+
+    <div class="blue-header">
+      <!-- <timer #timer [timeInSeconds]="roundTime"></timer>  -->
+      <!-- <new-timer></new-timer>  -->
+      <timer></timer>
+    </div>
+
+    <ion-item no-padding>
+        <ion-input class="big-input" placeholder="Enter Frequency" text-right type="text" [value]="frequency"></ion-input>
+    </ion-item>
+    
+    <ion-grid class="grid-border-col-3" no-padding>
+      <ion-row justify-content-center>
+          <ion-col *ngFor="let num of numbers | reverse" col-4>
+              <div (click)="concatFrequency(num)">
+                {{ num }}
+              </div>
+          </ion-col>
+        
+        <ion-col col-4 (click)="removeFrequency()"> 
+          <div>
+            <ion-icon name="backspace"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+</ion-grid>
+
+</ion-content>
+
+<ion-footer no-border padding class="sftudy_ooter">
+    <ion-grid>
+        
+      <ion-row>
+        <ion-col col-12>
+          <button ion-button block class="theme-btn no-radius footer-btn" [disabled]="frequency.length == 0" (click)="addFrequency()">Add Frequency</button>
+        </ion-col>
+      </ion-row>
+  
+      </ion-grid>
+
+  </ion-footer>

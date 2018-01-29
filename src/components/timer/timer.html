@@ -1,0 +1,15 @@
+<!-- Generated template for the TimerComponent component -->
+<ion-toolbar color="primary" class="header-divider" [hidden]="timer.secondsRemaining <= 0 || (timer.hasFinished)">
+    <ion-title>
+        <ion-icon name="stopwatch"></ion-icon> 
+        <span>{{timer.displayTime.split(':')[0]}}</span>m : <span>{{timer.displayTime.split(':')[1]}}</span>s
+    </ion-title>
+
+    <div class="progress-bar-timer">
+        <div class="progress-done" style="width:83%;"></div>
+    </div>
+</ion-toolbar>
+
+
+
+

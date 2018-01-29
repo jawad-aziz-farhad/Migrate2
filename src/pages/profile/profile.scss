@@ -1,0 +1,17 @@
+page-profile {
+
+    .profile-image{
+        border-radius: 50%;
+        height: 100px;
+        width: 100px;
+        overflow: hidden;
+        border: 3px solid $theme-color;
+        margin: 15px auto;
+
+        img{
+            height: 100px;
+            width: 100px;
+        }
+    }
+
+}

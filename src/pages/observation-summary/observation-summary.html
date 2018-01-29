@@ -1,0 +1,63 @@
+<ion-header class="blue-header">
+    <!-- <ion-navbar color="primary">
+        <ion-title>
+          Expandable Header
+        </ion-title>
+    </ion-navbar> -->
+       <!-- <expandable-header [scrollArea]="mycontent" headerHeight="125">
+          
+           <img text-center [src]="imagePath" alt="Image"/>
+       </expandable-header> -->
+    
+       <header title="Round Summary" button="back"></header>
+      
+  </ion-header>
+  
+<ion-content *ngIf="show">
+
+  <ion-card no-margin class="full-card">
+    <!-- <img [src]="getImage()" alt="Study_Photo"/> -->
+    <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
+    <div class="card-title overlayed">
+      <!-- <span>12</span> -->
+      {{ parser.geAllData().title }}</div>
+  </ion-card>
+
+  <ion-list>
+      
+    <ion-item>
+      <ion-label stacked>Area</ion-label>
+      <ion-input type="text" value="{{ data.area.areaname }}" disabled readonly></ion-input>
+    </ion-item>
+  
+    <ion-item>
+      <ion-label stacked>Rating</ion-label>
+      <ion-input type="text" value="{{data.rating}}" disabled readonly></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>Frequency</ion-label>
+      <ion-input type="text" value="{{ data.frequency }}" disabled readonly></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label stacked>Study Time:</ion-label>
+        <ion-input value="{{ convertTime(parser.geAllData().studyStartTime) }}" disabled readonly></ion-input>
+    </ion-item>
+
+    <ion-item>
+        <ion-label stacked>Observation Time:</ion-label>
+        <ion-input value="{{ data.observationTime }}" disabled readonly></ion-input>
+    </ion-item>
+  
+    <ion-item *ngIf="data.notes">
+      <ion-label stacked>Notes</ion-label>
+      <ion-textarea value="{{ data.notes }}" disabled readonly></ion-textarea>
+    </ion-item>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer padding>
+    <button ion-button block  no-margin class="theme-btn no-radius">Delete</button>
+</ion-footer>

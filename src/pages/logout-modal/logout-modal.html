@@ -1,0 +1,31 @@
+<ion-header class="blue-header create-study-header">
+    <ion-navbar color="primary">
+      <ion-title><b>Logout Confirmation</b></ion-title>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding text-center>
+    <div *ngIf="show" >
+        <div class="profile-image">
+            <img [src]="getProfileImage()" alt="" class="img-circle"> 
+         </div> 
+        <h5>{{ user.firstname + ' ' + user.lastname }}</h5>  
+        <p> {{user.email}}</p>
+        <p> Are you sure that you want to Logout ? </p>  
+    </div>    
+</ion-content>
+
+
+<ion-footer>
+    <ion-grid>
+        <ion-row>
+          <ion-col col-50>
+              <button ion-button block class="theme-btn no-radius" (click)="dismiss('no')">NO</button>
+          </ion-col>
+          <ion-col col-50>
+              <button ion-button block class="theme-btn no-radius" (click)="dismiss('yes')">YES</button>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-footer>

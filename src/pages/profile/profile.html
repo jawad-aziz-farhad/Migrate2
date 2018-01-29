@@ -1,0 +1,37 @@
+<ion-header class="blue-header">
+  <ion-navbar color="primary">
+        <ion-title><b>{{ isLogoutClicked ? 'Logout Confirmation' : 'Profile' }}</b></ion-title>
+        <ion-buttons start>
+            <button ion-button icon-only (click)="dismiss()">
+                <ion-icon ios="ios-close" md="md-close"></ion-icon>
+            </button>
+          </ion-buttons>
+    </ion-navbar>
+</ion-header>
+
+<ion-content padding *ngIf="show" text-center>
+    <div class="profile-image" >
+        <img [src]="getProfileImage()" alt="" class="img-circle"> 
+     </div> 
+    <h5>{{ user.firstname + ' ' + user.lastname }}</h5>  
+    <p *ngIf="!isLogoutClicked"> {{user.email}}</p>
+    <p *ngIf="isLogoutClicked"> Are you sure that you want to Logout ? </p>  
+</ion-content>
+
+<ion-footer no-border padding>
+   <ion-grid *ngIf="!isLogoutClicked">
+        <button ion-button block no-margin class="theme-btn no-radius" (click)="isLogoutClicked = !isLogoutClicked">LOGOUT</button>
+   </ion-grid>
+
+   <ion-grid *ngIf="isLogoutClicked">
+        <ion-row>
+          <ion-col col-6>
+              <button ion-button block no-margin class="theme-btn no-radius" (click)="dismiss()">NO</button>
+          </ion-col>
+          <ion-col col-6>
+              <button ion-button block no-margin class="theme-btn no-radius" (click)="logout()">YES</button>
+          </ion-col>
+        </ion-row>
+    </ion-grid>
+
+</ion-footer>

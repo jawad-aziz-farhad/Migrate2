@@ -1,0 +1,46 @@
+  <ion-toolbar color="primary">
+    <!--
+    <button *ngIf="button == 'toggle'" ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    -->
+    <button *ngIf="button == 'back'" ion-button navPop clear class="absolute nav-back">
+        <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
+    </button>
+
+    <button *ngIf="button !== 'back'" ion-button menuToggle>
+      <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
+    </button>
+
+    <ion-title *ngIf="title">{{ title }}</ion-title>
+    <ion-buttons end>
+      <!-- 
+      <div class="header-img-btn" *ngIf="show" (click)="showProfile()">
+          <img [src]="getProfileImage()" alt="" class="img-circle"> 
+      </div> 
+      -->
+      <button *ngIf="!getTitle(title)" ion-button clear (click)="presentPopover($event)">
+          <ion-icon ios="ios-more" md="md-more" class="ion-md-more-new"></ion-icon>
+      </button>
+
+      <!-- 
+      <button *ngIf="getTitle(title)" ion-button clear style="font-size:22px;">
+          <ion-icon ios="ios-search" md="md-search"></ion-icon>
+      </button> -->
+
+    </ion-buttons>
+
+  </ion-toolbar>
+
+  <ion-toolbar  class="sub-header bottom-border" [hidden]="sub_title == ''">
+     <!-- <div margin-left class="sub-heading">{{ sub_title }}</div> -->
+     <ion-grid>
+        <ion-row>
+          <ion-col col-12>
+            <div class="sub-heading">{{ sub_title }}</div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+  </ion-toolbar>
+
+  

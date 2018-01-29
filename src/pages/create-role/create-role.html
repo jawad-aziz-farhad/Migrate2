@@ -1,0 +1,61 @@
+<!--
+  Generated template for the CreateRolePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header class="blue-header">
+
+  <ion-toolbar color="primary">
+    <button ion-button clear class="nav-back"  padding>
+      <ion-icon name="arrow-back" (click)="goBack()"></ion-icon>
+    </button>
+    <ion-title>Create Role</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only margin-right [disabled]="roleForm.invalid" (click)="setUserInfo()">
+        <span>Save</span>
+      </button>
+    </ion-buttons>
+
+  </ion-toolbar>
+
+  <div class="blue-header">
+    <timer></timer>
+  </div>
+
+  <ion-toolbar class="sub-header">
+    <div margin-left>Details</div>
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding> 
+
+  <form [formGroup]="roleForm">
+
+    <ion-item margin-bottom no-padding>
+      <ion-label color="dark" stacked>Role Name</ion-label>
+      <ion-input type="text" placeholder="Enter Role Name" formControlName="rolename"></ion-input>
+
+      <p *ngIf="!roleForm.controls.rolename.valid && (roleForm.controls.rolename.dirty)">
+        Please enter Role Name.
+      </p>
+    </ion-item>
+
+    <!-- <ion-item margin-bottom no-padding>
+        <ion-label color="dark" stacked>Position</ion-label>
+        <ion-input type="radio" *ngFor="let role of roles; let i=index;" value="{{role}}">{{ role }}</ion-input>
+    </ion-item> -->
+    <ion-list radio-group formControlName="position">
+      <ion-item *ngFor="let role of roles; let i=index;">
+        <ion-radio value="{{ role }}" [checked]="i == 0"></ion-radio>
+        <ion-label>{{ role }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <!-- <pre>form value: <br>{{roleForm.value | json}}</pre> -->
+
+  </form>
+
+</ion-content>

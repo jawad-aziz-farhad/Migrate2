@@ -1,0 +1,30 @@
+page-ratings {
+
+    scroll-content {
+        display: flex;
+        flex-direction: column;
+    }
+ 
+    ion-grid {
+      height: 90%;
+    }
+ 
+    ion-row {
+        flex: 1;
+
+    }
+
+    .grid-border-col-4 ion-row ion-col div {
+        width: 100%;
+        height: 100%;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        font-size: 30px !important;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+      
+
+}

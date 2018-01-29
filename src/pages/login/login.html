@@ -1,0 +1,39 @@
+
+<ion-content padding class="gradient-bg">
+  <div style="display:table;height:100%; width:100%;">
+    <div style="display:table-cell; width:100%; vertical-align:middle;">
+  <form [formGroup]="loginForm" class="loginForm">
+    <div class="vc-align" text-center>
+      <div class="vc-align-inner">
+        <ion-img width="175" height="175" class="margin-auto loginForm-logo-top" src="assets/images/logo.png"></ion-img>
+        <div class="login-section">
+            <!-- EMAIL FIELD -->
+            <ion-input placeholder="Email Address" formControlName="email" type="email" margin-bottom class="transparent-input"></ion-input>
+            <p *ngIf="!loginForm.controls.email.valid && (loginForm.controls.email.dirty)">
+                Please enter a valid email.
+            </p>
+             <!-- PASSWORD FIELD -->
+            <ion-input placeholder="Password" formControlName="password" type="password" margin-bottom class="transparent-input"></ion-input>
+            <p *ngIf="!loginForm.controls.password.valid  && (loginForm.controls.password.dirty)">
+                Please enter the Password(min 6 Characters).
+            </p>
+
+          <button ion-button block margin-bottom class="custom-btn theme-btn no-radius" [disabled]="!loginForm.valid" (click)="Login()">Login</button>
+          <a [navPush]="pushPage">Forgotten your password?</a>
+        </div>
+        <div class="bottom-logo">
+          <ion-img width="50" height="35" class="margin-auto" src="assets/images/retime-white-logo.svg"></ion-img>
+          <span class="copyright-text">&copy; ReThink Productivity</span>
+        </div>
+
+        <div class="bottom-logo bottom-logo-large">
+          <ion-img width="100" height="70" class="margin-auto" src="assets/images/retime-white-logo.svg"></ion-img>
+          <span class="copyright-text">&copy; ReThink Productivity</span>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>
+</div>
+</ion-content>
