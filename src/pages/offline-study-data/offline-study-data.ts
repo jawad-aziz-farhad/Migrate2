@@ -62,7 +62,7 @@ export class OfflineStudyDataPage {
     this.items = [];
 
     this.operations.syncData().then(result => {
-      for(var i=0; i< result.length;i++){
+      for(let i=0; i< result.length;i++){
         
         let all_data = new AllStudyData();
         all_data.setTitle(result[i].title);

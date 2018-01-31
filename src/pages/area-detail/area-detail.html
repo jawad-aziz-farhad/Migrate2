@@ -4,21 +4,6 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<!-- <ion-header class="blue-header" no-border>
-  
-<ion-toolbar color="primary">
-  <button ion-button navPop>
-    <ion-icon name="arrow-back"></ion-icon>
-  </button>
-  <ion-title>Locations</ion-title>
-  <ion-buttons end>
-    <div class="header-img-btn" margin-right>
-      <img src="assets/images/user-img.png" alt="header-icon">
-    </div>
-  </ion-buttons>
-</ion-toolbar>
-
-</ion-header> -->
 
 <ion-header class="blue-header"> 
     <header title="Locations" button="back"></header>
@@ -56,14 +41,6 @@
     <p>Telephone</p>
     <h2>{{ location.telephone }}</h2>
   </ion-item>
-  
-  <!-- <ion-item>
-    <ion-avatar item-start>
-      <ion-icon name="time"></ion-icon>
-    </ion-avatar>
-    <h2>Opening Times</h2>
-    <ion-icon name="arrow-dropdown" class="drop-caret"></ion-icon>
-  </ion-item> -->
 
   <ion-item>
     <ion-avatar item-start>
@@ -81,60 +58,10 @@
         
       </ion-select>
   </ion-item>
-
-  <!-- <div class="accordion-expandable">
-      <ion-grid>
-        <ion-row>
-          <ion-col col-6>
-            <span>Monday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>{{ location._time }}</span>
-          </ion-col>
-          <ion-col col-6>
-            <span>Tuesday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>{{ location._time }}</span>
-          </ion-col>
-          <ion-col col-6>
-            <span>Wednesday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>{{ location._time }}</span>
-          </ion-col>
-          <ion-col col-6>
-            <span>Thursday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>9am - 8pm</span>
-          </ion-col>
-          <ion-col col-6>
-            <span>Friday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>9am - 8pm</span>
-          </ion-col>
-          <ion-col col-6>
-            <span>Saturday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>9am - 6pm</span>
-          </ion-col>
-          <ion-col col-6>
-            <span>Sunday</span>
-          </ion-col>
-          <ion-col col-6 text-right>
-            <span>10am - 4pm</span>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-  </div> -->
-
 </ion-list>
 
 </ion-content>
 
-<ion-footer no-border padding>
-<button ion-button block no-margin class="theme-btn no-radius" (click)="openModal()">Create Study</button>
+<ion-footer no-border>
+  <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal()">Create Study</button>
 </ion-footer>

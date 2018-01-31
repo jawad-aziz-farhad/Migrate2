@@ -59,7 +59,7 @@ export class ParseDataProvider {
     this.round_data = {roundStartTime: '', roundEndTime: '', data: [ ]} ;
   }
   setFinalData(data: StudyData){
-    var _data = this.getFinalData();
+    let _data = this.getFinalData();
     _data.title = new AllStudyData().getTitle();
     _data.data.push(data);
   }

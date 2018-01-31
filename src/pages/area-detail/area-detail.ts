@@ -61,7 +61,7 @@ getImage(){
 
 
 openModal() {
-      let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project}, { cssClass: 'inset-modal' });
+      let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project}, { cssClass: 'inset-modal create-study-modal' });
       modal.onDidDismiss(data => {
              if(data.action == 'start'){
                 this.studyStatus.setStatus(true);
@@ -77,7 +77,7 @@ openModal() {
   }
 
   open_close_Time(from, to) {
-    var time = '';
+    let time = '';
     if(typeof from !== 'undefined' && typeof to !== 'undefined'){
     
       if(from.trim() !== "00 - 00"){

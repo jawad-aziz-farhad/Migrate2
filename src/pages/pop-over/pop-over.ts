@@ -26,8 +26,11 @@ export class PopOverPage {
   }
 
   close(value: any) {
-    var data = { value: value };
-    this.viewCtrl.dismiss(data);
+    let data = { value: value };
+    if(typeof data !== 'undefined')
+      this.viewCtrl.dismiss(data);
+    else
+      this.viewCtrl.dismiss();  
   }
 
 }

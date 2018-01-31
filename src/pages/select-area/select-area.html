@@ -75,7 +75,7 @@
           </ion-grid>
       </ion-toolbar>
   
-      <ion-toolbar class="sub-header bottom-border" [hidden]="!isFiltering">
+      <ion-toolbar class="sub-header bottom-border segment_btn_css" [hidden]="!isFiltering">
           <ion-segment [(ngModel)]="filter">
               <ion-segment-button value="recently_added">
                 RECENTLY ADDED
@@ -117,10 +117,6 @@
 </ion-content>
 
 
-<ion-footer no-border padding>
-    <ion-row>
-        <ion-col col-12>
-          <button ion-button block no-margin class="theme-btn no-radius" (click)="createArea()" >Create Area</button>
-        </ion-col> 
-    </ion-row>
+<ion-footer no-border>
+  <button ion-button block no-margin class="theme-btn no-radius"(click)="createArea()" >Create Areat</button>
 </ion-footer>

@@ -32,6 +32,7 @@ import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, SERVER_URL , BACK_BTN_MESSA
 import { RatingsPage } from '../pages/ratings/ratings';
 import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { StudyPhotoPage } from '../pages/study-photo/study-photo';
+import { SubmitDataProgressPage } from '../pages/submit-data-progress/submit-data-progress';
 
 @Component({
   templateUrl: 'app.html'
@@ -204,7 +205,7 @@ export class MyApp {
 
   openModal() {
        
-    let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal' });
+    let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal logOut-modal' });
         modal.onDidDismiss(data => {
           if(data.action == 'yes')
               this.authProvider.logOut();

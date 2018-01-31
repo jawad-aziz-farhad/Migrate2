@@ -1,4 +1,4 @@
-import { Component , ViewChild, OnInit, NgZone } from '@angular/core';
+import { Component , ViewChild, OnInit} from '@angular/core';
 import { Location } from '@angular/common';
 import { IonicPage, NavController, NavParams , ModalController} from 'ionic-angular';
 import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider, StudyStatusProvider } from '../../providers';
@@ -23,14 +23,13 @@ import { SelectRolePage } from '../select-role/select-role';
 })
 export class StudyItemsPage implements OnInit {
   
-  public items: any;
+  public round_data: any;
+  public study_data: any;
   public isStudyEnded: boolean;
   public temp: any;
   public itemsSelected: any;
   public totalItemsSelected: number;
   public show: boolean;
-
-  
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -41,8 +40,7 @@ export class StudyItemsPage implements OnInit {
               public parser: ParserProvider,
               public toast: ToastProvider,
               public studyStatus:StudyStatusProvider,
-              public location: Location,
-              public zone: NgZone) {
+              public location: Location) {
   }
 
 
@@ -54,6 +52,7 @@ export class StudyItemsPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    
   }
 
   /* GETTING DATA */
@@ -61,25 +60,27 @@ export class StudyItemsPage implements OnInit {
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
     this.show = this.isStudyEnded = false;
-    this.items = [];
-    this.items = this.parser.geAllData();  
+    this.round_data = [];
+    this.study_data = this.parser.geAllData();
+    this.round_data = this.study_data.rounds[this.study_data.rounds.length - 1];
     this.show = true;
     this.toast.showBottomToast(ROUND_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
-  showSummary(item){
-    this.navCtrl.push(ObservationSummaryPage, {item: item});
+  showSummary(index, sub_index){
+    if(index == null)
+      index = this.study_data.rounds.length - 1
+    this.navCtrl.push(ObservationSummaryPage, {round_index: index, data_index: sub_index});
   }
 
   /* CONFIRMATION FOR SUBMITTING ALL THE STUDY DATA  */
   openModal(component: string) {
 
-      var data = null;
-
+      let data = null;
       if(component == 'EditTitlePage')
-        data = { title: this.items.title }
+        data = { title: this.study_data.title }
 
-      let modal = this.modalCtrl.create(component, data, { cssClass: 'inset-modal' });
+      let modal = this.modalCtrl.create(component, data, { cssClass: 'inset-modal items-page-modal' });
       
       modal.onDidDismiss(data => {
 
@@ -98,87 +99,44 @@ export class StudyItemsPage implements OnInit {
         }
     
       });
-    
-      modal.present();
-      
+    modal.present();
   }
 
   /* SHOWING SELECTED ITEMS  */
-  showSelectedItems(i) {
-    var _index = this.itemsSelected.indexOf(i);
-    if(_index > -1){
+  showSelectedItems(item) {
+    
+    const index = this.itemsSelected.indexOf(item);
+    if(index > -1){
        this.totalItemsSelected--;
-       this.itemsSelected.splice(_index, 1);
+       this.itemsSelected.splice(index, 1);
     }  
     else{
       this.totalItemsSelected++;
-      this.itemsSelected.push(i);  
+      this.itemsSelected.push(item);  
     }
-    console.log(JSON.stringify(this.itemsSelected));
-  }
-
-  /* CHECKING THE SELECTED ITEMS, IF ALL THE STUDY ITEMS ARE SELECTED,
-   * THEN AFTER REMOVING ITEMS, 
-   * NAVIGATING USER TO PROJECTS PAGE 
-  */
-  checkSelectedItems(){
-    if(this.parseData.getDataArray().length == this.itemsSelected.length) {
-        this.alert.presentConfirm(ALERT_TITLE , REMOVING_STUDY_ITEMS_MSG).then(value => {
-          if(value == 'yes')
-            this.removeItems();
-          else
-            console.log('ACTION CANCELED');
-        });
-    }
-
-    else
-      this.removeItems();
-
   }
 
   /* REMOVING ITEM FROM LIST */
   removeItems() { 
+   
+    let rounds = this.study_data.rounds;
     
-    this.removeItem().then(res => {
-      if(this.parseData.getDataArray().length == 0){
-        this.parseData.clearData();
-        this.parseData.clearDataArray();
-        this.navCtrl.popToRoot();
+    for (let i = rounds.length - 1; i >= 0; i -= 1) {
+        
+        for(let j= rounds[i].data.length; j>=0; j-=1){
+          const index =this.itemsSelected.indexOf(rounds[i].data[j])
+          if(index > -1){
+            rounds[i].data.splice(index,1);
+            this.totalItemsSelected--;
+          }
       }
-      else
-        this.items = this.parseData.getDataArray();
 
-      this.totalItemsSelected = 0;
-      this.itemsSelected = [];
-      
-    }).catch(error => {
-        console.error('ERROR: '+ JSON.stringify(error));
-    });
-  }
-
-  
-  removeItem(){
-
-   return new Promise((resolve, reject) => {
-      for(var i = 0; i < this.parseData.getDataArray().length; i++) {
-        if(this.itemsSelected.indexOf(i) > -1)
-          this.parseData.getDataArray().splice(i, 1);
-      }
-      resolve(true);
-    });
-}
-
-  updateContent(){
-    this.zone.run(() => {
-      this.getData();
-    });
-  }
-
-  btnStatus(){
-    if(this.items.length == 0)
-      return true;
-    else
-      return false;
+      if(rounds[i].data.length == 0)
+        rounds.splice(i,1);
+    }
+     
+    
+    this.itemsSelected = [];
   }
 
   /* START NEXT ROUND */
@@ -195,4 +153,22 @@ export class StudyItemsPage implements OnInit {
     this.isStudyEnded = !this.isStudyEnded;
     this.toast.showBottomToast(STUDY_ENDED);
   }
+
+  getListData() {
+    alert(JSON.stringify(this.parser.geAllData().getRoundData()));
+    this.study_data = [];
+    if(!this.isStudyEnded){
+      const index = this.parser.geAllData().getRoundData().length - 1;
+      this.study_data.push(this.parser.geAllData().getRoundData()[index]);
+    }
+     else
+       this.study_data = this.parser.geAllData().getRoundData();
+
+    return this.study_data;  
+  }
+
+  convertTime(time){
+    return new Date(time).toLocaleTimeString();
+  }
+
 }

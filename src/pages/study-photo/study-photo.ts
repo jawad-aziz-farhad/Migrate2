@@ -123,10 +123,10 @@ export class StudyPhotoPage {
   /* UPLOADIN PHOTO TO SERVER */
   uploadPhoto() {
       this.loader.showLoader(MESSAGE);
-      var params = {endPoint:'ras_data/study_image' , key :'photo', file: this.photo};
+      let params = {endPoint:'ras_data/study_image' , key :'photo', file: this.photo};
       this.operations.uploadFile(params).then(res => {
         this.loader.hideLoader();
-        var response = JSON.parse(res);
+        let response = JSON.parse(res);
         if(response.success){
           this.toast.showToast(FILE_UPLOADED_MESSAGE);
           this._parseData(response.path);

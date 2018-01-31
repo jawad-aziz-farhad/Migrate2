@@ -6,18 +6,9 @@
 -->
 <ion-header class="blue-header">
 
-  <!-- <ion-navbar>
-    <ion-title>Create Area</ion-title>
-
-    <ion-buttons end>
-        <button ion-button icon-only margin-right [disabled]="areaForm.invalid" (click)="setUserInfo()">
-          <span>Save</span>
-        </button>
-      </ion-buttons>
-  </ion-navbar> -->
   <ion-toolbar color="primary">
-      <button ion-button clear class="absolute nav-back" (click)="goBack()">
-          <ion-icon name="arrow-back"></ion-icon>
+      <button ion-button clear class="nav-back" (click)="goBack()">
+          <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
       </button>
       <ion-title>Create Area</ion-title>
       <ion-buttons end>
@@ -46,18 +37,6 @@
               Please enter Area Name.
           </p>
       </ion-item>
-
-      <!--
-      <ion-item margin-bottom no-padding>
-          <ion-label color="dark" stacked>Area Type</ion-label>
-          <ion-select formControlName="areatype" (ionChange)="onChange()">
-            <ion-option selected disabled>Select Area Type</ion-option>
-            <ion-option *ngFor="let type of types" value="{{type}}">{{ type }}</ion-option>
-          </ion-select>
-      </ion-item> -->
-
-      <!-- <pre>form value: <br>{{areaForm.value | json}}</pre> -->
-
   </form>
     
 </ion-content>

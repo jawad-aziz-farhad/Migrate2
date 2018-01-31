@@ -5,18 +5,18 @@
   Ionic pages and navigation.
 -->
 <ion-header class="blue-header" no-border>
-    <header title="Study Data" button="menu"></header>
+    <in-study-header title="{{isStudyEnded ? 'Study Data' : 'Round Data'}}"></in-study-header>
 </ion-header>
 
 <ion-content>
 
-    <ion-toolbar color="primary" padding *ngIf="items">
+    <ion-toolbar color="primary" padding>
 
-      <ion-title>{{ items.title }}</ion-title> 
+      <ion-title>{{ isStudyEnded ?  study_data.title : 'Round Summary' }}</ion-title> 
       
-      <ion-buttons end>
-        <button ion-button clear style="font-size:22px;" (click)="openModal('EditTitlePage')">
-            <ion-icon ios="ios-create" md="md-create"></ion-icon>
+      <ion-buttons end *ngIf="isStudyEnded">
+        <button ion-button clear (click)="openModal('EditTitlePage')">
+            <ion-icon ios="ios-create" md="md-create" class="ion-md-edit"></ion-icon>
         </button> 
       </ion-buttons>
 
@@ -27,8 +27,8 @@
         <ion-row>
           <ion-col col-6><div margin-left class="sub-head">{{ totalItemsSelected }} item selected</div></ion-col>
           <ion-col col-6 text-right><span  margin-right> 
-            <button icon-only clear [disabled]="totalItemsSelected == 0" (click)="checkSelectedItems()">
-                <ion-icon ios="ios-trash" md="md-trash" ></ion-icon>
+            <button icon-only clear [disabled]="totalItemsSelected == 0" (click)="removeItems()">
+              <ion-icon ios="ios-trash" md="md-trash" class="ion-md-delete"></ion-icon>
             </button>
             </span>
           </ion-col>
@@ -40,26 +40,65 @@
       <thead>
         <tr>
           <th>Element</th>
+          <th *ngIf="isStudyEnded">Round</th>
           <th>Rating</th>
           <th>Frequency</th>
-          <th width="55">
-            <!-- <ion-checkbox></ion-checkbox> -->
-          </th>
+          <th width="55"></th>
         </tr>
       </thead>
 
       <tbody>
-        <ng-template ngFor let-round [ngForOf]="items.rounds" let-i="index">
-            <tr *ngFor="let item of round.data; let j=index;" (click)="showSummary(item)">
-              <td><div class="number-icon">1</div>{{ item.element.description }}</td>
+        <!-- <ng-container *ngIf="!isStudyEnded">
+            <tr *ngFor="let item of round_data.data; let j=index;" (click)="showSummary(null, j)">
+              <td>
+                  <div class="number-icon">{{ j + 1 }}</div>
+                  {{ item.element.description }}
+              </td>
               <td>{{ item.rating }}</td>
               <td>{{ item.frequency }}</td>
               <td>
-                <ion-checkbox (ionChange)="showSelectedItems(j)">
+                <ion-checkbox (ionChange)="showSelectedItems(item)">
                 </ion-checkbox>
               </td>
             </tr>
-        </ng-template>
+          </ng-container>
+
+
+        <ng-template *ngIf="isStudyEnded" ngFor let-round [ngForOf]="study_data.rounds" let-i="index">
+          <tr *ngFor="let item of round.data; let j=index;" (click)="showSummary(i, j)">
+            <td>
+              <div class="number-icon">{{ j + 1 }}</div>
+                {{ item.element.description }}
+            </td>
+            <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
+            <td>{{ item.rating }}</td>
+            <td>{{ item.frequency }}</td>
+            <td>
+              <ion-checkbox (ionChange)="showSelectedItems(item)">
+              </ion-checkbox>
+            </td>
+          </tr>
+      </ng-template>
+      -->
+
+      <ng-template *ngIf="isStudyEnded" ngFor let-round [ngForOf]="getListData()" let-i="index">
+        <tr *ngFor="let item of round.data; let j=index;" (click)="showSummary(i, j)">
+          <td>
+            <div class="number-icon">{{ j + 1 }}</div>
+              {{ item.element.description }}
+          </td>
+          <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
+          <td>{{ item.rating }}</td>
+          <td>{{ item.frequency }}</td>
+          <td>
+            <ion-checkbox (ionChange)="showSelectedItems(item)">
+            </ion-checkbox>
+          </td>
+        </tr>
+       </ng-template>
+
+
+
 
       </tbody>
 
@@ -71,15 +110,15 @@
     <ion-grid>
         <ion-row *ngIf="!isStudyEnded">
             <ion-col col-6>
-                <button ion-button block no-radius class="theme-btn no-radius" (click)="endStudy()">END</button>
+                <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="endStudy()">END</button>
             </ion-col>
           <ion-col col-6>
               <button ion-button block class="theme-btn no-radius" (click)="startNextRound()">NEXT ROUND</button>
           </ion-col>
         </ion-row>
 
-        <ion-row *ngIf="isStudyEnded">
-            <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="btnStatus()">Submit Data</button>
+        <ion-row *ngIf="isStudyEnded" no-padding>
+            <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
         </ion-row>
     </ion-grid>
 </ion-footer>

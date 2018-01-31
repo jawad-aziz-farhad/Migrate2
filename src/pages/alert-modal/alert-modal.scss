@@ -1,5 +1,14 @@
 page-alert-modal {
     ion-footer button {
         margin: 0 !important;
-      }
+        color: gray;
+    }
+    
+    @media (min-width : 768px) {
+        p {
+            font-size: 25px;
+            color: gray;
+        } 
+    }
+
 }

@@ -32,7 +32,7 @@ export class EditTitlePage {
   }
 
   dismiss(value: string){
-    var parser = this.parser.geAllData();
+    let parser = this.parser.geAllData();
     parser.setTitle(this.studyTitle);
     this.viewCtrl.dismiss();
   }

@@ -106,7 +106,7 @@ export class LoginPage {
   /* OPENING MODAL */
   openModal(error) {
 
-    let modal = this.modalCtrl.create('AlertModalPage', {error: error, email: this.loginForm.value.email}, { cssClass: 'inset-modal' });
+    let modal = this.modalCtrl.create('AlertModalPage', {error: error, email: this.loginForm.value.email}, { cssClass: 'inset-modal login-error-modal' });
     modal.onDidDismiss(data => {
       if(data.action == 'reset_password')
         this.navCtrl.push(ResetPasswordPage);

@@ -80,7 +80,7 @@ export class SubmitDataProgressPage {
     //this.formProvider.initFormBuilder(this.parseData.getDataArray(), this.user);
     this.formProvider.initFormBuilder(this.parser.geAllData(), this.user);
     let formData = this.formProvider.getFormBuilder().value;
-    var url = SERVER_URL + 'ras_data/add';
+    let url = SERVER_URL + 'ras_data/add';
     this.http
         .withUploadProgressListener(progress => { 
           console.log(`Uploading ${progress.percentage}%`); 
@@ -122,7 +122,7 @@ createTable(table) {
 
 /* INSERTING DATA TO TABLE */
 insertStudy() {
-  var data = [1];
+  let data = [1];
   this.sql.addData(this.TABLE_NAME,data).then(result => {
       console.log("INSERT STUDY RESPONSE: \n" + JSON.stringify(result));
       this.getStudy();
@@ -164,7 +164,7 @@ getAllData(){
 go(value: string) {
     this.parseData.clearDataArray();
     this.parseData.clearData();
-    var index = this.viewCtrl.index;
+    const index = this.viewCtrl.index;
     if(value == 'projects')
         this.navCtrl.popToRoot();
     else

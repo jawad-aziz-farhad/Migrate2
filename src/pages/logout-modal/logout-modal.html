@@ -9,7 +9,7 @@
         <div class="profile-image">
             <img [src]="getProfileImage()" alt="" class="img-circle"> 
          </div> 
-        <h5>{{ user.firstname + ' ' + user.lastname }}</h5>  
+        <h3>{{ user.firstname + ' ' + user.lastname }}</h3>  
         <p> {{user.email}}</p>
         <p> Are you sure that you want to Logout ? </p>  
     </div>    
@@ -20,10 +20,10 @@
     <ion-grid>
         <ion-row>
           <ion-col col-50>
-              <button ion-button block class="theme-btn no-radius" (click)="dismiss('no')">NO</button>
+              <button ion-button clear block class="theme-btn no-radius" (click)="dismiss('no')">NO</button>
           </ion-col>
           <ion-col col-50>
-              <button ion-button block class="theme-btn no-radius" (click)="dismiss('yes')">YES</button>
+              <button ion-button clear block class="theme-btn no-radius" (click)="dismiss('yes')">YES</button>
           </ion-col>
         </ion-row>
     </ion-grid>

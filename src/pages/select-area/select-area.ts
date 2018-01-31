@@ -204,7 +204,7 @@ getAllData() {
 
   onSearchInput(){
     if(typeof this.searchInput !== 'undefined' && this.searchInput.length > 3){
-      var searchResult = this.search.search_Item(this.areas,this.searchInput, 'areas');
+      let searchResult = this.search.search_Item(this.areas,this.searchInput, 'areas');
       if(searchResult.length > 0)
       this.areas = this.search.search_Item(this.areas,this.searchInput, 'area'); 
     }
@@ -255,10 +255,10 @@ getAllData() {
   sortAreasbyPopularity() {
     this.sortedAreas = [];
     this.sortedAreas = this.areas;
-    for(var i=0; i<this.sortedAreas.length; i++) {
-        for(var j = ( this.sortedAreas.length - 1); j > i ; j--) {
+    for(let i=0; i<this.sortedAreas.length; i++) {
+        for(let j = ( this.sortedAreas.length - 1); j > i ; j--) {
           if(this.sortedAreas[i].popularity_number < this.sortedAreas[j].popularity_number){
-              var temp = this.sortedAreas[j];
+              let temp = this.sortedAreas[j];
               this.sortedAreas[j] = this.sortedAreas[i];
               this.sortedAreas[i] = temp;
               console.log('SORTED ARRAY: '+ JSON.stringify(this.sortedAreas));

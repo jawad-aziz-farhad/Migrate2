@@ -50,7 +50,7 @@ export class SqlDbProvider {
     let query = this.insertQuery(table);
     return new Promise((resolve, reject) => {
 
-      for(var i = 0; i < data.length; i++) {
+      for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
             if(table == 'Study' || table == 'Study_Data')
               console.log(query + '\n' +JSON.stringify(row_data));
@@ -100,11 +100,6 @@ export class SqlDbProvider {
       else if(table == 'Study')
         _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime()];
       else if(table == 'Study_Data'){
-        // var photo = '';
-        // if(data[index].photo == null)
-        //   photo = 'NO IMAGE';
-        // else
-        //   photo = data[index].photo;  
         _data = [data[index].role._id , data[index].area._id , data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo ,  data[index].observationTime, this.parser.geAllData().getRoundData()[this.studyDataIndex].roundStartTime , this.parser.geAllData().getRoundData()[this.studyDataIndex].roundEndTime, this.studyID];  
       } 
       return _data;
@@ -140,7 +135,7 @@ export class SqlDbProvider {
   
   /* CREATE TABLE QUERY ACCORDING TO PARAMETER */
   createTable(table): Promise<any> {
-      var query = '';
+      let query = '';
       if(table == 'Projects')
         query = 'CREATE TABLE IF NOT EXISTS Projects(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT , name TEXT,logo TEXT,headoffice TEXT, customer_id TEXT, customer_name TEXT)';
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
@@ -163,7 +158,7 @@ export class SqlDbProvider {
   
   /* INSERT QUERY ACCORDING TO PARAMETER */
   insertQuery(table): string {
-    var query = '';
+    let query = '';
     if(table == 'Projects')
       query = 'INSERT INTO Projects (_id, name, logo, headoffice, customer_id, customer_name) VALUES (? , ? , ? , ?, ?, ?)';
     else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
@@ -182,11 +177,11 @@ export class SqlDbProvider {
   
   /* GETTING ALL RECORDS FROM TABLE */
   getAllData(table: string) {
-    var query = "SELECT * FROM " + `${table}`;
+    let query = "SELECT * FROM " + `${table}`;
     return this.database.executeSql(query, []).then((result) => {
       let data = [];
       if (result.rows.length > 0) {
-        for (var i = 0; i < result.rows.length; i++) {
+        for (let i = 0; i < result.rows.length; i++) {
           if(table == 'Projects')
             data.push(new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name ));
           else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
@@ -224,11 +219,11 @@ export class SqlDbProvider {
 
   /* GETTING IDS OF ROLES, ELEMENTS, AREAS TO FETCH DATA  */
   getIDs(table, project_id) {
-    var query = "SELECT * FROM " + `${table}`  + " WHERE project_id=?";
+    let query = "SELECT * FROM " + `${table}`  + " WHERE project_id=?";
     return this.database.executeSql(query, [project_id]).then((result) => {
       let data = [];
       if (result.rows.length > 0) {
-        for (var i = 0; i < result.rows.length; i++) {
+        for (let i = 0; i < result.rows.length; i++) {
           data.push(result.rows.item(i)._id);
         }
       }
@@ -257,7 +252,7 @@ export class SqlDbProvider {
   }
   /* REMOVING ALL DATA FROM TABLE */
   dropTable(table: string): Promise<any> {
-    var query = "DROP TABLE IF EXISTS "+ table;
+    let query = "DROP TABLE IF EXISTS "+ table;
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, []).then(() => {
         resolve(table + ' data removed successfully.');
@@ -276,9 +271,9 @@ export class SqlDbProvider {
    addingIDs(table, data) {
     let query = this.insertQuery(table);
     return new Promise((resolve, reject) => {
-      for(var i = 0; i < data.length; i++) {
-            var item = data[i];
-            var loopFor = this.loopFor(table,item);
+      for(let i = 0; i < data.length; i++) {
+            let item = data[i];
+            let loopFor = this.loopFor(table,item);
             
             $(loopFor).each((index, sub_item) => {
               let row_data = [item._id , sub_item];
@@ -297,7 +292,7 @@ export class SqlDbProvider {
   }
 
   loopFor(table, data) {
-      var array = [];
+      let array = [];
       if(table == 'Areas_IDs')
         array = data.areas;
       else if(table == 'Roles_IDs')
@@ -310,12 +305,12 @@ export class SqlDbProvider {
 
   /* GETTING OFFLINE DATA FOR SPECIFIC ID */  
   getOfflineStudyData(studyId) {
-    var query = "SELECT * FROM Study join Study_Data on Study.id=Study_Data.Study_Id join Projects on Projects._id=Study.project_id Where Study.id=" +`${studyId}`;
+    let query = "SELECT * FROM Study join Study_Data on Study.id=Study_Data.Study_Id join Projects on Projects._id=Study.project_id Where Study.id=" +`${studyId}`;
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, []).then((result) => {
         let data = [];
         if (result.rows.length > 0) {
-          for (var i = 0; i < result.rows.length; i++) {
+          for (let i = 0; i < result.rows.length; i++) {
             data.push({ id: result.rows.item(i).id, title: result.rows.item(i).title, project_id: result.rows.item(i).project_id, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime,
                         roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area ,element: result.rows.item(i).element , 
                         rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, 

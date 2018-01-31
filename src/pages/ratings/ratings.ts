@@ -57,7 +57,7 @@ export class RatingsPage {
   getRatings() {
      
     this.element = this.navParams.get('element');
-    var rating = this.element.rating.toLowerCase().trim();
+    let rating = this.element.rating.toLowerCase().trim();
     /* IF RATING IS FIELD USER INPUT */
     if(rating == 'field user input')
       this.enterRating(this.ratings[0]);
@@ -67,7 +67,7 @@ export class RatingsPage {
     }
     /* IF RATING IS A NUMBER */  
     else{
-      var index = this.ratings.indexOf(parseInt(this.element.rating));
+      const index = this.ratings.indexOf(parseInt(this.element.rating));
       if(index > -1)
         this.enterRating(this.ratings[index]);
       else

@@ -2,4 +2,20 @@ page-study-items {
     ion-title {
         text-align: center !important;
     }
+
+    @media (min-width: 768px) {
+
+        tr {
+            th {
+                font-size: 30px;
+            }
+
+            td {
+                margin-bottom: 5px !important;
+                font-size: 22px;
+                padding: 25px !important;
+            }
+           
+        }
+    }
 }

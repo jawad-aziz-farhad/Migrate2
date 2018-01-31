@@ -19,3 +19,5 @@ export let BACK_BTN_MESSAGE= "Press back again to exit the App.";
 export let REMOVING_STUDY_ITEMS_MSG = "Are you sure that you want to remove all Study Itmes ?";
 export let ROUND_ENDED = "Round has now ended";
 export let STUDY_ENDED = "Study has now ended";
+export let DELETE_TITLE = 'Delete Item';
+export let DELETE_MSG = 'Are you sure that you want to delete this Item ?';

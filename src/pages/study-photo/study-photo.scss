@@ -1,5 +1,9 @@
 page-study-photo {
+    @media (min-width: 768px) {
+        .image {
+            display: table-cell; vertical-align: middle; width: 100%;
+        }        
+    }
     
-
     
 }

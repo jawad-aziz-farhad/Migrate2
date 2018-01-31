@@ -57,7 +57,7 @@ export class AddFrequencyPage {
 
   /* REMOVING ENTERED FREQUENCY */ 
   removeFrequency(){
-    var length = this.frequency.length - 1;
+    const length = this.frequency.length - 1;
     this.frequency = this.frequency.slice(0, this.frequency.length -1 );
   }
 
@@ -78,12 +78,12 @@ export class AddFrequencyPage {
 
   /* PARSING DATA */
   _parseData(frequency: number) {
-    var observationTime = 0;
+    let observationTime = 0;
     if(this.parseData.getData().getRating() == 0)
       this.parseData.getData().setObservationTime("00:00");
     else { 
       observationTime = new Date().getTime() - this.parseData.getData().getObservationTime();
-      var observation_Time = this.millisToMinutesAndSeconds(observationTime);
+      let observation_Time = this.millisToMinutesAndSeconds(observationTime);
       this.parseData.getData().setObservationTime(observation_Time);
     }
     this.parseData.getData().setNotes(null);
@@ -94,8 +94,8 @@ export class AddFrequencyPage {
   } 
 
   millisToMinutesAndSeconds(millis) {
-    var minutes = Math.floor(millis / 60000);
-    var seconds = ((millis % 60000) / 1000).toFixed(0);
+    const minutes = Math.floor(millis / 60000);
+    const seconds = ((millis % 60000) / 1000).toFixed(0);
     if(minutes > 0)
     return minutes + ":" + (parseInt(seconds) < 10 ? '0' : '') + seconds;
     else
@@ -104,7 +104,7 @@ export class AddFrequencyPage {
    
   /* OPENING MODAL FOR ADDING FREQUENCY */
   openModal() {
-      let modal = this.modalCtrl.create('StudyOptionsPage', null, { cssClass: 'inset-modal' });        
+      let modal = this.modalCtrl.create('StudyOptionsPage', null, { cssClass: 'inset-modal study-options-modal' });        
       modal.onDidDismiss(data => {
 
               this._parseTime();

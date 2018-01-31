@@ -14,7 +14,7 @@
 
 <ion-content padding>
  <p>
-  You are about to submit all data of this study. <br><br>
+  You are about to submit all data for this study. <br><br>
 
   If you would like to edit this data before you sync it then plesae tap 'Cancel'.
   If you are happy to continue, then plesae tap 'Submit'.
@@ -26,12 +26,12 @@
 <ion-footer>
 
     <ion-grid>
-      <ion-row>
-        <ion-col col-50>
-            <button ion-button block class="theme-btn no-radius" (click)="dismiss('dismiss')">CANCEL</button>
+      <ion-row >
+        <ion-col col-6 >
+            <button ion-button clear block class="theme-btn no-radius" (click)="dismiss('dismiss')">CANCEL</button>
         </ion-col>
-        <ion-col col-50>
-            <button ion-button block class="theme-btn no-radius" (click)="dismiss('submit')">SUBMIT</button>
+        <ion-col col-6>
+            <button ion-button clear block class="theme-btn no-radius" (click)="dismiss('submit')">SUBMIT</button>
         </ion-col>
       </ion-row>
     </ion-grid>

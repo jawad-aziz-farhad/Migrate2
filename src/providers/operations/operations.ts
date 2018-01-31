@@ -58,17 +58,17 @@ export class OperationsProvider {
   }
 
   addData(formData , endPoint){
-    var url = SERVER_URL + endPoint;
+    let url = SERVER_URL + endPoint;
     return this.http.post(`${url}`, formData).map(res => res.json());
   }
 
   uploadFile(data: any): Promise<any>{
     
-    var filename = data.file.substr(data.file.lastIndexOf('/') + 1);
+    let filename = data.file.substr(data.file.lastIndexOf('/') + 1);
     
     filename = filename.split("?");
     filename = filename[0];
-    var options = {
+    let options = {
       fileKey: 'photo',
       fileName: filename,
       chunkedMode: false,
@@ -93,12 +93,12 @@ export class OperationsProvider {
   }
 
   _uploadFile(photo): Observable<any> {
-    var data = {endPoint:'ras_data/study_image' , key :'photo', file: photo};
-    var filename = data.file.substr(data.file.lastIndexOf('/') + 1);
+    let data = {endPoint:'ras_data/study_image' , key :'photo', file: photo};
+    let filename = data.file.substr(data.file.lastIndexOf('/') + 1);
     
     filename = filename.split("?");
     filename = filename[0];
-    var options = {
+    let options = {
       fileKey: 'photo',
       fileName: filename,
       chunkedMode: false,
@@ -136,9 +136,9 @@ export class OperationsProvider {
 
   checkForImages(data){
 
-     for(var i=0; i<data.length; i++ ) {
+     for(let i=0; i<data.length; i++ ) {
        if(data[i].photo.indexOf('file:///') > -1) {
-          var params = {endPoint:'ras_data/study_image' , key :'photo', file: data[i].photo};
+          let params = {endPoint:'ras_data/study_image' , key :'photo', file: data[i].photo};
           this.uploadFile(params).then(response => {
               data[i].photo = response.path;
               this.parseData.getDataArray()[i].setPhoto(response.path);
@@ -155,9 +155,9 @@ export class OperationsProvider {
 
   uploadPhoto(photo: any): Promise<any>{  
    return new Promise((resolve, reject) => {
-      var params = {endPoint:'ras_data/study_image' , key :'photo', file: photo};
+      let params = {endPoint:'ras_data/study_image' , key :'photo', file: photo};
       this.uploadFile(params).then(res => {
-        var response = JSON.parse(res);
+        let response = JSON.parse(res);
         resolve(response);
       }).catch(error => {
           reject(error);

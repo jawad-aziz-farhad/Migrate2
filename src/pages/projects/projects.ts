@@ -100,7 +100,7 @@ export class ProjectsPage {
   /* GETTING DATA FROM SERVER */
   getData() {
     this.projects = [];
-    var endPoint = this.TABLE_NAME +  '/getByManagerEmail/' + this.userProfile.email;
+    const endPoint = this.TABLE_NAME +  '/getByManagerEmail/' + this.userProfile.email;
     this.operations.getByEmail(endPoint).subscribe(res => {
       console.log(JSON.stringify(res)) 
       this.createTable(res, this.TABLE_NAME);
@@ -166,7 +166,7 @@ export class ProjectsPage {
 
   getCustomerImage(image) {
 
-    var imagePath = '';
+    let imagePath = '';
     
     if(typeof image !== 'undefined' && image !== null && image !== ''){
         

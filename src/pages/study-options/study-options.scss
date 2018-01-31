@@ -1,8 +1,18 @@
 page-study-options {
-    ion-item {
-        ion-label {
-           font-size: 1.6rem;
-        }
-    } 
+   
+
+    @media (min-width : 768px) {
+        p {
+            font-size: 25px;
+            color: gray;
+        } 
+
+        ion-item {
+            ion-label {
+               font-size: 25px;
+            }
+        } 
+    }
+    
 
 }

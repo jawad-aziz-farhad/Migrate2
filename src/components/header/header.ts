@@ -63,7 +63,7 @@ export class HeaderComponent {
     
     if(typeof this.userProfile.userimage !== 'undefined' && this.userProfile.userimage !== null && this.userProfile.userimage !== ''){
         
-        var imagePath = '';
+        let imagePath = '';
         
         if(this.network.isInternetAvailable()){
           if(this.userProfile.userimage.indexOf('assets/profile_images') > -1)
@@ -82,17 +82,6 @@ export class HeaderComponent {
         
   }
  
-  /* SHOWING PROFILE INFO ON CLICKING PROFILE IMAGE */
-  showProfile() {
-    
-    let modal = this.modalCtrl.create('ProfilePage',{ user : this.userProfile }, { cssClass: 'inset-modal' });
-     modal.onDidDismiss(data => {
-        console.log('PROFILE PAGE MODAL DISMISSED.');  
-     });
- 
-     modal.present();
-  }
-
   presentPopover(myEvent) {
     let popover = this.popoverCtrl.create(PopOverPage);
     popover.present({
@@ -114,7 +103,7 @@ export class HeaderComponent {
    }
  
    showVersion(){
-     let modal = this.modalCtrl.create('VersionInfoPage' , { },{ cssClass: 'inset-modal' });
+     let modal = this.modalCtrl.create('VersionInfoPage' , { },{ cssClass: 'inset-modal version-info-modal' });
      modal.onDidDismiss(data => {
       console.log('PROFILE PAGE MODAL DISMISSED.');  
      });
@@ -137,8 +126,8 @@ export class HeaderComponent {
    }
 
   cancelStudy() {
-    var message = 'Are you sure that you want to cancel this Study ?'
-    var title: 'Efficiency Study';
+    let message = 'Are you sure that you want to cancel this Study ?'
+    let title: 'Efficiency Study';
     this.alertProvider.presentConfirm(title,message).then(action => {
         if(action == 'yes'){
           //this.time.setStatus(true);

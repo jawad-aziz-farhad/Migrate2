@@ -58,34 +58,5 @@ export class InStudyHeaderComponent {
     });
   }
 
-  presentPopover(myEvent) {
-    let popover = this.popoverCtrl.create(PopOverPage);
-    popover.present({
-      ev: myEvent
-    });
-
-    popover.onDidDismiss(data => {
-       
-        if(data.value == 'privacy_policy')
-          this.navCtrl.push(PrivacyPolicyPage);
-        else if(data.value == 'terms_of_services')
-          this.navCtrl.push(TermsOfServicesPage);
-        else  if(data.value == 'version_info')
-        this.showVersion();
-        else 
-           console.error(ERROR);   
- 
-     });
-   }
- 
-   showVersion(){
-     let modal = this.modalCtrl.create('VersionInfoPage' , { },{ cssClass: 'inset-modal' });
-     modal.onDidDismiss(data => {
-      console.log('PROFILE PAGE MODAL DISMISSED.');  
-     });
- 
-     modal.present();
-   }
-
 
 }

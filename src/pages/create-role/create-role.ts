@@ -71,8 +71,8 @@ export class CreateRolePage {
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
     this.storage.get('currentUser').then(user => {
-      var name = user.firstname + ' ' + user.lastname;
-      var id = user._id;
+      let name = user.firstname + ' ' + user.lastname;
+      const id = user._id;
       this.roleForm.controls['addedby'].setValue(name);
       this.roleForm.controls['id_of_addedby'].setValue(id);
       this.createRole();
@@ -106,7 +106,7 @@ setUserInfo() {
 
   /* INSERTING DATA TO TABLE */
   insertData(data) {
-    var _data = {project_id: this.project._id, _id: data._id};
+    let _data = {project_id: this.project._id, _id: data._id};
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.toast.showToast('Role added succesfully.');                
       this.loader.hideLoader();

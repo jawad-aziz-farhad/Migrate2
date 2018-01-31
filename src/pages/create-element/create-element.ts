@@ -95,7 +95,7 @@ export class CreateElementPage {
 
   addTypes(){
     const formCtrl = <FormArray>this.elementForm.controls['types'];
-    for(var i=0; i<this.study_types.length;i++){
+    for(let i=0; i<this.study_types.length;i++){
         if(i == 0 && this.e_study)
           formCtrl.push(this.formBuilder.control(this.study_types[0]));
 
@@ -127,7 +127,7 @@ export class CreateElementPage {
   /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
   setUserInfo() {
     this.storage.get('currentUser').then(user => {
-      var id = user._id;
+      let id = user._id;
       this.elementForm.controls['userId'].setValue(id);
        this.addTypes();
       //this.createElement();
@@ -161,7 +161,7 @@ export class CreateElementPage {
 
   /* INSERTING DATA TO TABLE */
   insertData(data) {
-    var _data = {project_id: this.project._id, _id: data._id};
+    let _data = {project_id: this.project._id, _id: data._id};
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.toast.showToast('Element added succesfully.');                
       this.loader.hideLoader();

@@ -1,4 +1,5 @@
 page-ratings {
+    @media (min-width: 768px){
 
     scroll-content {
         display: flex;
@@ -25,6 +26,9 @@ page-ratings {
         flex-direction: column;
         text-align: center;
     }
+
+ }
+
       
 
 }

@@ -5,20 +5,17 @@
   Ionic pages and navigation.
 -->
 <ion-header class="blue-header" no-border>
-    <!-- <header title="Enter Notes" button="men_btn"></header> -->
     <in-study-header title="Enter Notes" (cancel)="onCancelStudy($event)"></in-study-header>
 </ion-header>
 
 
 <ion-content>
     <div class="blue-header">
-      <!-- <timer #timer [timeInSeconds]="roundTime"></timer> -->
-      <!-- <new-timer></new-timer>  -->
       <timer></timer>
     </div>
     <ion-textarea class="white-bg" placeholder="Add Notes Here..."  [(ngModel)]="notes" no-padding class="h200"></ion-textarea>
 </ion-content>
 
-<ion-footer padding>
+<ion-footer>
     <button ion-button block no-margin class="theme-btn no-radius" (click)="addNotes()" [disabled]="notes == '' || notes.length < 6 ">Add Notes</button>
 </ion-footer>

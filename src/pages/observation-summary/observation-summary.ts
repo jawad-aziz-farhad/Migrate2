@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { TimerComponent } from '../../components/timer/timer';
-import { Time , ParseDataProvider , OperationsProvider, LoaderProvider , ToastProvider, ParserProvider } from '../../providers';
+import { Time , ParseDataProvider , OperationsProvider, LoaderProvider , ToastProvider, ParserProvider, AlertProvider } from '../../providers';
 import { Observable } from 'rxjs';
-import { SERVER_URL } from '../../config/config';
+import { SERVER_URL, DELETE_MSG, DELETE_TITLE } from '../../config/config';
 /**
  * Generated class for the ObservationSummaryPage page.
  *
@@ -22,11 +22,12 @@ export class ObservationSummaryPage {
   public data: any;
   public show: boolean;
   private DEFAULT_IMG: string = "assets/images/banner.png";
-
+  
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider) {
+              public parser: ParserProvider,
+              public alert: AlertProvider) {
     this.show = false;
   }
 
@@ -34,9 +35,11 @@ export class ObservationSummaryPage {
     console.log('ionViewDidLoad ObservationSummaryPage');  
     this.showObservationSummary();  
   }
-
+  /* GETTING SUMMARY  */
   showObservationSummary(){
-      this.data = this.navParams.get('item');
+      const round_index = this.navParams.get('round_index');
+      const data_index  = this.navParams.get('data_index');
+      this.data = this.parser.geAllData().getRoundData()[round_index].data[data_index];
       this.show = true;
   }
   /* GETTING IMAGE PATH */
@@ -55,8 +58,25 @@ export class ObservationSummaryPage {
       return this.imagePath;
   }
 
+  /* CONVERTING MILLISECONDS TO LOCALE TIME */
   convertTime(time){
     return new Date(time).toLocaleString();
+  }
+
+  /* ASKING FOR CONFIRMATION FROM USER */
+  deletConfirmation(){
+    this.alert.presentConfirm(DELETE_TITLE, DELETE_MSG).then(res => {
+      if(res == 'yes')
+        this.deleteItem();
+    });
+  }
+
+  /* IF USER SAYS YES, THEN WE WILL DELETE ITEM FROM ARRAY AND MOVE BACK TO STUDY ITEMS PAGE */  
+  deleteItem(){
+    const round_index = this.navParams.get('round_index');
+    const data_index  = this.navParams.get('data_index');
+    this.parser.geAllData().getRoundData()[round_index].data.splice(data_index,1);
+    this.navCtrl.pop();
   }
 
 }

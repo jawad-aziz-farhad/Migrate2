@@ -201,21 +201,20 @@ getAllData() {
   /* PARSING STUDY DATA */
   _parseData(role: any) {
     if(this.parseData.getData() == null || typeof this.parseData.getData() == 'undefined'){
-       var data = new StudyData();
+       let data = new StudyData();
        data.setRole(role);
        this.parseData.setData(data);
     }
     else{
       this.parseData.getData().setRole(role);
     }
-    console.log("STUDY DATA AT ROLE PAGE: " + JSON.stringify(this.parseData.getData()));
   }
 
   /* DOING SEARCH ON INPUT DATA */
   onSearchInput() {
     if(typeof this.searchInput !== 'undefined' && this.searchInput.length > 3){
       console.log(this.search.search_Item(this.roles,this.searchInput, 'role'));
-      var searchResult = this.search.search_Item(this.roles,this.searchInput, 'role');
+      let searchResult = this.search.search_Item(this.roles,this.searchInput, 'role');
       if(searchResult.length > 0)
         this.roles = this.search.search_Item(this.roles,this.searchInput, 'role');    
     }
@@ -267,10 +266,10 @@ getAllData() {
   sortRolesbyPopularity() {
     this.sortedRoles = [];
     this.sortedRoles = this.roles;
-    for(var i=0; i<this.sortedRoles.length; i++) {
-        for(var j = ( this.sortedRoles.length - 1); j > i ; j--) {
+    for(let i=0; i<this.sortedRoles.length; i++) {
+        for(let j = ( this.sortedRoles.length - 1); j > i ; j--) {
           if(this.sortedRoles[i].popularity_number < this.sortedRoles[j].popularity_number){
-              var temp = this.sortedRoles[j];
+              let temp = this.sortedRoles[j];
               this.sortedRoles[j] = this.sortedRoles[i];
               this.sortedRoles[i] = temp;
               console.log('SORTED ARRAY: '+ JSON.stringify(this.sortedRoles));

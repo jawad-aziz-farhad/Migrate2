@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Network } from '@ionic-native/network';
 import { Observable } from 'rxjs';
 
-declare var navigator: any;
-declare var Connection: any;
+declare let navigator: any;
+declare let Connection: any;
 
 /*
   Generated class for the NetworkProvider provider.

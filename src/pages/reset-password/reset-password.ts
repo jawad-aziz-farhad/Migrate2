@@ -56,7 +56,7 @@ export class ResetPasswordPage {
       },
      error => {
         this.loader.hideLoader();
-        var _error = JSON.parse(error._body);
+        let _error = JSON.parse(error._body);
         this.handleError(_error);
      });
   }

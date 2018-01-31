@@ -124,13 +124,13 @@ export class TimerComponent implements OnInit {
 
   /* CALCULATING REMAINING TIME */
   getTimeAsDigitalClock(inputSeconds: number) {
-      var sec_num = parseInt(inputSeconds.toString(), 10); // don't forget the second param
-      var hours   = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-      var seconds = sec_num - (hours * 3600) - (minutes * 60);
-      var hoursString = '';
-      var minutesString = '';
-      var secondsString = '';
+      const sec_num = parseInt(inputSeconds.toString(), 10); // don't forget the second param
+      const hours   = Math.floor(sec_num / 3600);
+      const minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+      const seconds = sec_num - (hours * 3600) - (minutes * 60);
+      let hoursString = '';
+      let minutesString = '';
+      let secondsString = '';
       hoursString = (hours < 10) ? "0" + hours : hours.toString();
       minutesString = (minutes < 10) ? "0" + minutes : minutes.toString();
       secondsString = (seconds < 10) ? "0" + seconds : seconds.toString();
@@ -143,7 +143,7 @@ export class TimerComponent implements OnInit {
   openModal() {
     
     this.timer.runTimer = false;  
-    let modal = this.modalCtrl.create('TimerExpiredPage', null, { cssClass: 'inset-modal' });
+    let modal = this.modalCtrl.create('TimerExpiredPage', null, { cssClass: 'inset-modal timer-expired-modal' });
     modal.onDidDismiss(data => {
         console.log('TIME EXPIRED FOR ROUND.');
         if(data.action.toLowerCase().trim() == 'continue')

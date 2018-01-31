@@ -1,24 +1,17 @@
-<ion-header class="blue-header">
+<ion-header class="blue-header create-study-header">
     <ion-navbar color="primary">
       <ion-title>{{ title }}</ion-title>
-      <!--
-      <ion-buttons end>
-        <button ion-button icon-only>
-        <ion-icon name='bulb'></ion-icon>
-      </button>
-      </ion-buttons>
-      -->
     </ion-navbar>
   </ion-header>
 
-  <ion-content padding>
+  <ion-content>
 
-    <p *ngIf="error !== 'Wrong password'"> Sorry, we can't find an account matching the email address: <br>
+    <p padding *ngIf="error !== 'Wrong password'"> Sorry, we can't find an account matching the email address: <br>
         <b> {{ this.email }} </b> <br><br>
         If you do not have an account, please contact your system administrator. Otherwise, try again using a different email address.
     </p>
 
-    <p *ngIf="error == 'Wrong password'"> 
+    <p padding *ngIf="error == 'Wrong password'"> 
       The password you have entered for the account <b> {{ this.email }} </b> is incorrect. <br><br>
       If you have forgotten you password tap on Reset Password.<br>
       Alternatively tap Try Again to re-enter your password.
@@ -27,15 +20,25 @@
 
   </ion-content>
   
-  <ion-footer padding>
+  <ion-footer>
 
-      <ion-buttons end *ngIf="error !== 'Wrong password'">
-        <button ion-button clear class="theme-btn no-radius" (click)="dismiss('dismiss')">TRY AGAIN</button>
-      </ion-buttons>
+    <ion-grid>
 
-      <ion-buttons end *ngIf="error == 'Wrong password'">
-          <button ion-button clear block padding class="theme-btn no-radius" (click)="dismiss('reset_password')">RESET PASSWORD</button>
-          <button ion-button clear block padding class="theme-btn no-radius" (click)="dismiss('dismiss')">TRY AGAIN</button>
-      </ion-buttons>
+        <ion-row *ngIf="error !== 'Wrong password'">
+          <ion-col col-6></ion-col>
+          <ion-col col-6 >
+              <button ion-button clear class="theme-btn no-radius btn-text" (click)="dismiss('dismiss')">TRY AGAIN</button>
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="error == 'Wrong password'">
+          <ion-col col-6>
+              <button ion-button clear block class="theme-btn no-radius" (click)="dismiss('reset_password')">RESET PASSWORD</button>
+          </ion-col>
+          <ion-col col-6>
+              <button ion-button clear block class="theme-btn no-radius" (click)="dismiss('dismiss')">TRY AGAIN</button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
   </ion-footer>

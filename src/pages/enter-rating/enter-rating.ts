@@ -50,7 +50,7 @@ export class EnterRatingPage {
 
   /* REMOVING ENTERED RATING */ 
   removeRatings(){
-    var length = this.rating.length - 1;
+    const length = this.rating.length - 1;
     this.rating = this.rating.slice(0, this.rating.length -1 );
   }
 

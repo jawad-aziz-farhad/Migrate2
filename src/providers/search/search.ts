@@ -17,7 +17,7 @@ export class SearchProvider {
   }
 
   searchItem(searchTerm, from){
-    var data = new DummyData();
+    let data = new DummyData();
     /* SEARCHING AREA */
     if(from == 'area'){
       console.log('SEARCHING IN AREA: ' + searchTerm);

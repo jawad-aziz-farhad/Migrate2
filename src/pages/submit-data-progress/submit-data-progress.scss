@@ -1,3 +1,8 @@
 page-submit-data-progress {
-
+    @media (min-width : 768px) {
+        p {
+            font-size: 25px;
+            color: gray;
+        } 
+    }
 }

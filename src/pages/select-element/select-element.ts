@@ -227,7 +227,7 @@ goNext() {
 
   onSearchInput(){
     if(typeof this.searchInput !== 'undefined' && this.searchInput.length > 3){
-      var searchResult = this.search.search_Item(this.elements,this.searchInput, 'element');
+      let searchResult = this.search.search_Item(this.elements,this.searchInput, 'element');
       if(searchResult.length > 0)
         this.elements = this.search.search_Item(this.temp,this.searchInput, 'element');;  
     }
