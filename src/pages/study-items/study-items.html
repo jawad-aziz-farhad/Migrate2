@@ -48,24 +48,8 @@
       </thead>
 
       <tbody>
-        <!-- <ng-container *ngIf="!isStudyEnded">
-            <tr *ngFor="let item of round_data.data; let j=index;" (click)="showSummary(null, j)">
-              <td>
-                  <div class="number-icon">{{ j + 1 }}</div>
-                  {{ item.element.description }}
-              </td>
-              <td>{{ item.rating }}</td>
-              <td>{{ item.frequency }}</td>
-              <td>
-                <ion-checkbox (ionChange)="showSelectedItems(item)">
-                </ion-checkbox>
-              </td>
-            </tr>
-          </ng-container>
-
-
-        <ng-template *ngIf="isStudyEnded" ngFor let-round [ngForOf]="study_data.rounds" let-i="index">
-          <tr *ngFor="let item of round.data; let j=index;" (click)="showSummary(i, j)">
+        <ng-template ngFor let-round [ngForOf]="study_data?.rounds | studyItems : isStudyEnded" let-i="index">
+          <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(i, j)">
             <td>
               <div class="number-icon">{{ j + 1 }}</div>
                 {{ item.element.description }}
@@ -78,37 +62,16 @@
               </ion-checkbox>
             </td>
           </tr>
-      </ng-template>
-      -->
-
-      <ng-template *ngIf="isStudyEnded" ngFor let-round [ngForOf]="getListData()" let-i="index">
-        <tr *ngFor="let item of round.data; let j=index;" (click)="showSummary(i, j)">
-          <td>
-            <div class="number-icon">{{ j + 1 }}</div>
-              {{ item.element.description }}
-          </td>
-          <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
-          <td>{{ item.rating }}</td>
-          <td>{{ item.frequency }}</td>
-          <td>
-            <ion-checkbox (ionChange)="showSelectedItems(item)">
-            </ion-checkbox>
-          </td>
-        </tr>
-       </ng-template>
-
-
-
-
+        </ng-template>
       </tbody>
 
     </table>
 
 </ion-content>
 
-<ion-footer no-padding>
-    <ion-grid>
-        <ion-row *ngIf="!isStudyEnded">
+<ion-footer>
+    <ion-grid *ngIf="!isStudyEnded">
+        <ion-row>
             <ion-col col-6>
                 <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="endStudy()">END</button>
             </ion-col>
@@ -116,8 +79,10 @@
               <button ion-button block class="theme-btn no-radius" (click)="startNextRound()">NEXT ROUND</button>
           </ion-col>
         </ion-row>
-
-        <ion-row *ngIf="isStudyEnded" no-padding>
+    </ion-grid>
+    
+    <ion-grid no-padding *ngIf="isStudyEnded">
+        <ion-row>
             <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
         </ion-row>
     </ion-grid>

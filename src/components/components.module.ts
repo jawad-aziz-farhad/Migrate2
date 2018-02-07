@@ -9,6 +9,8 @@ import { NewTimerComponent } from './new-timer/new-timer';
 import { ImgComponent } from './img/img';
 import { InStudyHeaderComponent } from './in-study-header/in-study-header';
 import { ProgressBarComponent } from './progress-bar/progress-bar';
+import { InOneComponent } from './in-one/in-one';
+import { PipesModule } from "../pipes/pipes.module";
 
 @NgModule({
 	declarations: [HeaderComponent , TimerComponent,
@@ -17,16 +19,18 @@ import { ProgressBarComponent } from './progress-bar/progress-bar';
     NewTimerComponent,
     ImgComponent,
     InStudyHeaderComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    InOneComponent
     ],
-	imports: [IonicModule],
+	imports: [IonicModule , PipesModule],
 	exports: [HeaderComponent , TimerComponent,
     NavMenuComponent,
     TimerComponent,
     NewTimerComponent,
     ImgComponent,
     InStudyHeaderComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    InOneComponent
     ]
 })
 export class ComponentsModule {}

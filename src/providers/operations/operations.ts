@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
 import { Observable } from "rxjs";
+import { forkJoin } from "rxjs/observable/forkJoin";
 import { SERVER_URL } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
@@ -163,7 +164,10 @@ export class OperationsProvider {
           reject(error);
       });
     });
-    
-}
+  }
+
+  getDataforMultipeRequests(data: any): Observable<any> {
+    return forkJoin([data]);
+  }
 
 }

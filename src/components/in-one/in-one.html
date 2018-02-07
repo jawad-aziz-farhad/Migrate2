@@ -1,5 +1,5 @@
 <!--
-  Generated template for the SelectRolePage page.
+  Generated COMPONENT .
 
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
@@ -11,7 +11,7 @@
           <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
        </button> 
     
-        <ion-title>Select Role</ion-title>
+        <ion-title>Select {{ title }}</ion-title>
         
         <ion-buttons end *ngIf="!isSearching">
           <button ion-button clear (click)="isSearching = !isSearching">
@@ -52,7 +52,7 @@
        <ion-grid>
          <ion-row>
            <ion-col col-6>
-             <div class="sub-heading">Select Role</div>
+             <div class="sub-heading">Select {{ title }}</div>
            </ion-col>
            <ion-col col-6 text-right (click)="sortData()">
              <div class="sub-heading">FILTER &nbsp; <ion-icon name="options"></ion-icon></div>
@@ -65,7 +65,7 @@
        <ion-grid>
          <ion-row>
            <ion-col col-6>
-             <div class="sub-heading" style="font-weight:bold;">Sort by</div>
+             <div class="sub-heading">Sort by</div>
            </ion-col>
            <ion-col col-6 text-right (click)="sortData()">
              <div class="sub-heading">
@@ -88,11 +88,13 @@
    </ion-toolbar>
 
 
-  <div *ngIf="!isFiltering">
+  <div *ngIf="!isFiltering" >
     
     <ion-list class="list_items" *ngIf="show" padding>
-      <ion-item *ngFor="let role of roles;" (click)="selectRole(role)" [ngClass]="getStyle(role)">
-        <p>{{ role.rolename }}</p>
+      <ion-item *ngFor="let item of items;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+        <p *ngIf="END_POINT == 'roles'">{{ item.rolename }}</p>
+        <p *ngIf="END_POINT == 'areas'">{{ item.areaname }}</p>
+        <p *ngIf="END_POINT == 'elements'">{{ item.description}}</p>
       </ion-item>
     </ion-list>
  </div>
@@ -105,15 +107,19 @@
               </ion-col>              
           </ion-row>
          
-          <ion-item *ngFor="let role of roles | sort : 'popularity_number'; let i=index;" [ngClass]="getStyle(role)" (click)="selectRole(role)">
-            <p>{{ role.rolename }}</p>
+          <ion-item *ngFor="let item of items | sort : ['popularity_number']; let i=index;" [ngClass]="getStyle(item)" (click)="selectItem(item)">
+            <p *ngIf="END_POINT == 'items'">{{ item.itemname }}</p>
+        <p *ngIf="END_POINT == 'areas'">{{ item.areaname }}</p>
+        <p *ngIf="END_POINT == 'elements'">{{ item.description}}</p>
           </ion-item>
          
       </ion-list>
     
       <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
-          <ion-item *ngFor="let role of roles?.reverse(); let i=index;" (click)="selectRole(role)" [ngClass]="getStyle(role)">
-            <p>{{ role.rolename }}</p>
+          <ion-item *ngFor="let item of items | reverse" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+            <p *ngIf="END_POINT == 'roles'">{{ item.rolename }}</p>
+            <p *ngIf="END_POINT == 'areas'">{{ item.areaname }}</p>
+            <p *ngIf="END_POINT == 'elements'">{{ item.description}}</p>
         </ion-item>
       </ion-list>
       
@@ -123,5 +129,5 @@
 </ion-content>
 
 <ion-footer no-border>
-  <button ion-button block no-margin class="theme-btn no-radius" (click)="createRole()">Create Role</button>
+  <button ion-button block no-margin class="theme-btn no-radius" (click)="createItem()">Create {{ endpoint }}</button>
 </ion-footer>

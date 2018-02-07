@@ -4,6 +4,7 @@ export let SESSION_KEY = '';
 export let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 export let MESSAGE = 'Please wait...';
 export let ERROR = 'SOMETHING WENT WRONG.';
+export let NO_DATA_FOUND = 'Sorry! No Data Found.'
 export let STUDY_START_TOAST = 'New Study has started';
 export let NOTES_ALERT_TITLE = "STUDY NOTES";
 export let NOTES_ALERT_MESSAGE = "Please enter some notes for this Study.";

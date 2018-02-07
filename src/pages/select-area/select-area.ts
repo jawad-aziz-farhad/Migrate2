@@ -66,7 +66,7 @@ export class SelectAreaPage {
     this.sortedAreas = [];
     this.areas = [];
     this.project = this.navParams.get('project');
-    this.gettingData(); 
+    this.checkDB(); 
   }
 
   
@@ -90,18 +90,19 @@ export class SelectAreaPage {
 
   /* CHECKING LOCAL DATA BASE IF ELEMENTS ARE ALREADY THERE OR NOT */
   checkDB(){
-    this.sql.getDatabaseState().subscribe(ready  => {        
+    this.sql.getDatabaseState().subscribe(ready  => {    
       if(ready)
-        this.sql.getAllData(this.TABLE_NAME).then(result => {
+        this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
+         
             if(result.length == 0 || typeof result == 'undefined' || result == null)
               this.getIDs();
             else
               this.populateData(result);
-
         }).catch(error => {
-            console.error('ERROR: ' + JSON.stringify(error));
-        });
+          console.error('ERROR: ' + JSON.stringify(error));
+        });   
     });
+    
   }
 
   /* GETTING ROLES IDs FROM Areas_IDs TABLE TO GET ROLES ACCORDINGLY */

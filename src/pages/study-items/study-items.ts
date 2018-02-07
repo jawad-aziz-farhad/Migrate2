@@ -5,8 +5,6 @@ import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider, 
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { SubmitDataProgressPage } from  '../submit-data-progress/submit-data-progress';
 import { ALERT_TITLE , REMOVING_STUDY_ITEMS_MSG, ROUND_ENDED, STUDY_ENDED } from '../../config/config'
-import { Observable } from 'rxjs';
-import * as $ from 'jQuery';
 import { SelectRolePage } from '../select-role/select-role';
 /**
  * 
@@ -23,13 +21,12 @@ import { SelectRolePage } from '../select-role/select-role';
 })
 export class StudyItemsPage implements OnInit {
   
-  public round_data: any;
   public study_data: any;
   public isStudyEnded: boolean;
   public temp: any;
   public itemsSelected: any;
   public totalItemsSelected: number;
-  public show: boolean;
+  private totalItems: number = 0;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -59,11 +56,8 @@ export class StudyItemsPage implements OnInit {
   getData(){
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
-    this.show = this.isStudyEnded = false;
-    this.round_data = [];
+    this.isStudyEnded = false;
     this.study_data = this.parser.geAllData();
-    this.round_data = this.study_data.rounds[this.study_data.rounds.length - 1];
-    this.show = true;
     this.toast.showBottomToast(ROUND_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
@@ -97,6 +91,7 @@ export class StudyItemsPage implements OnInit {
         else if(component == 'EditTitlePage'){
 
         }
+
     
       });
     modal.present();
@@ -117,26 +112,23 @@ export class StudyItemsPage implements OnInit {
   }
 
   /* REMOVING ITEM FROM LIST */
-  removeItems() { 
-   
+  removeItems() {    
     let rounds = this.study_data.rounds;
-    
-    for (let i = rounds.length - 1; i >= 0; i -= 1) {
-        
-        for(let j= rounds[i].data.length; j>=0; j-=1){
-          const index =this.itemsSelected.indexOf(rounds[i].data[j])
+        for (let i = rounds.length - 1; i >= 0; i -= 1) {       
+        for(let j= rounds[i].data.length - 1; j>=0; j-=1){
+          const index = this.itemsSelected.indexOf(rounds[i].data[j])
           if(index > -1){
-            rounds[i].data.splice(index,1);
+            rounds[i].data.splice(j,1);
             this.totalItemsSelected--;
           }
+        if(rounds[i].data.length == 0)
+            rounds.splice(i,1);
       }
-
-      if(rounds[i].data.length == 0)
-        rounds.splice(i,1);
     }
-     
     
     this.itemsSelected = [];
+    if(rounds.length == 0)
+      this.isStudyEnded = false;
   }
 
   /* START NEXT ROUND */
@@ -149,26 +141,16 @@ export class StudyItemsPage implements OnInit {
     this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length()- (this.navCtrl.length() - 3)));
   }
 
+  /* END STUDY BUTTON CLICKED FUNCTION */
   endStudy(){
     this.isStudyEnded = !this.isStudyEnded;
     this.toast.showBottomToast(STUDY_ENDED);
   }
 
-  getListData() {
-    alert(JSON.stringify(this.parser.geAllData().getRoundData()));
-    this.study_data = [];
-    if(!this.isStudyEnded){
-      const index = this.parser.geAllData().getRoundData().length - 1;
-      this.study_data.push(this.parser.geAllData().getRoundData()[index]);
-    }
-     else
-       this.study_data = this.parser.geAllData().getRoundData();
-
-    return this.study_data;  
-  }
-
+  /* CONVERTING MILLISECONDS TO TIME STRING */
   convertTime(time){
     return new Date(time).toLocaleTimeString();
   }
+
 
 }

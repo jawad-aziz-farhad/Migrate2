@@ -82,6 +82,7 @@ export class AddFrequencyPage {
     if(this.parseData.getData().getRating() == 0)
       this.parseData.getData().setObservationTime("00:00");
     else { 
+
       observationTime = new Date().getTime() - this.parseData.getData().getObservationTime();
       let observation_Time = this.millisToMinutesAndSeconds(observationTime);
       this.parseData.getData().setObservationTime(observation_Time);

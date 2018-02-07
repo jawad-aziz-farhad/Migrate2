@@ -12,16 +12,41 @@ export class SortPipe implements PipeTransform {
   /**
    * Takes a value and makes it lowercase.
    */
-  transform(array: Array<any>, field: string): Array<any> {
+  transform(array: Array<any>, popularity_number: string, element_id: string, order: any): Array<any> {
     array.sort((a: any, b: any) => {
-      if (a[field] < b[field]) {
+      if (a[popularity_number] < b[popularity_number]) {
         return -1;
-      } else if (a[field] > b[field]) {
+      } else if (a[popularity_number] > b[popularity_number]) {
         return 1;
       } else {
         return 0;
       }
     });
+
+    if(typeof order !== 'undefined'){
+        array.sort((a: any, b: any) => {
+          if(order == 'ascending'){
+            if (a[element_id] < b[element_id]) {
+              return -1;
+            } else if (a[element_id] > b[element_id]) {
+              return 1;
+            } else {
+              return 0;
+            }
+          }
+
+          else if(order == 'descending'){
+            if (a[element_id] < b[element_id]) {
+              return 1;
+            } else if (a[element_id] > b[element_id]) {
+              return -1;
+            } else {
+              return 0;
+            }
+          }
+      });   
+    }             
+    
     return array;
   }
 }

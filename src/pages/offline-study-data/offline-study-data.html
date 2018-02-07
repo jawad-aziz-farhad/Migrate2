@@ -25,24 +25,24 @@
             <th>Element</th>
             <th>Rating</th>
             <th>Frequency</th>
-            <!-- <th width="55">
-              <ion-checkbox></ion-checkbox>
-            </th> -->
+            <th></th>
           </tr>
         </thead>
       
         <tbody>
-      
-          <tr *ngFor="let item of items; let i=index;" (click)="showSummary(item)">
-            <td><div class="number-icon">1</div>{{ item.getElement() }}</td>
-            <td>{{ item.getRating() }}</td>
-            <td>{{ item.getFrequency() }}</td>
-            <!-- <td>
-              <ion-checkbox (ionChange)="showSelectedItems(i)">
-              </ion-checkbox>
-            </td> -->
-          </tr>
-      
+            <tr *ngFor="let item of items; let i=index;">
+              <td>
+                <div class="number-icon">{{ i + 1 }}</div>
+                  {{ item.element }}
+              </td>
+              <td>{{ item.rating }}</td>
+              <td>{{ item.frequency }}</td>
+              <td>
+                <ion-checkbox >
+                </ion-checkbox>
+              </td>
+            </tr>
+
         </tbody>
       
       </table>
@@ -61,3 +61,11 @@
       </div>
 
 </ion-content>
+
+<ion-footer>
+    <ion-grid no-padding>
+        <ion-row>
+            <button ion-button block no-margin class="theme-btn no-radius" (click)="checkConnection()" [disabled]="items.length == 0">Sync Data</button>
+        </ion-row>
+    </ion-grid>
+</ion-footer>

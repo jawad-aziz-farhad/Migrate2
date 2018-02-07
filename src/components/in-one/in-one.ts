@@ -1,9 +1,8 @@
-import { Component , ViewChild } from '@angular/core';
+import { Component , Input, Output , EventEmitter, ViewChild } from '@angular/core';
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
-import { SelectAreaPage } from '../select-area/select-area';
-import { CreateRolePage } from '../create-role/create-role';
+import { TimerComponent } from '../timer/timer';
+import { SelectAreaPage } from '../../pages/select-area/select-area';
+import { CreateRolePage } from '../../pages/create-role/create-role';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
          AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../../config/config';
@@ -12,69 +11,75 @@ import { Observable } from "rxjs";
 import { FormBuilder } from '@angular/forms/src/form_builder';
 
 /**
- * Generated class for the SelectRolePage page.
+ * Generated class for the 3InOneComponent component.
  *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
+ * See https://angular.io/api/core/Component for more info on Angular
+ * Components.
  */
-
-@IonicPage()
 @Component({
-  selector: 'page-select-role',
-  templateUrl: 'select-role.html',
+  selector: 'in-one',
+  templateUrl: 'in-one.html'
 })
-export class SelectRolePage {
-  
+export class InOneComponent {
+
+  @Input('tablename') TABLE_NAME;
+  @Input('tablename1') TABLE_NAME_1;
+  @Input('endpoint') endpoint;
+  @Input('title') title;
+
+  @Output() next: any = new EventEmitter<any>();
+
   @ViewChild(TimerComponent) timer: TimerComponent;
   
-  public roles: Array<Role>;
-  public searchInput: any;
-  public isSearching: boolean;
-  public temp: any;
-  public show: boolean;
-  public isFiltering: boolean;
-  public filter: any;
-  public _temp: any;
-  public sortedRoles: any;
-  public project: any;
+  private items: Array<any>;
+  private searchInput: any;
+  private isSearching: boolean;
+  private temp: any;
+  private show: boolean;
+  private isFiltering: boolean;
+  private filter: any;
+  private _temp: any;
+  private sortedItems: any;
+  private _project: any;
 
-  private TABLE_NAME: string = 'Roles';
-  private TABLE_NAME_1: string = 'Roles_IDs';
+  @Input('project')
+  set project(project: any) {
+    // Here you can do what you want with the variable
+    this._project = (project && project.trim()) || '';
+  }
 
-  constructor(public navCtrl: NavController, 
-              public menuCtrl: MenuController,
-              public navParams: NavParams,
-              public time: Time,
-              public operations: OperationsProvider,
-              public loader: LoaderProvider,
-              public parseData: ParseDataProvider,
-              public search: SearchProvider,
-              public sql: SqlDbProvider,
-              public network: NetworkProvider,
-              public toast: ToastProvider,
-              public alertProvider: AlertProvider,
-              public studyStatus: StudyStatusProvider,
-              public formBuilder: FormBuilderProvider,
-              public timerService: TimerService,
-              public platform: Platform) {
+  get project() { return this._project; }
+
+  constructor(private navCtrl: NavController, 
+              private menuCtrl: MenuController,
+              private navParams: NavParams,
+              private time: Time,
+              private operations: OperationsProvider,
+              private loader: LoaderProvider,
+              private parseData: ParseDataProvider,
+              private search: SearchProvider,
+              private sql: SqlDbProvider,
+              private network: NetworkProvider,
+              private toast: ToastProvider,
+              private alertProvider: AlertProvider,
+              private studyStatus: StudyStatusProvider,
+              private formBuilder: FormBuilderProvider,
+              private timerService: TimerService) {
+    console.log('Hello InOneComponent Component');
+    this.initView();
   }
 
   /*INITIALIZING VIEW */
   initView(){
     this.isFiltering = this.isSearching = this.show = false;        
-    this.project  = this.navParams.get('project');
     this.filter = 'recently_added'; 
-    this.timer.startTimer();
+    //this.timer.startTimer();
     this.checkDB();       
-  }
-
-  ionViewDidLoad() {
-    console.log('ionViewDidLoad SelectRolePage: ');
   }
 
   /* STARTING TIMER ON GETTING BACK TO THIS VIEW */
   ionViewWillEnter() {
-    this.initView();
+    
   }
 
   ionViewWillLeave(){
@@ -104,12 +109,12 @@ export class SelectRolePage {
     });
   }
 
-  /* GETTING ROLES IDs FROM Roles_IDs TABLE TO GET ROLES ACCORDINGLY */
+  /* GETTING ITEMS IDs FROM Items_IDs TABLE TO GET Items ACCORDINGLY */
   getIDs(){
     this.loader.showLoader(MESSAGE);
-    this.roles = [];
+    this.items = [];
     this.sql.getIDs(this.TABLE_NAME_1, this.project._id).then(data => {
-      console.log('ROLE IDS: '+ JSON.stringify(data));
+      console.log('IDS: '+ JSON.stringify(data));
       this.formBuilder.initIDForm(data);
       this.getData();
     }).catch(error => {
@@ -117,11 +122,11 @@ export class SelectRolePage {
         console.error("ERROR: " + JSON.stringify(error));
     });
   }
-
+  
   /* GETTING DATA FROM SERVER */
   getData() {    
     let formData = this.formBuilder.getIDForm().value;
-    this.operations.getByIds('roles', formData).subscribe(data => {
+    this.operations.getByIds(this.endpoint, formData).subscribe(data => {
       console.log("RESULT: \n" +JSON.stringify(data));
       this.createTable(data.result, this.TABLE_NAME);
     },
@@ -158,20 +163,20 @@ getAllData() {
 }
 
   /* POPULATING DATA */
-  populateData(roles){
-    this.roles = [];
+  populateData(items){
+    this.items = [];
     this._temp = {};
-    this.sortedRoles = [];
-    this.sortedRoles = roles;
-    this.roles = roles;
-    this.temp = roles;
+    this.sortedItems = [];
+    this.sortedItems = items;
+    this.items = items;
+    this.temp = items;
     this.show = true;
   }
 
   /* SELECTING ROLE FOR STUDY */
-  selectRole(role){
-    this._temp = role;
-    this._parseData(role);
+  selectRole(item){
+    this._temp = item;
+    this._parseData(item);
     setTimeout(() => {
       this.goNext();
     },50);
@@ -180,11 +185,12 @@ getAllData() {
   /* GOING TO THE NEXT PAGE */
   goNext() {
     this._parseTime();
-    this.navCtrl.push(SelectAreaPage, { project: this.project});
+    this.next.emit(this.project);
+    //this.navCtrl.push(SelectAreaPage, { project: this.project});
   }
 
-  getStyle(role){
-    if(this._temp._id == role._id)
+  getStyle(item){
+    if(this._temp._id == item._id)
       return 'list-checked';
     else
       return 'disabled';  
@@ -198,36 +204,36 @@ getAllData() {
   }
 
   /* PARSING STUDY DATA */
-  _parseData(role: any) {
+  _parseData(item: any) {
     if(this.parseData.getData() == null || typeof this.parseData.getData() == 'undefined'){
        let data = new StudyData();
-       data.setRole(role);
+       data.setRole(item);
        this.parseData.setData(data);
     }
     else{
-      this.parseData.getData().setRole(role);
+      this.parseData.getData().setRole(item);
     }
   }
 
   /* DOING SEARCH ON INPUT DATA */
   onSearchInput() {
     if(typeof this.searchInput !== 'undefined' && this.searchInput.length > 3){
-      console.log(this.search.search_Item(this.roles,this.searchInput, 'role'));
-      let searchResult = this.search.search_Item(this.roles,this.searchInput, 'role');
+      console.log(this.search.search_Item(this.items,this.searchInput, this.endpoint.slice(0,-1)));
+      let searchResult = this.search.search_Item(this.items,this.searchInput, this.endpoint.slice(0,-1));
       if(searchResult.length > 0)
-        this.roles = this.search.search_Item(this.roles,this.searchInput, 'role');    
+        this.items = this.search.search_Item(this.items,this.searchInput, this.endpoint.slice(0,-1));    
     }
     else{
       console.log(JSON.stringify(this.temp));        
-      this.roles = this.temp;
+      this.items = this.temp;
     }
       
   }
 
-  /* CANCELING SEARCH AND POPULATING ORIGIONAL ROLES*/  
+  /* CANCELING SEARCH AND POPULATING ORIGIONAL ITEMS*/  
   onSearchCancel(event) {
     console.log(event.target.value);
-    this.roles = this.temp;
+    this.items = this.temp;
   }
 
   /* REFRESHING DATA ON SWIPE DOWN */
@@ -261,17 +267,17 @@ getAllData() {
     });
   }
 
-  /* SORTING ROLES USING POPULARITY NUMBER  */
+  /* SORTING ITEMS USING POPULARITY NUMBER  */
   sortRolesbyPopularity() {
-    this.sortedRoles = [];
-    this.sortedRoles = this.roles;
-    for(let i=0; i<this.sortedRoles.length; i++) {
-        for(let j = ( this.sortedRoles.length - 1); j > i ; j--) {
-          if(this.sortedRoles[i].popularity_number < this.sortedRoles[j].popularity_number){
-              let temp = this.sortedRoles[j];
-              this.sortedRoles[j] = this.sortedRoles[i];
-              this.sortedRoles[i] = temp;
-              console.log('SORTED ARRAY: '+ JSON.stringify(this.sortedRoles));
+    this.sortedItems = [];
+    this.sortedItems = this.items;
+    for(let i=0; i<this.sortedItems.length; i++) {
+        for(let j = ( this.sortedItems.length - 1); j > i ; j--) {
+          if(this.sortedItems[i].popularity_number < this.sortedItems[j].popularity_number){
+              let temp = this.sortedItems[j];
+              this.sortedItems[j] = this.sortedItems[i];
+              this.sortedItems[i] = temp;
+              console.log('SORTED ARRAY: '+ JSON.stringify(this.sortedItems));
             }
         }
     }
@@ -279,10 +285,10 @@ getAllData() {
   /* sort DATA BASED ON MOST POPULARITY ATTRIBUTE */
   sortData() {
     if(!this.isFiltering)
-       this.temp = this.OriginalArray(this.roles);
+       this.temp = this.OriginalArray(this.items);
     else{
-      this.roles = this.OriginalArray(this.temp);
-      this.sortedRoles = this.OriginalArray(this.temp);
+      this.items = this.OriginalArray(this.temp);
+      this.sortedItems = this.OriginalArray(this.temp);
     }
     this.isFiltering = !this.isFiltering;
     
@@ -318,9 +324,9 @@ getAllData() {
   }
 
   /* NAVIGATING TO CREATE ROLE PAGE FOR CREATING A NEW ROLE */
-  createRole(){
+  createItem(){
     this._parseTime();
-    this.navCtrl.push(CreateRolePage, { project: this.project });
+    this.navCtrl.push(CreateRolePage, { project: this.project._id });
   }
 
 

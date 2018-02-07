@@ -5,12 +5,11 @@
   Ionic pages and navigation.
 -->
 <ion-header class="blue-header"> 
-    <in-study-header title="Enter Frequency"></in-study-header>
+    <in-study-header title="Enter Frequency" (cancel)="onCancelStudy($event)"></in-study-header>
  </ion-header>
 
 
 <ion-content class="white-bg">
-
     <div class="blue-header">
       <timer></timer>
     </div>
@@ -21,7 +20,7 @@
     
     <ion-grid class="grid-border-col-3" no-padding>
       <ion-row justify-content-center>
-          <ion-col *ngFor="let num of numbers | reverse" col-4>
+          <ion-col *ngFor="let num of numbers?.reverse()" col-4>
               <div (click)="concatFrequency(num)">
                 {{ num }}
               </div>

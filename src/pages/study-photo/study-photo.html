@@ -15,16 +15,19 @@
         <timer></timer>
     </div>
     
-    <div *ngIf="!isPhotoTaken" class="default_image">
+    <!-- <div class="default_image" *ngIf="!isPhotoTaken">
         <div class="center-align-outer">
             <h4>Add a photo of this observation</h4>
-            <div class="__image">
-            </div>
-
-            <p>Tap the Add Photo button to use the camera</p>
+            <div class="__image" [ngStyle]="{'background-image': 'url('+getImage()+')' }"></div>
+            <p >Tap the Add Photo button to use the camera</p>
         </div>
+    </div> -->
+    <h4 text-center *ngIf="!isPhotoTaken">Add a photo of this observation</h4>
+    <div text-center class="__image">
+        <ion-img padding class="subimg" id="file" [src]="isPhotoTaken ? photo : 'assets/images/camera.png'"></ion-img>
+        <p text-center *ngIf="!isPhotoTaken">Tap the Add Photo button to use the camera</p>
     </div>
-    
+   
 
 </ion-content>
 

@@ -278,10 +278,10 @@
    
    .upload-image{
        margin: 0 auto;
-       height: 150px;
-       width: 150px;
+       height: 80%;
+       width: 80%;
        @include border-radius(50%);
-       overflow: hidden;
+       //overflow: hidden;
    }
    
    .absolute{
@@ -953,6 +953,11 @@
         background-color:#FFF;
         margin-bottom:20px;
         margin-top:5px;
+
+        @media(min-width: 768px){
+          height:120px;
+          width:120px;
+        }
         
         img{
             border-radius:50%;
@@ -968,20 +973,23 @@
     
     .profile-name{
         padding:5px 0;
-    
+        @media(min-width: 768px){ padding: 15px 0; }
         span{
             color:#FFF;
             font-size:16px;
             font-weight: 500;
+
+            @media(min-width: 768px){ font-size: 28px; font-weight: 800px;}
         }
     }
     
     .profile-mail{
         padding:5px 0;
-    
+        @media(min-width: 768px){ padding: 15px 0;}
         span{
             color:#FFF;
             font-size:14px;
+            @media(min-width: 768px){ font-size:  26px;}
         }
     }
 }
@@ -1077,7 +1085,9 @@ ion-modal.inset-modal ion-footer {
 }
 
 .segment_btn_css .segment-md {
+    width: 100%;
     margin: 0 auto;
+    margin-top: -20px !important;
     background: #fff;
     padding: 30px 10px;
     border-top: #e2e2e2 solid 1px;
@@ -1109,14 +1119,78 @@ ion-modal.inset-modal ion-footer {
        width: 100%;
        text-align: center !important;
        div.__image {
-           width: 50% !important;
-           height:20% ;
+           width: 80% !important;
+           height:35% ;
            background-image: url('../assets/images/camera.png');
            background-position: center;
            background-repeat: no-repeat;
 
        }
 }
+
+.version-info-modal {
+    .modal-wrapper {
+        width: 300px;
+        height: 200px;
+       
+        .toolbar {
+            padding-right: 5px;
+            .toolbar-background {
+              background: #fff;
+            }
+        }
+
+        .scroll-content {
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
+            background: #fff;
+
+            .version-outer {
+                padding-bottom: 20px;
+                img {
+                    width: 100px;
+                    height: 100px;    
+                    float: left;
+                }
+                .version-inner {
+                    padding-left: 10px;
+                    margin-left: 60px;
+                    h2 {
+                        font-size: 22px;
+                        font-family: $font-bold
+                    }
+                    h3 {
+                        font-size: 22px;
+                        color: gray;
+                    }
+                    p {
+                        font-size: 16px;
+                        color: gray
+                    }
+                }
+            }
+           
+        }
+    }
+   
+
+  }
+
+.ion-md-more-new {
+    font-size: 25px !important;
+    margin-right: 7px; 
+ }
+ .ion-md-new-toggle {
+     font-size: 25px !important;
+ }
+ .ion-md-new-back {
+   font-size: 25px !important;
+ }
+
+ .ion-md-delete , .ion-md-edit {
+   font-size: 25px !important;
+ }
 
 @media (min-width:700px) {
  html {
@@ -1275,7 +1349,7 @@ height: 60px;
     .modal-wrapper {
         width: 600px;
         height: 250px;
-
+       
         .toolbar {
             padding-right: 15px;
             .toolbar-background {
@@ -1407,13 +1481,14 @@ height: 60px;
        display: table;
        width: 100%;
        text-align: center !important;
+       margin-top: 20px; 
        div.__image {
            width: 100% !important;
-           height:40% ;
-           background-image: url('../assets/images/camera.png');
+           height:50% !important ;
            background-position: center;
+           background-size: contain;
            background-repeat: no-repeat;
-
+           text-align: center;
        }
     }
 

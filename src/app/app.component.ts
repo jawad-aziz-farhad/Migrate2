@@ -377,6 +377,7 @@ export class MyApp {
     data.setElement(element.element);
     data.setRole(element.role);
     data.setRating(element.rating);
+    data.setFrequency(element.frequency);
     data.setNotes(element.notes);
     if(element.observationTime.indexOf('NaN') > -1)
     data.setObservationTime("00:02");
@@ -401,7 +402,10 @@ export class MyApp {
         });
     });
     
-    this.uploadAllImages(images);
+    if(images.length > 0)
+      this.uploadAllImages(images);
+    else
+      this.getUser();  
     
   }
 
@@ -476,9 +480,5 @@ export class MyApp {
     this.loader.hideLoader();
     this.toast.showToast(ERROR);
   }
-
-
-  
-
 }
 

@@ -34,18 +34,20 @@ export class StudyNotesPage {
               public parseData: ParseDataProvider,
               public parser: ParserProvider,
               public studyStatus: StudyStatusProvider) {
-      //this.roundTime = this.time.getTime();          
-      this.notes = '';          
+    this.initView();
   }
 
   ionViewDidLoad() {
-    this.study_photo = false;
-    this.study_photo = this.navParams.get('photo');
   }
 
   ionViewWillEnter() {
-    //this.roundTime = this.time.getTime();
     this.timer.resumeTimer();
+  }
+
+  initView(){
+    this.notes = '';    
+    this.study_photo = false;
+    this.study_photo = this.navParams.get('photo');
   }
 
   addNotes(){

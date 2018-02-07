@@ -6,7 +6,7 @@
 -->
 
 <ion-header class="blue-header" no-border> 
-  <in-study-header title="Select Rating"></in-study-header>
+  <in-study-header title="Select Rating" (cancel)="onCancelStudy($event)"></in-study-header>
 </ion-header>
 
 <ion-content>
@@ -26,16 +26,6 @@
 
  
 </ion-content>
-
-<!-- <ion-footer no-border class="study_footer">
-    <ion-grid>
-      <ion-row>
-            <ion-col col-12>
-                <button ion-button block class="theme-btn no-radius footer-btn" (click)="goToEnterRating()">Enter Rating</button>
-            </ion-col>
-          </ion-row>
-      </ion-grid>
-</ion-footer> -->
 
 <ion-footer no-border>
     <button ion-button block no-margin class="theme-btn no-radius" (click)="goToEnterRating()">Enter Rating</button>

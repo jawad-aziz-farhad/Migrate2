@@ -37,6 +37,7 @@ export class SelectElementPage {
   public isSearching: boolean;
   public isFiltering: boolean;
   public filter: any;
+  public order: any;
   private sortedElements: any;
   public project: any;
 
@@ -67,13 +68,13 @@ export class SelectElementPage {
     this.isClicked = this.isFiltering = this.show = false;    
     this.project  = this.navParams.get('project');    
     this.filter = 'recently_added'; 
+    this.order = 'ascending';
     this.timer.resumeTimer();
-    this.gettingData();
+    this.checkDB();
   }
   
   ionViewDidLoad() {    
-    console.log('ionViewDidLoad SelectElementPage');
-    
+    console.log('ionViewDidLoad SelectElementPage');    
   }
 
   ionViewWillEnter() {
@@ -91,17 +92,16 @@ export class SelectElementPage {
 
   /* CHECKING LOCAL DATA BASE IF ELEMENTS ARE ALREADY THERE OR NOT */
   checkDB(){
-    this.sql.getDatabaseState().subscribe(ready  => {        
+    this.sql.getDatabaseState().subscribe(ready  => {    
       if(ready)
-        this.sql.getAllData(this.TABLE_NAME).then(result => {
+        this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
             if(result.length == 0 || typeof result == 'undefined' || result == null)
               this.getIDs();
             else
               this.populateData(result);
-
         }).catch(error => {
-            console.error('ERROR: ' + JSON.stringify(error));
-        });
+          console.error('ERROR: ' + JSON.stringify(error));
+        });   
     });
   }
 
@@ -165,10 +165,6 @@ populateData(elements){
   this.elements = elements;
   this.sortedElements = elements;
   this.temp  = elements;
-  //this.selectElement(elements[0]);
-
-  // if(!this.show)
-  //   this.isLoaded1stTime();
 }
 
 /* START TIMER WHEN THE VIEW IS LOADED 1st TIME */
@@ -321,4 +317,5 @@ goNext() {
     this._parseTime();
     this.navCtrl.push(CreateElementPage, {project: this.project});
   }
+
 }

@@ -6,10 +6,10 @@
             <img [src]="getProfileImage()" alt="avatar">
           </div>
           <div class="profile-name" *ngIf="isMenuOpened">
-            <span>{{ user.firstname + ' ' + user.lastname }}</span>
+            <span>{{ user?.firstname + ' ' + user?.lastname }}</span>
           </div>
           <div class="profile-mail" *ngIf="isMenuOpened">
-            <span>{{ user.email }}</span>
+            <span>{{ user?.email }}</span>
           </div>
     </div>
     <ion-list>

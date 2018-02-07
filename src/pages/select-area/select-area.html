@@ -64,7 +64,7 @@
           <ion-grid>
             <ion-row>
               <ion-col col-6>
-                <div class="sub-heading">Sort by</div>
+                <div class="sub-heading" style="font-weight:bold;">Sort by</div>
               </ion-col>
               <ion-col col-6 text-right (click)="sortData()">
                 <div class="sub-heading">
@@ -102,13 +102,13 @@
                   <div class="sub-heading">Position</div>
                 </ion-col>              
             </ion-row>
-            <ion-item *ngFor="let area of areas | sort : ['popularity_number']; let i=index;" [ngClass]="getStyle(area)" (click)="selectArea(area)">
+            <ion-item *ngFor="let area of areas | sort : 'popularity_number'; let i=index;" [ngClass]="getStyle(area)" (click)="selectArea(area)">
               <p>{{ area.areaname }}</p>
             </ion-item>
         </ion-list>
       
         <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
-          <ion-item *ngFor="let area of areas | reverse; let i=index;" (click)="selectArea(area)" [ngClass]="getStyle(area)">
+          <ion-item *ngFor="let area of areas?.reverse(); let i=index;" (click)="selectArea(area)" [ngClass]="getStyle(area)">
               <p>{{ area.areaname }}</p>
             </ion-item>
       </ion-list>

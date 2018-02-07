@@ -52,7 +52,7 @@ export class SqlDbProvider {
 
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Study' || table == 'Study_Data')
+            if(table == 'Areas' || table == 'Elements')
               console.log(query + '\n' +JSON.stringify(row_data));
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));
@@ -92,11 +92,11 @@ export class SqlDbProvider {
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')        
         _data = [data[index].project_id, data[index]._id];     
       else if(table == 'Areas')
-        _data = [data[index].areaname, data[index]._id , data[index].popularity_number];
+        _data = [data[index].areaname, data[index]._id , data[index].popularity_number, null , null , data[index].project_id];
       else if(table == 'Roles') 
-        _data = [data[index].rolename, data[index]._id , data[index].popularity_number]; 
+        _data = [data[index].rolename, data[index]._id , data[index].popularity_number, null , null ,data[index].project_id]; 
       else if(table == 'Elements')
-        _data = [data[index].description, data[index]._id , data[index].popularity_number, data[index].rating];
+        _data = [data[index].description, data[index]._id , data[index].popularity_number, data[index].rating, data[index].id, data[index].project_id];
       else if(table == 'Study')
         _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime()];
       else if(table == 'Study_Data'){
@@ -143,7 +143,7 @@ export class SqlDbProvider {
       else if(table == 'Locations')
         query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
       else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, _id TEXT, popularity_number INT, rating TEXT)'; 
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, _id TEXT, popularity_number INT, rating TEXT, element_id BIGINT, project_id)'; 
       else if(table == 'Study')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, project_id TEXT, studyStartTime BIGINT, studyEndTime BIGINT)';
       else if(table == 'Study_Data')
@@ -166,7 +166,7 @@ export class SqlDbProvider {
     else if(table == 'Locations')
       query = 'INSERT INTO Locations (_id , locationname, addresslineone, addresslinetwo, addresslinethree, addresslinefour, addresslinefive, contactname, telephone, monday_time_from, tuesday_time_from, wednesday_time_from, thursday_time_from, friday_time_from, saturday_time_from, sunday_time_from, monday_time_to, tuesday_time_to, wednesday_time_to, thursday_time_to, friday_time_to, saturday_time_to, sunday_time_to) VALUES (? ,? , ? , ?, ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? , ? , ? , ? , ? , ?)';  
     else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
-      query = 'INSERT INTO ' + table + '(name, _id, popularity_number, rating) VALUES (?, ?, ?, ?)';
+      query = 'INSERT INTO ' + table + '(name, _id, popularity_number, rating, element_id, project_id) VALUES (?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
       query = 'INSERT INTO ' + table + '(title , project_id , studyStartTime , studyEndTime) VALUES (? , ? , ? , ?)';           
     else if(table == 'Study_Data')
@@ -195,11 +195,11 @@ export class SqlDbProvider {
                        friday_time_to: result.rows.item(i).friday_time_to, saturday_time_to: result.rows.item(i).saturday_time_to, sunday_time_to: result.rows.item(i).sunday_time_to
                       });
           else if(table == 'Areas')
-            data.push({_id: result.rows.item(i)._id , areaname: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number});
+            data.push({_id: result.rows.item(i)._id , areaname: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id});
           else if(table == 'Roles') 
-             data.push({_id: result.rows.item(i)._id, rolename: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number}); 
+             data.push({_id: result.rows.item(i)._id, rolename: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id}); 
           else if(table == 'Elements')
-             data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity_number, rating: result.rows.item(i).rating});
+             data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity_number, rating: result.rows.item(i).rating,element_id: result.rows.item(i).element_id, project_id: result.rows.item(i).project_id});
           else if(table == 'Study')
               data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, project_id: result.rows.item(i).project_id, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime});
           else if(table == 'Study_Data'){
@@ -224,7 +224,14 @@ export class SqlDbProvider {
       let data = [];
       if (result.rows.length > 0) {
         for (let i = 0; i < result.rows.length; i++) {
-          data.push(result.rows.item(i)._id);
+          if(table == 'Areas')
+            data.push({_id: result.rows.item(i)._id , areaname: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id});
+          else if(table == 'Roles') 
+             data.push({_id: result.rows.item(i)._id, rolename: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id}); 
+          else if(table == 'Elements')
+             data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity_number, rating: result.rows.item(i).rating,element_id: result.rows.item(i).element_id, project_id: result.rows.item(i).project_id});
+          else
+            data.push(result.rows.item(i)._id);
         }
       }
       else{

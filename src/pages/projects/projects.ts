@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams ,  } from 'ionic-angular';
-import { AuthProvider , OperationsProvider , ToastProvider, LoaderProvider, SqlDbProvider, NetworkProvider } from '../../providers/index';
-import { SERVER_URL, MESSAGE , INTERNET_ERROR} from '../../config/config';
+import { IonicPage, NavController, NavParams  } from 'ionic-angular';
+import { AuthProvider , OperationsProvider , ToastProvider, LoaderProvider, SqlDbProvider, NetworkProvider, FormBuilderProvider , HeadersProvider} from '../../providers/index';
+import { SERVER_URL, MESSAGE , INTERNET_ERROR, NO_DATA_FOUND} from '../../config/config';
 import { Storage } from "@ionic/storage";
 import { AreasPage } from '../areas/areas';
 import { Projects, IDs } from '../../models';
 import { importExpr } from '@angular/compiler/src/output/output_ast';
 import { Observable } from 'rxjs/Observable';
-
+import { FormBuilder } from '@angular/forms/src/form_builder';
+import { Http } from '@angular/http';
+import 'rxjs/add/operator/map';
+import { forkJoin } from "rxjs/observable/forkJoin";
 /**
  * Generated class for the ProjectsPage page.
  *
@@ -33,7 +36,11 @@ export class ProjectsPage {
   private TABLE_NAME_1: string = 'Roles_IDs';
   private TABLE_NAME_2: string = 'Areas_IDs';
   private TABLE_NAME_3: string = 'Elements_IDs';
-
+  private TABLE_NAME_4:string = 'Roles';
+  private TABLE_NAME_5:string = 'Areas';
+  private TABLE_NAME_6:string = 'Elements';
+  private all_data: Array<any> = [];
+  
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,
               public operations: OperationsProvider,
@@ -42,7 +49,10 @@ export class ProjectsPage {
               public sql: SqlDbProvider,
               public toast: ToastProvider,
               public network: NetworkProvider,
-              public storage: Storage) {
+              public formBuilder: FormBuilderProvider,
+              public headers: HeadersProvider,
+              public storage: Storage,
+              public http: Http) {
                
   }
 
@@ -53,7 +63,7 @@ export class ProjectsPage {
   ionViewWillEnter() {
     this.imagePath = "assets/images/logo.png"
     this.show = false;
-    this.gettingData();
+    this.checkDB();
   }
 
   /* GETTING DATA */
@@ -99,11 +109,16 @@ export class ProjectsPage {
   
   /* GETTING DATA FROM SERVER */
   getData() {
+    this.show = false;
     this.projects = [];
     const endPoint = this.TABLE_NAME +  '/getByManagerEmail/' + this.userProfile.email;
     this.operations.getByEmail(endPoint).subscribe(res => {
-      console.log(JSON.stringify(res)) 
-      this.createTable(res, this.TABLE_NAME);
+      console.log(res.result.length + '\n' +JSON.stringify(res));
+      this.projects = res.result;
+      if(res.result.length > 0) 
+        this.createTable(res, this.TABLE_NAME);
+      else
+        this.toast.showBottomToast(NO_DATA_FOUND);  
     },
     error => {
       this.loader.hideLoader();
@@ -121,6 +136,12 @@ export class ProjectsPage {
         else if(table == this.TABLE_NAME_2)
           this.createTable(data,this.TABLE_NAME_3);
         else if(table == this.TABLE_NAME_3)
+          this.createTable(data,this.TABLE_NAME_4);  
+        else if(table == this.TABLE_NAME_4)
+          this.createTable(data,this.TABLE_NAME_5);
+        else if(table == this.TABLE_NAME_5)
+          this.createTable(data,this.TABLE_NAME_6);  
+        else if(table == this.TABLE_NAME_6)
           this.insertData(data.result, this.TABLE_NAME);
       });
   }
@@ -128,12 +149,22 @@ export class ProjectsPage {
   /* INSERTING DATA TO TABLE */
   insertData(data, table) {
     this.sql.addData(table,data).then(result => {
-      this.insertIDs(data, this.TABLE_NAME_1);
+      if(table == this.TABLE_NAME)
+        this.insertIDs(data, this.TABLE_NAME_1);
+      else{
+        if(table == this.TABLE_NAME_4)
+          this.insertData(this.all_data[1],this.TABLE_NAME_5);
+        else if(table == this.TABLE_NAME_5)
+          this.insertData(this.all_data[2],this.TABLE_NAME_6);  
+        else 
+            this.getAllData();  
+      }  
     }).catch(error => {
         console.error("ERROR: " + JSON.stringify(error));
     });
   }
 
+  /* INSERTING IDS OF EACH PROJECT TO GET DATA ACCORDINGLY IN FUTURE */
   insertIDs(data, table) {
     this.sql.addingIDs(table,data).then(result => {
       if(table == this.TABLE_NAME_1)
@@ -141,11 +172,101 @@ export class ProjectsPage {
       else if(table == this.TABLE_NAME_2)    
         this.insertIDs(data,this.TABLE_NAME_3);
       else if(table == this.TABLE_NAME_3)
-        this.getAllData(); 
+        this.getDatabyElements(data, this.TABLE_NAME_4);
     }).catch(error => {
         console.error("ERROR: " + JSON.stringify(error));
     });
   
+  }
+
+  getDatabyElements(data,table){
+    this.makeRequest(table, data).subscribe(result => {
+      this.insertMultipleData(result);
+    },
+    error => console.log(JSON.stringify(error)),
+    () => console.log('DONE.')
+    );
+  }
+  /* INSERTING DATA RETURNED BY MULTIPLE FORK JOINS AND MAPPING EACH INDEX TO GET DATA ACCORDINGLY,
+    LIKE AT FIRST INDEX WE HAVE AN ARRAY WHICH ALSO AN ARRAY OF RESULT
+    DATA IS RETURNED AS WE PASSED IN OUR HTTP REQUESTS
+    AT O INDEX: ROLES
+    AT 1 INDEX: AREAS
+    AT 2 INDEX: ELEMENTS 
+  */
+  insertMultipleData(data){  
+    let roles = [];let elements = []; let areas = [];
+    data.forEach((element, index) => {
+      element.forEach((sub_element, sub_index) => {
+          if(sub_element.result.length > 0){
+            sub_element.result.forEach((res_element, res_index) => {
+                res_element.project_id = this.projects[index]._id;
+                if(sub_index == 0)
+                  roles.push(res_element);
+                else if(sub_index == 1)
+                  areas.push(res_element);
+                else if(sub_index == 2)
+                  elements.push(res_element);    
+            });
+          }
+      });
+    });
+    this.all_data = [];
+    this.all_data[0] = roles;
+    this.all_data[1] = areas;
+    this.all_data[2] = elements;
+                
+    this.insertData(this.all_data[0],this.TABLE_NAME_4);
+  }
+  /* MAKING MULTIPLE REQUESTS FOR EACH ARRAY INDEX */
+  makeRequest(table, data): Observable<any> {
+    let all_data = [];
+    return new Observable(observer => {
+      data.forEach((project, index) => {
+        this.getForkJoin(project).subscribe(reslut => {
+            all_data.push(reslut);
+            if(index == data.length - 1)
+              observer.next(all_data);
+        });   
+      });
+    });
+    
+  }
+
+  /* GETTING FORK JOIN FOR EACH INDEX , AS WE ARE HAVING ELEMENTS , ROLES, AREAS AT EACH INDEX 
+    AND WE HAVE TO GET THEIR DETAILS SO FOR ONE INDEX, WE ARE MAKING ONE FOKJOIN AND GETTING DATA FROM 
+    3 ENDPOINTS, IT WILL BE DONE FOR EACH INDEX OF PROJECTS ARRAY
+   */
+  getForkJoin(project): Observable<any> {          
+    let formData = null;
+    let request1  = null;
+    let request2  = null;
+    let request3  = null;
+    
+    /* MAKING REQUEST FOR ROLES */
+    this.formBuilder.initIDForm(project.roles);
+    formData = this.formBuilder.getIDForm().value;
+    request1 = this.getRequest('roles', formData);
+
+    /* MAKING REQUEST FOR AREAS */
+    this.formBuilder.initIDForm(project.areas);
+    formData = this.formBuilder.getIDForm().value;
+    request2 = this.getRequest('areas', formData);
+    
+    /* MAKING REQUEST FOR ELEMENTS */
+    this.formBuilder.initIDForm(project.elements);
+    formData = this.formBuilder.getIDForm().value;
+    request3 = this.getRequest('elements', formData);
+
+    const observablesArray = [request1, request2 , request3];
+
+    return Observable.forkJoin(observablesArray);
+  } 
+
+  /* MAKING SINGLE REQUEST FOR FORK JOIN */
+  getRequest(endPoint, data): Observable<any>{
+    endPoint = SERVER_URL + endPoint + '/getByIds';
+    return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());;
   }
 
   /* GETTING ALL DATA OF GIVEN TABLE */
@@ -155,7 +276,9 @@ export class ProjectsPage {
         this.populateData(data);
       }).catch(error => {
           console.error("ERROR: " + JSON.stringify(error));
-      })
+          this.loader.hideLoader();
+          this.toast.showBottomToast(NO_DATA_FOUND);
+      });
   }
 
   /* POPULATING DATA */
@@ -164,6 +287,7 @@ export class ProjectsPage {
     this.show = true;
   }
 
+  /* GETTING CUSTOMER IMAGE */
   getCustomerImage(image) {
 
     let imagePath = '';
@@ -207,7 +331,7 @@ export class ProjectsPage {
   });
 }
 
-  /* DROPPING TABLE FROM DATA BASE */
+  /* DROPPING ALL THE OBOVE SIX TABLES FROM DATA BASE */
   dropTable(refresher, table){
     this.sql.dropTable(table).then(result => {
       if(table == this.TABLE_NAME)    
@@ -216,7 +340,13 @@ export class ProjectsPage {
         this.dropTable(refresher,this.TABLE_NAME_2);
       else if(table == this.TABLE_NAME_2)    
         this.dropTable(refresher,this.TABLE_NAME_3);
-      else if(table == this.TABLE_NAME_3){
+      else if(table == this.TABLE_NAME_3)    
+        this.dropTable(refresher,this.TABLE_NAME_4);
+      else if(table == this.TABLE_NAME_4)    
+        this.dropTable(refresher,this.TABLE_NAME_5);
+      else if(table == this.TABLE_NAME_5)    
+        this.dropTable(refresher,this.TABLE_NAME_6);
+      else if(table == this.TABLE_NAME_6){
         if(refresher !== '')
           refresher.complete();
        this.getProfile();
@@ -226,7 +356,5 @@ export class ProjectsPage {
        console.error('ERROR: ' + JSON.stringify(error));
     });
   }
-
-
 
 }

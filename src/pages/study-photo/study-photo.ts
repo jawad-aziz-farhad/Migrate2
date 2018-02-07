@@ -56,7 +56,6 @@ export class StudyPhotoPage {
   initView(){
     this.isUploaded = false;
     this.isPhotoTaken = false;
-    this.roundTime = this.time.getTime();  
     this.TABLE_NAME = 'Study_Data';
     this.timer.resumeTimer();
   }
@@ -66,7 +65,7 @@ export class StudyPhotoPage {
   }
 
   ionViewWillEnter() {
-    //this.initView();
+    this.initView();
   }
 
   /* TAKING A PHOTO USING MOBILE CAMERA */
@@ -198,4 +197,13 @@ export class StudyPhotoPage {
       }
     }
   }
+
+  getImage(){
+    if(this.isPhotoTaken)
+      return this.photo;
+    else{
+      return 'assets/images/camera.png';
+    }  
+  }
 }
+

@@ -33,7 +33,7 @@ export class RatingsPage {
     public operations: OperationsProvider,
     public parseData: ParseDataProvider,
     public studyStatus: StudyStatusProvider) {
-      this.ratings = [  40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ];
+     
   }
 
   ionViewDidLoad() {     
@@ -41,14 +41,15 @@ export class RatingsPage {
   }
 
   ionViewWillEnter() {
-   //this.timer.resumeTimer();
-   //this.initView()
+   this.ratings = [  40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ];
+   this.initView()
  }
 
   /* iNITIALIZING VIEW  */
   initView(){
     this.temp = {};
     this.parseData.getData().setObservationTime(new Date().getTime());
+    this.parseData.setData(this.parseData.getData());
     this.getRatings();
   }
 

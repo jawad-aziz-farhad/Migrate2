@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController,  NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthProvider , ToastProvider, LoaderProvider } from '../../providers/index';
-import { EMAIL_REGEXP } from '../../config/config';
+import { EMAIL_REGEXP, MESSAGE } from '../../config/config';
 import { ResetPasswordPage } from '../reset-password/reset-password';
 
 /**
@@ -50,7 +50,7 @@ export class LoginPage {
   Login(value: any) {
 
     console.log(JSON.stringify(this.loginForm.value));
-    this.loader.showLoader('Please wait...');
+    this.loader.showLoader(MESSAGE);
     
     this.authProvider
     .authenticate(this.loginForm.value)
