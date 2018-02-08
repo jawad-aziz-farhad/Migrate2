@@ -92,15 +92,28 @@ export class SelectAreaPage {
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {    
       if(ready)
-        this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
+      this.sql.getAllData(this.TABLE_NAME).then(result => {
+        if(result.length == 0 || typeof result == 'undefined' || result == null){
+          if(!this.network.isInternetAvailable())
+            this.toast.showToast(INTERNET_ERROR);
+          else
+            this.getIDs();
+        }
+        else
+          this.populateData(result);
+
+    }).catch(error => {
+        console.error('ERROR: ' + JSON.stringify(error));
+    });
+        // this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
          
-            if(result.length == 0 || typeof result == 'undefined' || result == null)
-              this.getIDs();
-            else
-              this.populateData(result);
-        }).catch(error => {
-          console.error('ERROR: ' + JSON.stringify(error));
-        });   
+        //     if(result.length == 0 || typeof result == 'undefined' || result == null)
+        //       this.getIDs();
+        //     else
+        //       this.populateData(result);
+        // }).catch(error => {
+        //   console.error('ERROR: ' + JSON.stringify(error));
+        // });   
     });
     
   }

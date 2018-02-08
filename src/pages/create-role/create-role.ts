@@ -3,8 +3,9 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TimerComponent } from '../../components/timer/timer';
-import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider, SqlDbProvider, Time} from '../../providers';
+import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider, SqlDbProvider, Time, NetworkProvider } from '../../providers';
 import { MESSAGE, ERROR } from '../../config/config';
+import { Network } from '@ionic-native/network';
 /**
  * Generated class for the CreateRolePage page.
  *
@@ -25,6 +26,7 @@ export class CreateRolePage {
   public project: any;
   private TABLE_NAME: string = 'Roles';
   private TABLE_NAME_1: string = 'Roles_IDs';
+  private TABLE_NAME_2: string = 'Create_Role';
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -34,6 +36,7 @@ export class CreateRolePage {
               public toast: ToastProvider,
               public storage: Storage,
               public sql: SqlDbProvider,
+              public network: NetworkProvider,
               public formBuilder: FormBuilder,
               public time: Time) {
     this.initView();
@@ -58,15 +61,22 @@ export class CreateRolePage {
   initFormBuilder(){
     
     this.roleForm = this.formBuilder.group({
-            rolename: ['', Validators.required],
-            position: [this.roles[0], Validators.required],
-            addedby:'',
-            id_of_addedby: '',
-            status: 'active',
-            id_of_project: this.project._id,
-            dateadded: new Date()
+        rolename: ['', Validators.required],
+        position: [this.roles[0], Validators.required],
+        addedby:'',
+        id_of_addedby: '',
+        status: 'active',
+        id_of_project: this.project._id,
+        dateadded: new Date()
       });
   }
+  /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
+  checkInternet(){
+    if(this.network.isInternetAvailable())
+      this.setUserInfo();
+    else
+      this.createTable();  
+  }  
 
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
@@ -117,6 +127,41 @@ setUserInfo() {
     });
   }
 
+  /* CREATING ROLES TABLE */
+  createTable(){
+    this.sql.createTable(this.TABLE_NAME_2).then(result => {
+      this.create_Role();
+    }).catch(error =>{
+        console.log('ERROR: ' + JSON.stringify(error));
+    });
+  } 
+
+  /* CREATING NEW ROLE IN OFFLINE MODE */
+  create_Role(){
+    let name = this.roleForm.get('rolename').value;
+    let position = this.roleForm.get('position').value;
+    let _data = { name: name, project_id: this.project._id, position: position};
+    this.sql.addOfflineRow(this.TABLE_NAME_2,_data).then(result => {
+      this.addRole();
+    }).catch(error => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  /* ADDING NEWLY CREATED ROLE IN ROLES TABLE */
+  addRole(){
+    let name = this.roleForm.get('rolename').value;
+    let _data = [{ rolename: name, _id: new Date().getTime()+ '-role' , popularity_number: 0, rating: null, element_id: null, project_id: this.project._id}];
+    this.sql.addData(this.TABLE_NAME,_data).then(result => {
+      this.toast.showToast('Role added succesfully.');                
+      this.roleForm.reset();
+      this.goBack();
+    }).catch(error => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  /* GOING BACK TO PREVIOUS  */
   goBack(){
     this.timer.pauseTimer();
     this.time.setTime(this.timer.getRemainingTime());

@@ -54,7 +54,7 @@ export class CreateStudyPage {
     this.parser.setAllData(this.all_data);
 
     this.roundTime = this.roundTime * 60; 
-    let data = { action: action , roundTime: 10 , title: this.studyTitle};
+    let data = { action: action , roundTime: this.roundTime , title: this.studyTitle};
     this.viewCtrl.dismiss(data);
   }
 

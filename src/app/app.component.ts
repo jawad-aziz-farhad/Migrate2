@@ -98,7 +98,6 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
         this.statusBar.styleDefault();
         this.splashScreen.hide();
-        //this.rootPage = CreateAreaPage;
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
         this.registerBackButton();
         this.checkSession();
@@ -301,6 +300,7 @@ export class MyApp {
     })
   }
 
+
   handleStudies(data){
     /* INITIALIZING ARRAY BEFORE PUSHING DATA INTO IT */
     this.offlineData$ = [];
@@ -447,6 +447,35 @@ export class MyApp {
       observbeAbleArray.push(this.operations._uploadFile(element.photo));
     });
     return observbeAbleArray;
+  }
+
+  collectOfflineElements(data){
+    var all_data = [];
+    $(this.offlineData$[0].rounds).each((index, element) => {      
+        $(element.data).each((sub_index, sub_element) => {
+            let _data = [];
+            var Obj = {roundIndex: null, dataIndex: null, name: null, position: null};
+            if(sub_element.role.indexOf('-role') > -1) {
+              Obj.name = sub_element.photo;
+              Obj.dataIndex = sub_index;
+              Obj.roundIndex = index;
+              _data.push(Obj);
+            }
+           else if(sub_element.role.indexOf('-element') > -1) {
+            Obj.name = sub_element.photo;
+            Obj.dataIndex = sub_index;
+            Obj.roundIndex = index;
+            _data.push(Obj);
+          }
+          else if(sub_element.role.indexOf('-role') > -1) {
+            Obj.name = sub_element.photo;
+            Obj.dataIndex = sub_index;
+            Obj.roundIndex = index;
+            _data.push(Obj);
+          }
+      });
+    });
+    
   }
 
   /* SYNCING DATA TO SERVER */

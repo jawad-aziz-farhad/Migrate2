@@ -3,9 +3,8 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { TimerComponent } from '../../components/timer/timer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider , SqlDbProvider , Time} from '../../providers';
+import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider , SqlDbProvider , Time, NetworkProvider } from '../../providers';
 import { MESSAGE, ERROR } from '../../config/config';
-
 /**
  * Generated class for the CreateAreaPage page.
  *
@@ -28,6 +27,7 @@ export class CreateAreaPage {
 
   private TABLE_NAME: string = 'Areas';
   private TABLE_NAME_1: string = 'Areas_IDs';
+  private TABLE_NAME_2: string = 'Create_Area'
 
   constructor(public navParams: NavParams,
               public navCtrl: NavController,
@@ -36,6 +36,7 @@ export class CreateAreaPage {
               public loader: LoaderProvider,
               public toast: ToastProvider,
               public sql: SqlDbProvider,
+              public network: NetworkProvider,
               public storage: Storage,
               public formBuilder: FormBuilder,
               public time: Time) {
@@ -73,6 +74,14 @@ export class CreateAreaPage {
       dateadded:  new Date()
     });
   }
+
+  /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
+ checkInternet(){
+  if(!this.network.isInternetAvailable())
+    this.setUserInfo();
+  else
+    this.createTable();  
+}  
 
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
@@ -123,6 +132,40 @@ setUserInfo() {
     });
   }
 
+  /* CREATING AREAS TABLE */
+  createTable(){
+    this.sql.createTable(this.TABLE_NAME_2).then(result => {
+      this.create_Area();
+    }).catch(error =>{
+        console.log('ERROR: ' + JSON.stringify(error));
+    });
+  } 
+
+  /* CREATING NEW AREA IN OFFLINE MODE */
+  create_Area(){
+    let name = this.areaForm.get('areaname').value;
+    let _data = { name: name, project_id: this.project._id};
+    this.sql.addOfflineRow(this.TABLE_NAME_2,_data).then(result => {
+      this.addArea();
+    }).catch(error => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  /* ADDING NEWLY CREATED AREA IN AREAS TABLE */
+  addArea(){
+    let name = this.areaForm.get('areaname').value;
+    let _data = [{ areaname: name, _id: new Date().getTime()+ '-area' , popularity_number: 0, rating: null, id: null, project_id: this.project._id}];
+    this.sql.addData(this.TABLE_NAME,_data).then(result => {
+      this.toast.showToast('Area added succesfully.');                
+      this.areaForm.reset();
+      this.goBack();
+    }).catch(error => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  /* GOING BACK TO PREVIOUS PAGE */
   goBack(){
     this.timer.pauseTimer();
     this.time.setTime(this.timer.getRemainingTime());

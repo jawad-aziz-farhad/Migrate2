@@ -52,8 +52,8 @@ export class SqlDbProvider {
 
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Areas' || table == 'Elements')
-              console.log(query + '\n' +JSON.stringify(row_data));
+            if(table == 'Areas' || table == 'Elements' || 'Roles')
+             console.log(query + '\n' +JSON.stringify(row_data));
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));
             }, err => {
@@ -148,8 +148,12 @@ export class SqlDbProvider {
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, project_id TEXT, studyStartTime BIGINT, studyEndTime BIGINT)';
       else if(table == 'Study_Data')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, roundStartTime BIGINT, roundEndTime BIGINT, role TEXT, area TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, observationTime BIGINT, Study_Id TEXT, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
+      else if(table == 'Create_Role')
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, project_id TEXT, position TEXT)';
+      else if(table == 'Create_Area' || table == 'Create_Element')
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, project_id TEXT)';
       
-      return this.database.executeSql(query, {}).then(() => {
+        return this.database.executeSql(query, {}).then(() => {
           return 'created';
         }).catch(error => {
             return error;
@@ -171,7 +175,10 @@ export class SqlDbProvider {
       query = 'INSERT INTO ' + table + '(title , project_id , studyStartTime , studyEndTime) VALUES (? , ? , ? , ?)';           
     else if(table == 'Study_Data')
       query = 'INSERT INTO ' + table + '(role, area, element , rating, frequency, notes, photo, observationTime, roundStartTime, roundEndTime, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)';   
-
+    else if(table == 'Create_Role')
+      query = 'INSERT INTO ' + table + '(name, project_id , position) VALUES (? , ? , ?)' ;
+    else if(table == 'Create_Area' || table == 'Create_Element')
+      query = 'INSERT INTO ' + table + '(name, project_id ) VALUES (? , ? )' ;
     return query;  
   }
   
@@ -202,9 +209,12 @@ export class SqlDbProvider {
              data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity_number, rating: result.rows.item(i).rating,element_id: result.rows.item(i).element_id, project_id: result.rows.item(i).project_id});
           else if(table == 'Study')
               data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, project_id: result.rows.item(i).project_id, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime});
-          else if(table == 'Study_Data'){
+          else if(table == 'Study_Data')
             data.push({roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area ,element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
-          }
+          else if(table == 'Create_Role')
+            data.push({name: result.rows.item(i).name, position: result.rows.item(i).position , project_id: result.rows.item(i).project_id, });
+          else if(table == 'Create_Area' || table == 'Create_Element') 
+            data.push({name: result.rows.item(i).name,  project_id: result.rows.item(i).project_id, });         
         }
       }
       else{
@@ -353,6 +363,26 @@ export class SqlDbProvider {
     
   }
 
+  /* ADDING OFFLINE RECORD FOR AREA, ELEMENT AND ROLE */
+  addOfflineRow(table, data){
+    let query = this.insertQuery(table);
+    let row_data = [];
+    return new Promise((resolve, reject) => {
+
+        if(table == 'Create_Role')
+          row_data = [data.name,  data.project_id , data.position ];
+        else if(table == 'Create_Area' || table == 'Create_Element')
+          row_data = [data.name, data.project_id];
+
+        this.database.executeSql(query, row_data).then(result => {
+          resolve(true);
+        }, err => {
+          console.error('Error: '+ JSON.stringify(err));
+          reject(err);
+        });
+    });
+    
+  }
 
   deleteDB(): Observable<any> {
     return new Observable((observer) => {

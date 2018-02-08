@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators , FormControl } from '@angular/forms';
 import { TimerComponent } from '../../components/timer/timer';
 import { Storage } from "@ionic/storage";
-import { OperationsProvider , LoaderProvider , AuthProvider, ToastProvider, SqlDbProvider, Time } from '../../providers';
+import { OperationsProvider , LoaderProvider , AuthProvider, ToastProvider, SqlDbProvider, Time , NetworkProvider} from '../../providers';
 import { MESSAGE, ERROR } from '../../config/config';
 import { Observable } from 'rxjs/Observable';
 import { FormArray } from '@angular/forms/src/model';
@@ -39,6 +39,7 @@ export class CreateElementPage {
 
   private TABLE_NAME: string = 'Elements';
   private TABLE_NAME_1: string = 'Elements_IDs';
+  private TABLE_NAME_2: string = 'Create_Element';
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -47,6 +48,7 @@ export class CreateElementPage {
               public auth: AuthProvider,
               public toast: ToastProvider,
               public sql: SqlDbProvider,
+              public network: NetworkProvider,
               public storage: Storage,
               public formBuilder: FormBuilder,
               public time: Time) {
@@ -124,6 +126,14 @@ export class CreateElementPage {
     
   }
 
+    /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
+    checkInternet(){
+      if(!this.network.isInternetAvailable())
+        this.setUserInfo();
+      else
+        this.createTable();  
+    }
+
   /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
   setUserInfo() {
     this.storage.get('currentUser').then(user => {
@@ -172,6 +182,40 @@ export class CreateElementPage {
     });
   }
 
+  /* CREATING ROLES TABLE */
+  createTable(){
+    this.sql.createTable(this.TABLE_NAME_2).then(result => {
+      this.create_Element();
+    }).catch(error =>{
+        console.log('ERROR: ' + JSON.stringify(error));
+    });
+  } 
+
+  /* CREATING NEW ELEMENT IN OFFLINE MODE */
+  create_Element() {
+    let description = this.elementForm.get('description').value;
+    let _data = { description: description, project_id: this.project._id };
+    this.sql.addOfflineRow(this.TABLE_NAME_2,_data).then(result => {
+      this.addElement();
+    }).catch(error => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  /* ADDING NEWLY CREATED ELEMENT IN ELEMENTS TABLE */
+  addElement(){
+    let description = this.elementForm.get('description').value;
+    let _data = [{ description: description, _id: new Date().getTime()+ '-element' , popularity_number: 0,rating: 'field_user',id: null, project_id: this.project._id}];
+    this.sql.addData(this.TABLE_NAME,_data).then(result => {
+      this.toast.showToast('Element added succesfully.');                
+      this.elementForm.reset();
+      this.goBack();
+    }).catch(error => {
+      console.log("ERROR: " + JSON.stringify(error));
+    });
+  }
+
+  /* GOING BACK */
   goBack(){
     this.timer.pauseTimer();
     this.time.setTime(this.timer.getRemainingTime());
