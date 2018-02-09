@@ -60,11 +60,10 @@ export class SubmitDataProgressPage {
   
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
-      if(this.network.isInternetAvailable())
+      if(!this.network.isInternetAvailable())
         this.getUser();
-      else{
+      else
         this.createTable(this.TABLE_NAME);  
-      }
   } 
 
   /* GETTING USER's INFO */

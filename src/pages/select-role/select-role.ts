@@ -93,27 +93,14 @@ export class SelectRolePage {
   checkDB() {
     this.sql.getDatabaseState().subscribe(ready  => {    
         if(ready)
-        this.sql.getAllData(this.TABLE_NAME).then(result => {
-          if(result.length == 0 || typeof result == 'undefined' || result == null){
-            if(!this.network.isInternetAvailable())
-              this.toast.showToast(INTERNET_ERROR);
-            else
-              this.getIDs();
-          }
-          else
-            this.populateData(result);
-  
+          this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
+              if(result.length == 0 || typeof result == 'undefined' || result == null)
+                this.getIDs();
+              else
+                this.populateData(result);
           }).catch(error => {
-              console.error('ERROR: ' + JSON.stringify(error));
-          });
-          // this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
-          //     if(result.length == 0 || typeof result == 'undefined' || result == null)
-          //       this.getIDs();
-          //     else
-          //       this.populateData(result);
-          // }).catch(error => {
-          //   console.error('ERROR: ' + JSON.stringify(error));
-          // });   
+            console.error('ERROR: ' + JSON.stringify(error));
+          });   
     });
   }
 
@@ -121,7 +108,7 @@ export class SelectRolePage {
   getIDs(){
     this.loader.showLoader(MESSAGE);
     this.roles = [];
-    this.sql.getIDs(this.TABLE_NAME_1, this.project._id).then(data => {
+    this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
       console.log('ROLE IDS: '+ JSON.stringify(data));
       this.formBuilder.initIDForm(data);
       this.getData();
@@ -215,10 +202,12 @@ getAllData() {
     if(this.parseData.getData() == null || typeof this.parseData.getData() == 'undefined'){
        let data = new StudyData();
        data.setRole(role);
+       data.setObservationTime(new Date().getTime());
        this.parseData.setData(data);
     }
     else{
       this.parseData.getData().setRole(role);
+      this.parseData.getData().setObservationTime(new Date().getTime());
     }
   }
 
@@ -230,11 +219,10 @@ getAllData() {
       if(searchResult.length > 0)
         this.roles = this.search.search_Item(this.roles,this.searchInput, 'role');    
     }
-    else{
+    else {
       console.log(JSON.stringify(this.temp));        
       this.roles = this.temp;
-    }
-      
+    } 
   }
 
   /* CANCELING SEARCH AND POPULATING ORIGIONAL ROLES*/  
@@ -316,7 +304,6 @@ getAllData() {
   cancelStudy() {
     this.alertProvider.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
-          //this.time.setStatus(true);
           this.timer.killTimer();
           this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();

@@ -30,7 +30,7 @@ export class AlertModalPage {
      if(this.error == 'Wrong password')
         this.title = 'Invalid Password';
       else
-        this.title = 'Invalid Email';  
+        this.title = 'Invalid Account';  
     }
 
     /* DISMISSING ALERT */

@@ -36,6 +36,8 @@ export class CreateElementPage {
 
   private typesModel: any;
   private ratingModel: any;
+  private user: any;
+  private offline_types: any;
 
   private TABLE_NAME: string = 'Elements';
   private TABLE_NAME_1: string = 'Elements_IDs';
@@ -79,17 +81,17 @@ export class CreateElementPage {
   /* INITIALIZING FORM BUILDER */
   initFormBuilder(){
       this.elementForm = this.formBuilder.group({
-          id: [new Date().valueOf()],
-          description: ['', [Validators.required, Validators.minLength(5)]],
-          types: this.formBuilder.array([]),
-          element_type: [''],
-          rating: ['', Validators.required],
-          category: [this.categories[0], Validators.required],
-          userId: ['', Validators.required],
-          id_of_project: [this.project._id , Validators.required],
-          popularity_number: [0, Validators.required],
-          dateadded: [new Date(), Validators.required],
-          status:["active", Validators.required]
+        id: [new Date().valueOf()],
+        description: ['', [Validators.required, Validators.minLength(5)]],
+        types: this.formBuilder.array([]),
+        element_type: [''],
+        rating: ['', Validators.required],
+        category: [this.categories[0], Validators.required],
+        userId: ['', Validators.required],
+        id_of_project: [this.project._id , Validators.required],
+        popularity_number: [0, Validators.required],
+        dateadded: [new Date(), Validators.required],
+        status:["active", Validators.required]
       });
 
      this.show = true; 
@@ -98,14 +100,20 @@ export class CreateElementPage {
   addTypes(){
     const formCtrl = <FormArray>this.elementForm.controls['types'];
     for(let i=0; i<this.study_types.length;i++){
-        if(i == 0 && this.e_study)
+        if(i == 0 && this.e_study){
+          this.types += this.study_types[0];
           formCtrl.push(this.formBuilder.control(this.study_types[0]));
+        }
 
-        else if(i == 1 && this.a_time)
+        else if(i == 1 && this.a_time){
+          this.types += + ' , ' + this.study_types[1];
           formCtrl.push(this.formBuilder.control(this.study_types[1]));
+        }
           
-        else if(i == 2 && this.r_study)
+        else if(i == 2 && this.r_study){
+          this.types += + ' , ' + this.study_types[2];
           formCtrl.push(this.formBuilder.control(this.study_types[2]));
+        }
     }
 
     this.elementForm.get('rating').setValue(this.ratingModel);
@@ -121,26 +129,25 @@ export class CreateElementPage {
       this.initFormBuilder();
     },
     error => {
-    this.loader.hideLoader();
+      this.loader.hideLoader();
     });
     
   }
 
-    /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
-    checkInternet(){
-      if(!this.network.isInternetAvailable())
-        this.setUserInfo();
-      else
-        this.createTable();  
-    }
+  /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
+  checkInternet(){
+    if(!this.network.isInternetAvailable())
+      this.setUserInfo();
+    else
+      this.createTable();  
+  }
 
   /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
   setUserInfo() {
     this.storage.get('currentUser').then(user => {
-      let id = user._id;
-      this.elementForm.controls['userId'].setValue(id);
-       this.addTypes();
-      //this.createElement();
+      this.user = user;
+      this.elementForm.controls['userId'].setValue(user._id);
+      this.addTypes();
     });
   }
 
@@ -205,7 +212,11 @@ export class CreateElementPage {
   /* ADDING NEWLY CREATED ELEMENT IN ELEMENTS TABLE */
   addElement(){
     let description = this.elementForm.get('description').value;
-    let _data = [{ description: description, _id: new Date().getTime()+ '-element' , popularity_number: 0,rating: 'field_user',id: null, project_id: this.project._id}];
+    let id = this.elementForm.get('id').value;
+    let category = this.elementForm.get('category').value;
+    let _data = [{ description: description, _id: new Date().getTime()+ '-element' , id: id, popularity_number: 0, category:category,
+                   username: this.user.firstname + ' ' + this.user.lastname, userid: this.user._id , types: this.offline_types,
+                   dateadded: new Date(), rating: this.ratingModel , element_type: this.typesModel , project_id: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Element added succesfully.');                
       this.elementForm.reset();

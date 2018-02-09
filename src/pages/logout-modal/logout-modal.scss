@@ -1,6 +1,9 @@
 page-logout-modal {
     p {
-        font-size: 25px;
         color: gray;
+        font-size: 16px;
+        @media (min-width: 768px){
+            font-size: 25px;
+        }
     }
 }

@@ -32,8 +32,7 @@ export class RatingsPage {
     public time: Time,
     public operations: OperationsProvider,
     public parseData: ParseDataProvider,
-    public studyStatus: StudyStatusProvider) {
-     
+    public studyStatus: StudyStatusProvider) {     
   }
 
   ionViewDidLoad() {     
@@ -48,15 +47,12 @@ export class RatingsPage {
   /* iNITIALIZING VIEW  */
   initView(){
     this.temp = {};
-    this.parseData.getData().setObservationTime(new Date().getTime());
-    this.parseData.setData(this.parseData.getData());
     this.getRatings();
   }
 
   
   /* GETTING RATINGS */
   getRatings() {
-     
     this.element = this.navParams.get('element');
     let rating = this.element.rating.toLowerCase().trim();
     /* IF RATING IS FIELD USER INPUT */
@@ -123,15 +119,12 @@ export class RatingsPage {
 
   /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
   onCancelStudy(event){
-    if(event){
+    if(event)
       {
         this.timer.killTimer();
         this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }
-    }
   }
-
-  
   
 }

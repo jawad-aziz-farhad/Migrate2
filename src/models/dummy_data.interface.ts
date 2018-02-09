@@ -40,12 +40,6 @@ export class DummyData {
     }    
 
     public setRatings(){
-    //    this.ratings = [ {id: 0 , rating: 40}, {id: 1 , rating: 50}, {id: 2 , rating: 55}, {id: 3 , rating: 60}, 
-    //     {id: 4,rating:65},{id: 5 ,rating: 70}, {id: 6, rating: 75}, 
-    //     {id: 7, rating: 80},{id: 8 , rating: 85}, {id: 9,rating: 90},
-    //     {id: 10, rating: 95}, {id: 11 ,rating: 100} , {id: 11,rating: 105} , {id: 12,rating: 110} ,
-    //     {id: 13,rating: 115} , {id: 14 ,rating: 120} , {id: 15,rating: 125} , {id: 16,rating: 130} ,
-    //     {id: 17,rating: 135},  {id: 18 ,rating: 'NR' }]; 
         this.ratings = [  40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ]; 
     }
 

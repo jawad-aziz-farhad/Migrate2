@@ -37,10 +37,9 @@ export class ObservationSummaryPage {
   }
   /* GETTING SUMMARY  */
   showObservationSummary(){
-      const round_index = this.navParams.get('round_index');
-      const data_index  = this.navParams.get('data_index');
-      this.data = this.parser.geAllData().getRoundData()[round_index].data[data_index];
-      this.show = true;
+    this.data = null;
+    this.data = this.navParams.get('item');
+    this.show = true;
   }
   /* GETTING IMAGE PATH */
   getImage() {

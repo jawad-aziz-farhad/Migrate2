@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AreaDetailPage } from '../area-detail/area-detail';
 import { OperationsProvider , LoaderProvider , SqlDbProvider , NetworkProvider, ToastProvider } from '../../providers/index';
 import { MESSAGE , SERVER_URL , INTERNET_ERROR} from '../../config/config';
-
 /**
  * Generated class for the AreasPage page.
  *
@@ -48,15 +47,14 @@ export class AreasPage {
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {        
       if(ready)
-        this.sql.getAllData(this.TABLE_NAME).then(result => {
+          this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
             if(result.length == 0 || typeof result == 'undefined' || result == null)
               this.getData();
             else
               this.populateData(result);
-
         }).catch(error => {
-            console.error('ERROR: ' + JSON.stringify(error));
-        });
+          console.error('ERROR: ' + JSON.stringify(error));
+        });   
     });
   }
   
@@ -64,8 +62,7 @@ export class AreasPage {
   getData() {
     this.loader.showLoader(MESSAGE);
     this.operations.getLocationsByCustomerID('locations/getByCustomerId/', this.project.customer_id).subscribe(res => {
-       console.log('LOCATIONS:\n' +JSON.stringify(res));
-       this.createTable(res);
+      this.createTable(res);
     },
     error => {
       this.loader.hideLoader();
@@ -76,15 +73,15 @@ export class AreasPage {
 
 /* CREATING TABLE TO SAVE TO LOCAL DATA BASE */
 createTable(data) {
-    this.sql.createTable(this.TABLE_NAME).then(res => {
-        this.insertData(data);
-    });
+  this.sql.createTable(this.TABLE_NAME).then(res => {
+    this.insertData(data);
+  });
 }
 
 /* INSERTING DATA TO TABLE */
 insertData(data) {
   this.sql.addData(this.TABLE_NAME,data.result).then(result => {
-      this.getAllData();
+    this.getAllData();
   }).catch(error => {
       console.error("ERROR: " + JSON.stringify(error));
   });

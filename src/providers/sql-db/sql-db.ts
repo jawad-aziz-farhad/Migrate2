@@ -109,12 +109,12 @@ export class SqlDbProvider {
     this.studyID = id;
     return new Promise((resolve, reject) => {
       $(this.parser.geAllData().getRoundData()).each((index,element) => {
-        this.studyDataIndex = index;
-            this.addData( table, element.data).then(res => {
-                if((index + 1) == this.parser.geAllData().getRoundData().length)
-                   resolve(true);
-            }).catch(error => {
-                reject(error);
+          this.studyDataIndex = index;
+          this.addData( table, element.data).then(res => {
+              if((index + 1) == this.parser.geAllData().getRoundData().length)
+                  resolve(true);
+          }).catch(error => {
+              reject(error);
         });
     });
     });
@@ -141,7 +141,7 @@ export class SqlDbProvider {
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, project_id TEXT, _id TEXT)';
       else if(table == 'Locations')
-        query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
+        query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, project_id TEXT, locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
       else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, _id TEXT, popularity_number INT, rating TEXT, element_id BIGINT, project_id)'; 
       else if(table == 'Study')
@@ -150,8 +150,10 @@ export class SqlDbProvider {
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, roundStartTime BIGINT, roundEndTime BIGINT, role TEXT, area TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, observationTime BIGINT, Study_Id TEXT, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
       else if(table == 'Create_Role')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, project_id TEXT, position TEXT)';
-      else if(table == 'Create_Area' || table == 'Create_Element')
+      else if(table == 'Create_Area')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, project_id TEXT)';
+      else if(table == 'Create_Element')
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, description TEXT, id TEXT, element_type TEXT, rating TEXT, category TEXT, dateadded TEXT, popularity_number TEXT, types TEXT, project_id TEXT, userId TEXT, username TEXT)';  
       
         return this.database.executeSql(query, {}).then(() => {
           return 'created';
@@ -168,7 +170,7 @@ export class SqlDbProvider {
     else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
       query = 'INSERT INTO ' + table + '(project_id , _id) VALUES (?, ?)';
     else if(table == 'Locations')
-      query = 'INSERT INTO Locations (_id , locationname, addresslineone, addresslinetwo, addresslinethree, addresslinefour, addresslinefive, contactname, telephone, monday_time_from, tuesday_time_from, wednesday_time_from, thursday_time_from, friday_time_from, saturday_time_from, sunday_time_from, monday_time_to, tuesday_time_to, wednesday_time_to, thursday_time_to, friday_time_to, saturday_time_to, sunday_time_to) VALUES (? ,? , ? , ?, ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? , ? , ? , ? , ? , ?)';  
+      query = 'INSERT INTO Locations (_id , project_id , locationname, addresslineone, addresslinetwo, addresslinethree, addresslinefour, addresslinefive, contactname, telephone, monday_time_from, tuesday_time_from, wednesday_time_from, thursday_time_from, friday_time_from, saturday_time_from, sunday_time_from, monday_time_to, tuesday_time_to, wednesday_time_to, thursday_time_to, friday_time_to, saturday_time_to, sunday_time_to) VALUES (? , ? ,? , ? , ?, ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? , ? , ? , ? , ? , ?)';  
     else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
       query = 'INSERT INTO ' + table + '(name, _id, popularity_number, rating, element_id, project_id) VALUES (?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
@@ -228,24 +230,34 @@ export class SqlDbProvider {
   }
 
   /* GETTING IDS OF ROLES, ELEMENTS, AREAS TO FETCH DATA  */
-  getIDs(table, project_id) {
+  getIDData(table, project_id) {
     let query = "SELECT * FROM " + `${table}`  + " WHERE project_id=?";
+    alert(query);
     return this.database.executeSql(query, [project_id]).then((result) => {
       let data = [];
       if (result.rows.length > 0) {
         for (let i = 0; i < result.rows.length; i++) {
+          alert(table + '\n' + result.rows.length)
           if(table == 'Areas')
             data.push({_id: result.rows.item(i)._id , areaname: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id});
           else if(table == 'Roles') 
              data.push({_id: result.rows.item(i)._id, rolename: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id}); 
           else if(table == 'Elements')
              data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity_number, rating: result.rows.item(i).rating,element_id: result.rows.item(i).element_id, project_id: result.rows.item(i).project_id});
+          else if(table == 'Locations')
+             data.push({_id: result.rows.item(i)._id, locationname: result.rows.item(i).locationname , addresslineone : result.rows.item(i).addresslineone, addresslinetwo: result.rows.item(i).addresslinetwo , addresslinethree: result.rows.item(i).addresslinethree,
+                        addresslinefour: result.rows.item(i).addresslinefour ,addresslinefive: result.rows.item(i).addresslinefive , contactname: result.rows.item(i).contactname, telephone: result.rows.item(i).telephone,
+                        monday_time_from: result.rows.item(i).monday_time_from, tuesday_time_from: result.rows.item(i).tuesday_time_from, wednesday_time_from: result.rows.item(i).wednesday_time_from, thursday_time_from: result.rows.item(i).thursday_time_from,
+                        friday_time_from: result.rows.item(i).friday_time_from, saturday_time_from: result.rows.item(i).saturday_time_from, sunday_time_from: result.rows.item(i).sunday_time_from,
+                        monday_time_to: result.rows.item(i).monday_time_to, tuesday_time_to: result.rows.item(i).tuesday_time_to, wednesday_time_to: result.rows.item(i).wednesday_time_to, thursday_time_to: result.rows.item(i).thursday_time_to,
+                        friday_time_to: result.rows.item(i).friday_time_to, saturday_time_to: result.rows.item(i).saturday_time_to, sunday_time_to: result.rows.item(i).sunday_time_to
+                       }); 
           else
             data.push(result.rows.item(i)._id);
         }
       }
       else{
-        console.log('NO DATA')
+        console.log('NO DATA');
       }
       return data;
     }, err => {

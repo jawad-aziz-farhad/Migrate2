@@ -79,4 +79,25 @@ addData(data) {
     return this.dataForm;
   }
 
+  initFormForOfflineData(val, data, user){
+     let formData = null;
+     formData = {addedby:  [user.firstname + ' ' + user.lastname], id_of_addedby: [user._id], id_of_project: [data.project_id], status:  'active', dateadded: new Date() }
+     
+     if(val == 'area'){
+      formData.areaname = [data.name],
+      formData.areatype = 'Area Type 1';
+     }
+     else if(val == 'role'){
+       formData.rolename = [data.name ],
+       formData.position = [data.position];
+     }
+    else if(val == 'element'){
+
+    }
+    
+    this.dataForm = this.formBuilder.group({ formData });
+
+   
+  }
+
 }

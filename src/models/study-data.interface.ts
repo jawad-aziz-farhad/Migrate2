@@ -16,7 +16,7 @@ export class StudyData {
     setRole(role: any){ this.role = role; }
     setArea(area: any){ this.area = area;}
     setElement(element: any){ this.element = element;}
-    setRating(rating: number){ this.rating = rating;} 
+    setRating(rating: any){ this.rating = rating;} 
     setNotes(notes: string){ this.notes = notes;}
     setPhoto(photo: string){ this.photo= photo;}
     setFrequency(frequency: number){ this.frequency = frequency;}
@@ -24,7 +24,7 @@ export class StudyData {
 
     /* GETTING VALUES OF STUDY DATA */
     getObservationTime(): any  { return this.observationTime; }
-    getRating(): number  { return this.rating; }
+    getRating(): any  { return this.rating; }
     getArea(): any    { return this.area; }
     getElement(): any { return this.element; }
     getNotes(): string   { return this.notes; }

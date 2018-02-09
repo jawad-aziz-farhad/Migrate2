@@ -218,6 +218,7 @@ export class ProjectsPage {
                 
     this.insertData(this.all_data[0],this.TABLE_NAME_4);
   }
+ 
   /* MAKING MULTIPLE REQUESTS FOR EACH ARRAY INDEX */
   makeRequest(table, data): Observable<any> {
     let all_data = [];
@@ -266,7 +267,7 @@ export class ProjectsPage {
   /* MAKING SINGLE REQUEST FOR FORK JOIN */
   getRequest(endPoint, data): Observable<any>{
     endPoint = SERVER_URL + endPoint + '/getByIds';
-    return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());;
+    return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());
   }
 
   /* GETTING ALL DATA OF GIVEN TABLE */

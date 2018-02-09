@@ -98,7 +98,7 @@ export class InOneComponent {
   checkDB() {
     this.sql.getDatabaseState().subscribe(ready  => {    
         if(ready)
-          this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
+          this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
               if(result.length == 0 || typeof result == 'undefined' || result == null)
                 this.getIDs();
               else
@@ -113,7 +113,7 @@ export class InOneComponent {
   getIDs(){
     this.loader.showLoader(MESSAGE);
     this.items = [];
-    this.sql.getIDs(this.TABLE_NAME_1, this.project._id).then(data => {
+    this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
       console.log('IDS: '+ JSON.stringify(data));
       this.formBuilder.initIDForm(data);
       this.getData();

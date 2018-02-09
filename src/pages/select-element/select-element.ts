@@ -94,27 +94,14 @@ export class SelectElementPage {
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {    
       if(ready)
-       this.sql.getAllData(this.TABLE_NAME).then(result => {
-        if(result.length == 0 || typeof result == 'undefined' || result == null){
-          if(!this.network.isInternetAvailable())
-            this.toast.showToast(INTERNET_ERROR);
-          else
-            this.getIDs();
-        }
-        else
-          this.populateData(result);
-
-    }).catch(error => {
-        console.error('ERROR: ' + JSON.stringify(error));
-    });
-        // this.sql.getIDs(this.TABLE_NAME, this.project._id).then(result => {
-        //     if(result.length == 0 || typeof result == 'undefined' || result == null)
-        //       this.getIDs();
-        //     else
-        //       this.populateData(result);
-        // }).catch(error => {
-        //   console.error('ERROR: ' + JSON.stringify(error));
-        // });   
+        this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
+            if(result.length == 0 || typeof result == 'undefined' || result == null)
+              this.getIDs();
+            else
+              this.populateData(result);
+        }).catch(error => {
+          console.error('ERROR: ' + JSON.stringify(error));
+        });   
     });
   }
 
@@ -122,7 +109,7 @@ export class SelectElementPage {
   getIDs(){
     this.loader.showLoader(MESSAGE);
     this.elements = [];
-    this.sql.getIDs(this.TABLE_NAME_1, this.project._id).then(data => {
+    this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
       this.formBuilder.initIDForm(data);
       this.getData();
     }).catch(error => {
@@ -189,19 +176,16 @@ isLoaded1stTime(){
 goNext() {
   this._parseTime();
   if(this._temp.rating == null){
-    this._temp.rating = 'field user input';
+    this._temp.rating = 100;
     this.navCtrl.push(RatingsPage, {element: this._temp});
   }
   else if(this._temp.rating.toLowerCase().trim() == "field user input")
     this.navCtrl.push(RatingsPage, {element: this._temp});
   else{
     /* SETTING RATING VALUE AND SKIPPING RATINGS PAGE */
-    this.parseData.getData().setRating(0);
+    this.parseData.getData().setRating(this._temp.rating);
     this.parseData.setData(this.parseData.getData());
-    this.navCtrl.push(AddFrequencyPage).then(() => {
-      const startIndex = this.navCtrl.getActive().index - 2;
-      this.navCtrl.remove(startIndex, 2);
-    });
+    this.navCtrl.push(AddFrequencyPage)
   }
 }
   
@@ -312,7 +296,6 @@ goNext() {
   cancelStudy() {
     this.alertProvider.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
       if(action == 'yes'){
-        //this.time.setStatus(true);
         this.timer.killTimer();
         this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();

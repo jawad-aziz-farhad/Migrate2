@@ -78,20 +78,15 @@ export class AddFrequencyPage {
 
   /* PARSING DATA */
   _parseData(frequency: number) {
-    let observationTime = 0;
-    if(this.parseData.getData().getRating() == 0)
-      this.parseData.getData().setObservationTime("00:00");
-    else { 
 
-      observationTime = new Date().getTime() - this.parseData.getData().getObservationTime();
-      let observation_Time = this.millisToMinutesAndSeconds(observationTime);
-      this.parseData.getData().setObservationTime(observation_Time);
-    }
+    let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
+    let observation_Time = this.millisToMinutesAndSeconds(observationTime);
+    this.parseData.getData().setObservationTime(observation_Time);
+
     this.parseData.getData().setNotes(null);
     this.parseData.getData().setPhoto(null);
     this.parseData.getData().setFrequency(frequency);
     this.parseData.setData(this.parseData.getData());
-    console.log("STUDY DATA AT FREQUENCY PAGE: \n" + JSON.stringify(this.parseData.getData()));
   } 
 
   millisToMinutesAndSeconds(millis) {
@@ -163,11 +158,9 @@ export class AddFrequencyPage {
   /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
   onCancelStudy(event){
     if(event){
-      {
-        this.timer.killTimer();
-        this.studyStatus.setStatus(false);
-        this.navCtrl.popToRoot();
-      }
+      this.timer.killTimer();
+      this.studyStatus.setStatus(false);
+      this.navCtrl.popToRoot();
     }
   }
 }

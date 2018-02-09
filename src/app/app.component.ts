@@ -5,7 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 import { Storage } from "@ionic/storage";
 import { ScreenOrientation } from '@ionic-native/screen-orientation'
-import { Observable } from 'rxjs';
+import { Http } from '@angular/http';
 import * as $ from 'jQuery';
 
 /* PAGES */
@@ -22,7 +22,7 @@ import { SettingsPage } from '../pages/settings/settings';
 
 /* PROVIDERS  */
 import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider , OperationsProvider , LoaderProvider ,
-         FormBuilderProvider, ToastProvider, Time, StudyStatusProvider, ParserProvider, ParseDataProvider } from "../providers/index";
+         FormBuilderProvider, ToastProvider, Time, StudyStatusProvider, ParserProvider, ParseDataProvider, HeadersProvider } from "../providers/index";
 /* MODELS */         
 import { StudyData } from '../models//study-data.interface';
 import { AllStudyData, Rounds } from '../models/index';
@@ -33,6 +33,11 @@ import { RatingsPage } from '../pages/ratings/ratings';
 import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { StudyPhotoPage } from '../pages/study-photo/study-photo';
 import { SubmitDataProgressPage } from '../pages/submit-data-progress/submit-data-progress';
+
+/* RxJs */
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/map';
+import { forkJoin } from "rxjs/observable/forkJoin";
 
 @Component({
   templateUrl: 'app.html'
@@ -67,6 +72,7 @@ export class MyApp {
   
 
   constructor(public platform: Platform, 
+              public http: Http,
               public statusBar: StatusBar, 
               public splashScreen: SplashScreen,
               public storage: Storage,
@@ -85,6 +91,7 @@ export class MyApp {
               public parseData: ParseDataProvider,
               public parser: ParserProvider,
               public studyStatus: StudyStatusProvider,
+              public headers: HeadersProvider,
               private screenOrientation: ScreenOrientation,
               public time: Time) {
 
@@ -405,7 +412,9 @@ export class MyApp {
     if(images.length > 0)
       this.uploadAllImages(images);
     else
-      this.getUser();  
+      this.collectOfflineElements();  
+    // else
+    //   this.getUser();  
     
   }
 
@@ -424,7 +433,9 @@ export class MyApp {
         });
       });
       
-      this.getUser();
+     // this.getUser();
+     this.collectOfflineElements();  
+     
     },
     error => {
       this.loader.hideLoader();
@@ -449,33 +460,76 @@ export class MyApp {
     return observbeAbleArray;
   }
 
-  collectOfflineElements(data){
-    var all_data = [];
+  collectOfflineElements(){
+    let all_data = [];
     $(this.offlineData$[0].rounds).each((index, element) => {      
         $(element.data).each((sub_index, sub_element) => {
-            let _data = [];
-            var Obj = {roundIndex: null, dataIndex: null, name: null, position: null};
-            if(sub_element.role.indexOf('-role') > -1) {
-              Obj.name = sub_element.photo;
-              Obj.dataIndex = sub_index;
-              Obj.roundIndex = index;
-              _data.push(Obj);
+            let Obj = {roundIndex: null, dataIndex: null, name: null, position: null, role: null, area: null, element: null };
+            if(sub_element.area.indexOf('-area') > -1 || sub_element.element.indexOf('-element') > -1 || sub_element.element.indexOf('-role') > -1) {
+                Obj.dataIndex = sub_index;
+                Obj.roundIndex = index;
+              if(sub_element.area.indexOf('-area') > -1)
+                Obj.area = sub_element.area;
+              if(sub_element.element.indexOf('-element') > -1) 
+                Obj.element = sub_element.element;
+              if(sub_element.role.indexOf('-role') > -1) 
+                Obj.name = sub_element.role;
+
+               all_data.push(Obj);
             }
-           else if(sub_element.role.indexOf('-element') > -1) {
-            Obj.name = sub_element.photo;
-            Obj.dataIndex = sub_index;
-            Obj.roundIndex = index;
-            _data.push(Obj);
-          }
-          else if(sub_element.role.indexOf('-role') > -1) {
-            Obj.name = sub_element.photo;
-            Obj.dataIndex = sub_index;
-            Obj.roundIndex = index;
-            _data.push(Obj);
-          }
+        });
+     });
+  }
+
+  
+  /* MAKING MULTIPLE REQUESTS FOR EACH ARRAY INDEX */
+  makeRequest(table, data): Observable<any> {
+    let all_data = [];
+    return new Observable(observer => {
+      data.forEach((element, index) => {
+        this.getForkJoin(element).subscribe(reslut => {
+            all_data.push(reslut);
+            if(index == data.length - 1)
+              observer.next(all_data);
+        });   
       });
     });
+  }
+
+  /* GETTING FORK JOIN FOR EACH INDEX , AS WE ARE HAVING ELEMENTS , ROLES, AREAS AT EACH INDEX 
+    AND WE HAVE TO GET THEIR DETAILS SO FOR ONE INDEX, WE ARE MAKING ONE FOKJOIN AND GETTING DATA FROM 
+    3 ENDPOINTS, IT WILL BE DONE FOR EACH INDEX OF PROJECTS ARRAY
+   */
+  getForkJoin(project): Observable<any> {          
+    let formData  = null;
+    let request1  = null;
+    let request2  = null;
+    let request3  = null;
     
+    /* MAKING REQUEST FOR CREATE-ROLES */
+    this.formBuilder.initIDForm(project.roles);
+    formData = this.formBuilder.getIDForm().value;
+    request1 = this.getRequest('roles', formData);
+
+    /* MAKING REQUEST FOR CREATE-AREAS */
+    this.formBuilder.initIDForm(project.areas);
+    formData = this.formBuilder.getIDForm().value;
+    request2 = this.getRequest('areas', formData);
+    
+    /* MAKING REQUEST FOR CREATE-ELEMENTS */
+    this.formBuilder.initIDForm(project.elements);
+    formData = this.formBuilder.getIDForm().value;
+    request3 = this.getRequest('elements', formData);
+
+    const observablesArray = [request1, request2 , request3];
+
+    return Observable.forkJoin(observablesArray);
+  } 
+
+  /* MAKING SINGLE REQUEST FOR FORK JOIN */
+  getRequest(endPoint, data): Observable<any>{
+    endPoint = SERVER_URL + endPoint + '/getByIds';
+    return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());
   }
 
   /* SYNCING DATA TO SERVER */

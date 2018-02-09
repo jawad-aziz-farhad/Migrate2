@@ -5,7 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header class="blue-header" no-border>
-    <in-study-header title="{{isStudyEnded ? 'Study Data' : 'Round Data'}}"></in-study-header>
+    <in-study-header title="{{isStudyEnded ? 'Study Data' : 'Round Data'}}"  (cancel)="onCancelStudy($event)"></in-study-header>
 </ion-header>
 
 <ion-content>
@@ -49,9 +49,9 @@
 
       <tbody>
         <ng-template ngFor let-round [ngForOf]="study_data?.rounds | studyItems : isStudyEnded" let-i="index">
-          <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(i, j)">
+          <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
             <td>
-              <div class="number-icon">{{ j + 1 }}</div>
+              <div class="number-icon">{{ item.element.numericID ? item.element.numericID : (j + 1) }}</div>
                 {{ item.element.description }}
             </td>
             <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
