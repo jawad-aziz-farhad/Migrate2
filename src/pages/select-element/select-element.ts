@@ -94,7 +94,7 @@ export class SelectElementPage {
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {    
       if(ready)
-        this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
+       this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
             if(result.length == 0 || typeof result == 'undefined' || result == null)
               this.getIDs();
             else

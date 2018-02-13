@@ -75,13 +75,7 @@ export class CreateAreaPage {
     });
   }
 
-  /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
- checkInternet(){
-  if(!this.network.isInternetAvailable())
-    this.setUserInfo();
-  else
-    this.createTable();  
-}  
+ 
 
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
@@ -90,9 +84,17 @@ setUserInfo() {
       let id = user._id;
       this.areaForm.controls['addedby'].setValue(name);
       this.areaForm.controls['id_of_addedby'].setValue(id);
-      this.createArea();
+      this.checkInternet();
     });
   }
+
+   /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
+ checkInternet(){
+  if(this.network.isInternetAvailable())
+     this.createArea();
+  else
+    this.createTable();  
+}  
       
   /* ADD A NEW ROLE */
   createArea() {
@@ -135,17 +137,22 @@ setUserInfo() {
   /* CREATING AREAS TABLE */
   createTable(){
     this.sql.createTable(this.TABLE_NAME_2).then(result => {
-      this.create_Area();
+      this.create_Offline_Area();
     }).catch(error =>{
         console.log('ERROR: ' + JSON.stringify(error));
     });
   } 
 
   /* CREATING NEW AREA IN OFFLINE MODE */
-  create_Area(){
-    let name = this.areaForm.get('areaname').value;
-    let _data = { name: name, project_id: this.project._id};
-    this.sql.addOfflineRow(this.TABLE_NAME_2,_data).then(result => {
+  create_Offline_Area(){
+    let areaname = this.areaForm.get('areaname').value;
+    let areatype = this.areaForm.get('areatype').value;
+    let username = this.areaForm.get('addedby').value;
+    let userid   = this.areaForm.get('id_of_addedby').value;
+    let dateadded= this.areaForm.get('dateadded').value;
+    let _data    = [{ _id: dateadded + '-area' ,areaname: areaname,areatype: areatype ,id_of_project: this.project._id, addedby:username , 
+                      id_of_addedby: userid, status: 'active', dateadded: dateadded}];
+    this.sql.addData(this.TABLE_NAME_2,_data).then(result => {
       this.addArea();
     }).catch(error => {
       console.log("ERROR: " + JSON.stringify(error));
@@ -154,8 +161,9 @@ setUserInfo() {
 
   /* ADDING NEWLY CREATED AREA IN AREAS TABLE */
   addArea(){
-    let name = this.areaForm.get('areaname').value;
-    let _data = [{ areaname: name, _id: new Date().getTime()+ '-area' , popularity_number: 0, rating: null, id: null, project_id: this.project._id}];
+    let areaname = this.areaForm.get('areaname').value;
+    let dateadded= this.areaForm.get('dateadded').value;
+    let _data = [{ areaname: areaname, _id: dateadded + '-area'  , popularity_number: 0, rating: null, id: null, project_id: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Area added succesfully.');                
       this.areaForm.reset();

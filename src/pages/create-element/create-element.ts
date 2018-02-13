@@ -36,7 +36,6 @@ export class CreateElementPage {
 
   private typesModel: any;
   private ratingModel: any;
-  private user: any;
   private offline_types: any;
 
   private TABLE_NAME: string = 'Elements';
@@ -78,6 +77,19 @@ export class CreateElementPage {
     this.getCategories();
   }
 
+  /* GETTING CATEGORIES FOR CREATING NEW ELEMENT*/
+  getCategories(){
+    this.operations.get('categories').subscribe(result => {
+      this.loader.hideLoader();
+      this.categories = result;
+      this.initFormBuilder();
+    },
+    error => {
+      this.loader.hideLoader();
+    });
+    
+  }
+
   /* INITIALIZING FORM BUILDER */
   initFormBuilder(){
       this.elementForm = this.formBuilder.group({
@@ -88,6 +100,7 @@ export class CreateElementPage {
         rating: ['', Validators.required],
         category: [this.categories[0], Validators.required],
         userId: ['', Validators.required],
+        addedby: ['', Validators.required],
         id_of_project: [this.project._id , Validators.required],
         popularity_number: [0, Validators.required],
         dateadded: [new Date(), Validators.required],
@@ -97,6 +110,15 @@ export class CreateElementPage {
      this.show = true; 
   }
 
+   /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
+  setUserInfo() {
+    this.storage.get('currentUser').then(user => {
+      this.elementForm.controls['userId'].setValue(user._id);
+      this.addTypes();      
+    });
+  }
+
+  /* ADDING TYPES */
   addTypes(){
     const formCtrl = <FormArray>this.elementForm.controls['types'];
     for(let i=0; i<this.study_types.length;i++){
@@ -119,38 +141,17 @@ export class CreateElementPage {
     this.elementForm.get('rating').setValue(this.ratingModel);
     this.elementForm.get('element_type').setValue(this.typesModel);
 
-    this.createElement();
-  }
-
-  getCategories(){
-    this.operations.get('categories').subscribe(result => {
-      this.loader.hideLoader();
-      this.categories = result;
-      this.initFormBuilder();
-    },
-    error => {
-      this.loader.hideLoader();
-    });
-    
+    this.checkInternet();
   }
 
   /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
   checkInternet(){
-    if(!this.network.isInternetAvailable())
-      this.setUserInfo();
+    if(this.network.isInternetAvailable())
+      this.createElement();
     else
       this.createTable();  
-  }
-
-  /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
-  setUserInfo() {
-    this.storage.get('currentUser').then(user => {
-      this.user = user;
-      this.elementForm.controls['userId'].setValue(user._id);
-      this.addTypes();
-    });
-  }
-
+   }
+ 
   /* CREATING A NEW ELEMENT */
   createElement(){
    this.loader.showLoader(MESSAGE); 
@@ -192,17 +193,24 @@ export class CreateElementPage {
   /* CREATING ROLES TABLE */
   createTable(){
     this.sql.createTable(this.TABLE_NAME_2).then(result => {
-      this.create_Element();
+      this.create_Offline_Element();
     }).catch(error =>{
         console.log('ERROR: ' + JSON.stringify(error));
     });
   } 
 
   /* CREATING NEW ELEMENT IN OFFLINE MODE */
-  create_Element() {
+  create_Offline_Element() {
     let description = this.elementForm.get('description').value;
-    let _data = { description: description, project_id: this.project._id };
-    this.sql.addOfflineRow(this.TABLE_NAME_2,_data).then(result => {
+    let id = this.elementForm.get('id').value;
+    let category = this.elementForm.get('category').value;
+    let username = this.elementForm.get('addedby').value;
+    let userid   = this.elementForm.get('userId').value;
+    let dateadded= this.elementForm.get('dateadded').value;
+    let _data = [{ _id: dateadded + '-element', description: description, id: id, element_type: this.typesModel ,rating: this.ratingModel , category:category,  
+                   popularity_number: 0,types: this.offline_types, id_of_project: this.project._id, addedby:username , 
+                   id_of_addedby: userid, status: 'active', dateadded: dateadded}];
+    this.sql.addData(this.TABLE_NAME_2,_data).then(result => {
       this.addElement();
     }).catch(error => {
       console.log("ERROR: " + JSON.stringify(error));
@@ -213,10 +221,9 @@ export class CreateElementPage {
   addElement(){
     let description = this.elementForm.get('description').value;
     let id = this.elementForm.get('id').value;
-    let category = this.elementForm.get('category').value;
-    let _data = [{ description: description, _id: new Date().getTime()+ '-element' , id: id, popularity_number: 0, category:category,
-                   username: this.user.firstname + ' ' + this.user.lastname, userid: this.user._id , types: this.offline_types,
-                   dateadded: new Date(), rating: this.ratingModel , element_type: this.typesModel , project_id: this.project._id}];
+    let rating =this.elementForm.get('rating').value;
+    let dateadded= this.elementForm.get('dateadded').value;
+    let _data = [{ description: description, _id: dateadded + '-element' , popularity_number: 0, rating: rating, id: id, project_id: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Element added succesfully.');                
       this.elementForm.reset();

@@ -79,25 +79,49 @@ addData(data) {
     return this.dataForm;
   }
 
-  initFormForOfflineData(val, data, user){
-     let formData = null;
-     formData = {addedby:  [user.firstname + ' ' + user.lastname], id_of_addedby: [user._id], id_of_project: [data.project_id], status:  'active', dateadded: new Date() }
-     
-     if(val == 'area'){
-      formData.areaname = [data.name],
-      formData.areatype = 'Area Type 1';
-     }
-     else if(val == 'role'){
-       formData.rolename = [data.name ],
-       formData.position = [data.position];
-     }
-    else if(val == 'element'){
+  initFormForOfflineData(data){
+   let formData=null;
+   if(typeof data.areaname != 'undefined')
+   formData= {
+      areaname: [data.areaname],
+      areatype: [data.areatype],
+      addedby:  [data.addedby],
+      id_of_addedby:  [data.id_of_addedby],
+      id_of_project: [data.id_of_project],
+      status:  [data.status],
+      dateadded:  [data.dateadded]
+    };
 
-    }
-    
-    this.dataForm = this.formBuilder.group({ formData });
+   else if(typeof data.rolename != 'undefined')
+    formData= {
+      rolename: [data.rolename],
+      position: [data.position],
+      addedby:  [data.addedby],
+      id_of_addedby:  [data.id_of_addedby],
+      id_of_project: [data.id_of_project],
+      status:  [data.status],
+      dateadded:  [data.dateadded]
+    };
 
-   
+   else if(typeof data.description !== 'undefined')
+    formData= {
+        id: [new Date().valueOf()],
+        description: [data.description],
+        types: [data.types],
+        element_type: [data.element_type],
+        rating: [data.rating],
+        category: [data.category],
+        userId: [data.userId],
+        addedby: [data.addedby],
+        id_of_project: [data.id_of_project],
+        popularity_number: [0],
+        dateadded: [data.dateadded],
+        status:[data.status]
+    };  
+    this.dataForm = this.formBuilder.group(formData);
   }
 
+  getFormForOfflineData(){
+    return this.dataForm;
+  }
 }

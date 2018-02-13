@@ -39,6 +39,7 @@ export class ProjectsPage {
   private TABLE_NAME_4:string = 'Roles';
   private TABLE_NAME_5:string = 'Areas';
   private TABLE_NAME_6:string = 'Elements';
+  private TABLE_NAME_7: string = 'Locations';
   private all_data: Array<any> = [];
   
   constructor(public navCtrl: NavController, 
@@ -142,6 +143,8 @@ export class ProjectsPage {
         else if(table == this.TABLE_NAME_5)
           this.createTable(data,this.TABLE_NAME_6);  
         else if(table == this.TABLE_NAME_6)
+          this.createTable(data,this.TABLE_NAME_7);  
+        else if(table == this.TABLE_NAME_7)
           this.insertData(data.result, this.TABLE_NAME);
       });
   }
@@ -155,7 +158,9 @@ export class ProjectsPage {
         if(table == this.TABLE_NAME_4)
           this.insertData(this.all_data[1],this.TABLE_NAME_5);
         else if(table == this.TABLE_NAME_5)
-          this.insertData(this.all_data[2],this.TABLE_NAME_6);  
+          this.insertData(this.all_data[2],this.TABLE_NAME_6);
+        else if(table == this.TABLE_NAME_6)
+          this.insertData(this.all_data[3],this.TABLE_NAME_7);
         else 
             this.getAllData();  
       }  
@@ -195,18 +200,21 @@ export class ProjectsPage {
     AT 2 INDEX: ELEMENTS 
   */
   insertMultipleData(data){  
-    let roles = [];let elements = []; let areas = [];
+    let roles = [];let elements = []; let areas = []; let locations = [];
     data.forEach((element, index) => {
       element.forEach((sub_element, sub_index) => {
           if(sub_element.result.length > 0){
             sub_element.result.forEach((res_element, res_index) => {
                 res_element.project_id = this.projects[index]._id;
+                res_element.customer_id = this.projects[index].customer._id;
                 if(sub_index == 0)
                   roles.push(res_element);
                 else if(sub_index == 1)
                   areas.push(res_element);
                 else if(sub_index == 2)
                   elements.push(res_element);    
+                else if(sub_index == 3)
+                 locations.push(res_element);  
             });
           }
       });
@@ -215,6 +223,7 @@ export class ProjectsPage {
     this.all_data[0] = roles;
     this.all_data[1] = areas;
     this.all_data[2] = elements;
+    this.all_data[3] = locations
                 
     this.insertData(this.all_data[0],this.TABLE_NAME_4);
   }
@@ -240,9 +249,10 @@ export class ProjectsPage {
    */
   getForkJoin(project): Observable<any> {          
     let formData = null;
-    let request1  = null;
-    let request2  = null;
-    let request3  = null;
+    let request1 = null;
+    let request2 = null;
+    let request3 = null;
+    let request4 = null;
     
     /* MAKING REQUEST FOR ROLES */
     this.formBuilder.initIDForm(project.roles);
@@ -259,15 +269,22 @@ export class ProjectsPage {
     formData = this.formBuilder.getIDForm().value;
     request3 = this.getRequest('elements', formData);
 
-    const observablesArray = [request1, request2 , request3];
+    request4 = this.getRequest('locations/getByCustomerId/', project.customer._id);
+    let observablesArray = [request1, request2 , request3, request4];
 
     return Observable.forkJoin(observablesArray);
   } 
 
   /* MAKING SINGLE REQUEST FOR FORK JOIN */
   getRequest(endPoint, data): Observable<any>{
-    endPoint = SERVER_URL + endPoint + '/getByIds';
-    return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());
+    if(endPoint.indexOf('locations/getByCustomerId') > -1 ){
+      endPoint = SERVER_URL + endPoint + data ; 
+      return this.http.get(`${endPoint}`).map(res => res.json());
+     } 
+    else{
+      endPoint = SERVER_URL + endPoint + '/getByIds';
+      return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());
+    }
   }
 
   /* GETTING ALL DATA OF GIVEN TABLE */
@@ -310,7 +327,7 @@ export class ProjectsPage {
   
   /* GETTING LOCATIONS OF THIS PROJECT OR BRAND */
   gotoLocations(project: any): void{
-    this.navCtrl.push(AreasPage, {project: project});
+   this.navCtrl.push(AreasPage, {project: project});
   }
 
   /* REFRESHING DATA ON SWIPE DOWN */
@@ -347,7 +364,19 @@ export class ProjectsPage {
         this.dropTable(refresher,this.TABLE_NAME_5);
       else if(table == this.TABLE_NAME_5)    
         this.dropTable(refresher,this.TABLE_NAME_6);
-      else if(table == this.TABLE_NAME_6){
+      else if(table == this.TABLE_NAME_6)    
+        this.dropTable(refresher,this.TABLE_NAME_7);
+      else if(table == this.TABLE_NAME_7)    
+        this.dropTable(refresher,'Create_Area');    
+      else if(table == 'Create_Area')    
+        this.dropTable(refresher,'Create_Role');  
+      else if(table == 'Create_Role')    
+        this.dropTable(refresher,'Create_Element');
+     else if(table == 'Create_Element')    
+        this.dropTable(refresher,'Study'); 
+     else if(table == 'Study')    
+        this.dropTable(refresher,'Study_Data');
+      else if(table == 'Study_Data'){
         if(refresher !== '')
           refresher.complete();
        this.getProfile();

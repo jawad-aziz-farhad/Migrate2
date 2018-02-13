@@ -121,7 +121,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     PrivacyPolicyPage,
     TermsOfServicesPage,
     PopOverPage
-    //TimerComponent
 
   ],
   imports: [
@@ -172,7 +171,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     PrivacyPolicyPage,
     TermsOfServicesPage,
     PopOverPage
-
   ],
   providers: [
     StatusBar,

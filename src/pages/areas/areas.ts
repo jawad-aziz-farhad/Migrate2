@@ -39,7 +39,6 @@ export class AreasPage {
   initView(){
     this.show = false;
     this.project = this.navParams.get('project');
-    console.log(JSON.stringify(this.project));
     this.checkDB();
   }
 
@@ -47,7 +46,7 @@ export class AreasPage {
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {        
       if(ready)
-          this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
+          this.sql.getIDData(this.TABLE_NAME, this.project.customer_id).then(result => {
             if(result.length == 0 || typeof result == 'undefined' || result == null)
               this.getData();
             else
@@ -67,7 +66,6 @@ export class AreasPage {
     error => {
       this.loader.hideLoader();
       this.show = true;
-      console.error('ERROR: ' + JSON.stringify(error));
     });
   }
 

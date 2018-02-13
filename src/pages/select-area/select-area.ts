@@ -34,10 +34,11 @@ export class SelectAreaPage {
   public isFiltering: boolean;
   public filter: any; 
   public _temp: any;
-  public project: any;
 
-  public TABLE_NAME: string = 'Areas';
-  public TABLE_NAME_1: string = 'Areas_IDs';
+  protected project: any;
+  protected TABLE_NAME: string = 'Areas';
+  protected TABLE_NAME_1: string = 'Areas_IDs';
+  private _data: any;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams , 
@@ -54,7 +55,7 @@ export class SelectAreaPage {
               public menuCtrl: MenuController,
               public toast: ToastProvider,
               public timerService: TimerService) {             
-      
+     
   }
 
   initView(){
@@ -68,7 +69,6 @@ export class SelectAreaPage {
     this.project = this.navParams.get('project');
     this.checkDB(); 
   }
-
   
   ionViewDidLoad() {
     console.log('ionViewDidLoad SelectAreaPage: ' + this.roundTime);
@@ -166,7 +166,6 @@ getAllData() {
     this.areas = areas;
     this.sortedAreas = areas;
     this.temp  = areas;
-    //this.selectArea(areas[0]);
   }
 
   selectArea(area){
@@ -213,7 +212,6 @@ getAllData() {
       console.log(JSON.stringify(this.temp));        
       this.areas = this.temp;
     }
-      
   }
 
   onSearchCancel(event) {
@@ -237,7 +235,7 @@ getAllData() {
   }).catch(error => {
     refresher.complete();
     console.error('ERROR: ' + JSON.stringify(error));
-  })
+  });
   }
 
   /* DROPPING TABLE FROM DATA BASE */
