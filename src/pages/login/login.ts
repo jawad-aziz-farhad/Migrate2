@@ -48,10 +48,7 @@ export class LoginPage {
 
   /* LOGGIN IN USER */
   Login(value: any) {
-
-    console.log(JSON.stringify(this.loginForm.value));
     this.loader.showLoader(MESSAGE);
-    
     this.authProvider
     .authenticate(this.loginForm.value)
     .finally(() => this.loader.hideLoader())

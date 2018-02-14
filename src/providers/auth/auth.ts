@@ -6,8 +6,6 @@ import { Storage } from "@ionic/storage";
 import { JwtHelper, AuthHttp } from "angular2-jwt";
 import { SERVER_URL } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
-
-
 /*
   Generated class for the AuthProvider provider.
 
@@ -40,13 +38,8 @@ export class AuthProvider {
   }
 
   authenticate(credentials: any): Observable<any> {
-
-    this.END_POINT = SERVER_URL + 'users/authenticate';
-    // return this.http.post(this.END_POINT, credentials,  { headers: this.headersProvider.getHeaders()})
-    // .map(response => response.text())
-    // .map(jwt => this.handleJWT(jwt));
-
-    return this.http.post(this.END_POINT, credentials,  { headers: this.headersProvider.getHeaders()})
+    this.END_POINT = SERVER_URL + 'users/authenticate/app';
+    return this.http.post(`${this.END_POINT}`, credentials)
     .map(res => res.json())
     .map(jwt => jwt);
 ;    
@@ -96,8 +89,16 @@ export class AuthProvider {
   }
 
   getCurrentUser() {
-      this.storage.get('currentUser').then(currentUser => {
-          this.authUser.next(currentUser);
-      });
+    this.storage.get('currentUser').then(currentUser => {
+        this.authUser.next(currentUser);
+    });
+  }
+
+  getJwt(){
+    return this.storage.get('jwt').then(jwt => {
+        return jwt;
+    }).catch(error => {
+       return error 
+    });
   }
 }

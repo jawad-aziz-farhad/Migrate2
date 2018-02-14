@@ -121,7 +121,7 @@ export class SelectElementPage {
   /* GETTING DATA FROM SERVER */
   getData() {
       let formData = this.formBuilder.getIDForm().value;
-      this.operations.getByIds('elements', formData).subscribe(data => {
+      this.operations.get_data('elements/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
         this.createTable(data.result);
       },

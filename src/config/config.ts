@@ -1,5 +1,6 @@
-export let SERVER_URL = 'https://retime-webapp.herokuapp.com/' //'https://evening-thicket-25690.herokuapp.com/'; // 'https://testingretime.herokuapp.com/'; 
-
+//export let SERVER_URL = 'http://retime-dev.herokuapp.com/';  
+//export let SERVER_URL = 'https://retime-webapp.herokuapp.com/';
+export let SERVER_URL = 'http://192.168.0.105:3000/';
 export let SESSION_KEY = '';
 export let EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i;
 export let MESSAGE = 'Please wait...';

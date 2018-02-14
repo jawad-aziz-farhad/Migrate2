@@ -123,7 +123,7 @@ export class SelectAreaPage {
   /* GETTING DATA FROM SERVER */
   getData() {
       let formData = this.formBuilder.getIDForm().value;
-      this.operations.getByIds('areas', formData).subscribe(data => {
+      this.operations.get_data('areas/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
         this.createTable(data.result);
       },

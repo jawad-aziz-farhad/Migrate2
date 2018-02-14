@@ -126,7 +126,7 @@ export class InOneComponent {
   /* GETTING DATA FROM SERVER */
   getData() {    
     let formData = this.formBuilder.getIDForm().value;
-    this.operations.getByIds(this.endpoint, formData).subscribe(data => {
+    this.operations.get_data(this.endpoint, formData).subscribe(data => {
       console.log("RESULT: \n" +JSON.stringify(data));
       this.createTable(data.result, this.TABLE_NAME);
     },

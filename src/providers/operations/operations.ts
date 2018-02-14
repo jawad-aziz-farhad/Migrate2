@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 import { forkJoin } from "rxjs/observable/forkJoin";
 import { SERVER_URL } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
+import { AuthProvider } from '../auth/auth';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { SqlDbProvider } from '../sql-db/sql-db';
 import { ParseDataProvider } from '../parse-data/parse-data';
@@ -22,6 +23,7 @@ export class OperationsProvider {
   private END_POINT: any;
   constructor(public http: Http ,
               private transfer: FileTransfer,
+              private auth: AuthProvider,
               public headers: HeadersProvider,
               public sql: SqlDbProvider,
               public parseData: ParseDataProvider) {
@@ -34,22 +36,11 @@ export class OperationsProvider {
     return this.http.get(this.END_POINT, {headers: this.headers.getHeaders()}).map(res => res.json());
   }
 
-  getData(endPoint){
-    this.END_POINT = SERVER_URL + endPoint + '/get';
-    console.log(this.END_POINT);
-    return this.http.get(`${this.END_POINT}` ,{ headers: this.headers.getHeaders() }).map(res => res.json()).take(1);
-  }
-
-  getByIds(endPoint, data){
-    this.END_POINT = SERVER_URL + endPoint + '/getByIds';
-    console.log(this.END_POINT);
-    return this.http.post(`${this.END_POINT}`, data ,{headers: this.headers.getHeaders()}).map(res => res.json());
-  }
-
-  getByEmail(endPoint){
+  get_data(endPoint, data){
     this.END_POINT = SERVER_URL  + endPoint;
-    console.log(this.END_POINT);
-    return this.http.get(`${this.END_POINT}` ,{headers: this.headers.getHeaders()}).map(res => res.json()).take(1);
+    let headers = this.headers.getHeaders();
+    headers.append('Authorization', `${data.token}`);
+    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json());
   }
 
   getLocationsByCustomerID(endPoint, id){
@@ -124,35 +115,33 @@ export class OperationsProvider {
      });
   }
 
-  syncData(): Promise<any>{
-     return new Promise((resolve, reject) => {
-        this.sql.getAllData('Study_Data').then(result => {
-          resolve(result);      
-        }).catch(error => {
-          console.error('SYNC ERROR: ' + JSON.stringify(error));
-          reject(error);
-        });
-     });
-  }
+  // syncData(): Promise<any>{
+  //    return new Promise((resolve, reject) => {
+  //       this.sql.getAllData('Study_Data').then(result => {
+  //         resolve(result);      
+  //       }).catch(error => {
+  //         console.error('SYNC ERROR: ' + JSON.stringify(error));
+  //         reject(error);
+  //       });
+  //    });
+  // }
 
-  checkForImages(data){
+  // checkForImages(data){
 
-     for(let i=0; i<data.length; i++ ) {
-       if(data[i].photo.indexOf('file:///') > -1) {
-          let params = {endPoint:'ras_data/study_image' , key :'photo', file: data[i].photo};
-          this.uploadFile(params).then(response => {
-              data[i].photo = response.path;
-              this.parseData.getDataArray()[i].setPhoto(response.path);
-          }).catch(error => {
-              console.error('ERROR: ' + JSON.stringify(error));
-          });
-       }
-       else 
-        console.error('NOT FOUND.');
-     }
-
-
-  }
+  //    for(let i=0; i<data.length; i++ ) {
+  //      if(data[i].photo.indexOf('file:///') > -1) {
+  //         let params = {endPoint:'ras_data/study_image' , key :'photo', file: data[i].photo};
+  //         this.uploadFile(params).then(response => {
+  //             data[i].photo = response.path;
+  //             this.parseData.getDataArray()[i].setPhoto(response.path);
+  //         }).catch(error => {
+  //             console.error('ERROR: ' + JSON.stringify(error));
+  //         });
+  //      }
+  //      else 
+  //       console.error('NOT FOUND.');
+  //    }
+  // }
 
   uploadPhoto(photo: any): Promise<any>{  
    return new Promise((resolve, reject) => {
@@ -164,10 +153,6 @@ export class OperationsProvider {
           reject(error);
       });
     });
-  }
-
-  getDataforMultipeRequests(data: any): Observable<any> {
-    return forkJoin([data]);
   }
 
 }

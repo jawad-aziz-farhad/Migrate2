@@ -102,19 +102,25 @@ export class ProjectsPage {
     this.userProfile = {};
     this.storage.get('currentUser').then(user => {
       this.userProfile = user;
-      this.getData();
+      this.getToken();
     });
-    
   }
 
-  
+  getToken(){
+    this.storage.get('jwt').then(token => {
+      this.getData(token);
+    }).catch(error => {
+       console.log('ERROR: '+ error);
+    });
+  }
   /* GETTING DATA FROM SERVER */
-  getData() {
+  getData(token) {
     this.show = false;
     this.projects = [];
-    const endPoint = this.TABLE_NAME +  '/getByManagerEmail/' + this.userProfile.email;
-    this.operations.getByEmail(endPoint).subscribe(res => {
-      console.log(res.result.length + '\n' +JSON.stringify(res));
+    let data = {email: this.userProfile.email, token: token};
+    const endPoint = this.TABLE_NAME.toLowerCase().trim() +  '/get';
+    this.operations.get_data(endPoint, data).subscribe(res => {
+      alert(res.result.length + '\n' +JSON.stringify(res));
       this.projects = res.result;
       if(res.result.length > 0) 
         this.createTable(res, this.TABLE_NAME);
@@ -123,7 +129,7 @@ export class ProjectsPage {
     },
     error => {
       this.loader.hideLoader();
-      console.error("ERROR: " + error);
+      //alert('ERROR: ' + JSON.stringify(error))
     });
   }
 
@@ -257,35 +263,23 @@ export class ProjectsPage {
     /* MAKING REQUEST FOR ROLES */
     this.formBuilder.initIDForm(project.roles);
     formData = this.formBuilder.getIDForm().value;
-    request1 = this.getRequest('roles', formData);
+    request1 = this.operations.get_data('roles/getByIds', formData);
 
     /* MAKING REQUEST FOR AREAS */
     this.formBuilder.initIDForm(project.areas);
     formData = this.formBuilder.getIDForm().value;
-    request2 = this.getRequest('areas', formData);
+    request2 = this.operations.get_data('areas/getByIds', formData);
     
     /* MAKING REQUEST FOR ELEMENTS */
     this.formBuilder.initIDForm(project.elements);
     formData = this.formBuilder.getIDForm().value;
-    request3 = this.getRequest('elements', formData);
+    request3 = this.operations.get_data('elements/getByIds', formData);
 
-    request4 = this.getRequest('locations/getByCustomerId/', project.customer._id);
+    request4 = this.operations.get_data('locations/getByCustomerId/',{customerID: project.customer._id});
     let observablesArray = [request1, request2 , request3, request4];
 
     return Observable.forkJoin(observablesArray);
   } 
-
-  /* MAKING SINGLE REQUEST FOR FORK JOIN */
-  getRequest(endPoint, data): Observable<any>{
-    if(endPoint.indexOf('locations/getByCustomerId') > -1 ){
-      endPoint = SERVER_URL + endPoint + data ; 
-      return this.http.get(`${endPoint}`).map(res => res.json());
-     } 
-    else{
-      endPoint = SERVER_URL + endPoint + '/getByIds';
-      return this.http.post(`${endPoint}`, data, {headers: this.headers.getHeaders()}).map(res => res.json());
-    }
-  }
 
   /* GETTING ALL DATA OF GIVEN TABLE */
   getAllData() {

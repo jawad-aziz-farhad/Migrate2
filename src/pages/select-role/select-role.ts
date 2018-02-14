@@ -121,7 +121,7 @@ export class SelectRolePage {
   /* GETTING DATA FROM SERVER */
   getData() {    
     let formData = this.formBuilder.getIDForm().value;
-    this.operations.getByIds('roles', formData).subscribe(data => {
+    this.operations.get_data('roles/getByIds', formData).subscribe(data => {
       console.log("RESULT: \n" +JSON.stringify(data));
       this.createTable(data.result, this.TABLE_NAME);
     },
