@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams  } from 'ionic-angular';
 import { AuthProvider , OperationsProvider , ToastProvider, LoaderProvider, SqlDbProvider, NetworkProvider, FormBuilderProvider , HeadersProvider} from '../../providers/index';
-import { SERVER_URL, MESSAGE , INTERNET_ERROR, NO_DATA_FOUND} from '../../config/config';
+import { SERVER_URL, MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR} from '../../config/config';
 import { Storage } from "@ionic/storage";
 import { AreasPage } from '../areas/areas';
 import { Projects, IDs } from '../../models';
@@ -33,13 +33,15 @@ export class ProjectsPage {
   public dataArray: Array<Projects>;
 
   public  TABLE_NAME: string = 'Projects';
-  private TABLE_NAME_1: string = 'Roles_IDs';
-  private TABLE_NAME_2: string = 'Areas_IDs';
-  private TABLE_NAME_3: string = 'Elements_IDs';
-  private TABLE_NAME_4:string = 'Roles';
-  private TABLE_NAME_5:string = 'Areas';
-  private TABLE_NAME_6:string = 'Elements';
+  private TABLE_NAME_1: string = 'Areas_IDs';
+  private TABLE_NAME_2: string = 'Elements_IDs';
+  private TABLE_NAME_3: string = 'Roles_IDs';
+
+  private TABLE_NAME_4:string = 'Areas';
+  private TABLE_NAME_5:string = 'Elements';
+  private TABLE_NAME_6:string = 'Roles';
   private TABLE_NAME_7: string = 'Locations';
+
   private all_data: Array<any> = [];
   
   constructor(public navCtrl: NavController, 
@@ -67,15 +69,6 @@ export class ProjectsPage {
     this.checkDB();
   }
 
-  /* GETTING DATA */
-  gettingData(){
-    if(this.network.isInternetAvailable())
-      this.dropTable('',this.TABLE_NAME);
-    else  
-      this.checkDB();   
-  }
-  
-
   /* CHECKING LOCAL DATA BASE IF PROJECTS ARE ALREADY THERE OR NOT */
   checkDB(){
       this.sql.getDatabaseState().subscribe(ready  => {        
@@ -85,7 +78,7 @@ export class ProjectsPage {
                 if(!this.network.isInternetAvailable())
                   this.toast.showToast(INTERNET_ERROR);
                 else
-                  this.getProfile();
+                  this.getData();
               }
               else
                 this.populateData(result);
@@ -96,190 +89,101 @@ export class ProjectsPage {
       });
   }
 
-  /* GETTING PROFILE INFO OF LOGGED IN USER */
-  getProfile(){
-    this.loader.showLoader(MESSAGE);
-    this.userProfile = {};
-    this.storage.get('currentUser').then(user => {
-      this.userProfile = user;
-      this.getToken();
-    });
-  }
-
-  getToken(){
-    this.storage.get('jwt').then(token => {
-      this.getData(token);
-    }).catch(error => {
-       console.log('ERROR: '+ error);
-    });
-  }
   /* GETTING DATA FROM SERVER */
-  getData(token) {
-    this.show = false;
-    this.projects = [];
-    let data = {email: this.userProfile.email, token: token};
-    const endPoint = this.TABLE_NAME.toLowerCase().trim() +  '/get';
-    this.operations.get_data(endPoint, data).subscribe(res => {
-      alert(res.result.length + '\n' +JSON.stringify(res));
-      this.projects = res.result;
-      if(res.result.length > 0) 
+  getData() {
+    this.loader.showLoader(MESSAGE);
+    this.show = false;this.projects = [];
+    this.operations.getdata().subscribe((res: any) => {
+      this.projects = res;
+      if(res.length > 0) 
         this.createTable(res, this.TABLE_NAME);
       else
         this.toast.showBottomToast(NO_DATA_FOUND);  
     },
     error => {
       this.loader.hideLoader();
-      //alert('ERROR: ' + JSON.stringify(error))
+      console.error('ERROR: ' + JSON.stringify(error))
     });
   }
 
   /* CREATING TABLE TO SAVE TO LOCAL DATA BASE */
-  createTable(data, table) {      
-    this.sql.createTable(table).then(res => {
-        if(table == this.TABLE_NAME)
-          this.createTable(data,this.TABLE_NAME_1);
-        else if(table == this.TABLE_NAME_1)
-          this.createTable(data,this.TABLE_NAME_2);
-        else if(table == this.TABLE_NAME_2)
-          this.createTable(data,this.TABLE_NAME_3);
-        else if(table == this.TABLE_NAME_3)
-          this.createTable(data,this.TABLE_NAME_4);  
-        else if(table == this.TABLE_NAME_4)
-          this.createTable(data,this.TABLE_NAME_5);
-        else if(table == this.TABLE_NAME_5)
-          this.createTable(data,this.TABLE_NAME_6);  
-        else if(table == this.TABLE_NAME_6)
-          this.createTable(data,this.TABLE_NAME_7);  
-        else if(table == this.TABLE_NAME_7)
-          this.insertData(data.result, this.TABLE_NAME);
-      });
-  }
-  
-  /* INSERTING DATA TO TABLE */
-  insertData(data, table) {
-    this.sql.addData(table,data).then(result => {
-      if(table == this.TABLE_NAME)
-        this.insertIDs(data, this.TABLE_NAME_1);
-      else{
-        if(table == this.TABLE_NAME_4)
-          this.insertData(this.all_data[1],this.TABLE_NAME_5);
-        else if(table == this.TABLE_NAME_5)
-          this.insertData(this.all_data[2],this.TABLE_NAME_6);
-        else if(table == this.TABLE_NAME_6)
-          this.insertData(this.all_data[3],this.TABLE_NAME_7);
-        else 
-            this.getAllData();  
-      }  
-    }).catch(error => {
-        console.error("ERROR: " + JSON.stringify(error));
-    });
+  createTable(data, table) {   
+    
+    const table1 = this.sql.createTable(this.TABLE_NAME);
+    const table2 = this.sql.createTable(this.TABLE_NAME_1);
+    const table3 = this.sql.createTable(this.TABLE_NAME_2);
+    const table4 = this.sql.createTable(this.TABLE_NAME_3);
+    const table5 = this.sql.createTable(this.TABLE_NAME_4);
+    const table6 = this.sql.createTable(this.TABLE_NAME_5);
+    const table7 = this.sql.createTable(this.TABLE_NAME_6);
+    const table8 = this.sql.createTable(this.TABLE_NAME_7);
+
+    const tables = [table1, table2, table3, table4, table5, table6, table7, table8]
+
+    const create = Observable.forkJoin(tables);
+
+    create.subscribe(result => {
+        this.insertIDs(data);
+    },
+    error =>  this.loader.hideLoader(),
+    () => console.log('DONE'));
   }
 
   /* INSERTING IDS OF EACH PROJECT TO GET DATA ACCORDINGLY IN FUTURE */
-  insertIDs(data, table) {
-    this.sql.addingIDs(table,data).then(result => {
-      if(table == this.TABLE_NAME_1)
-        this.insertIDs(data,this.TABLE_NAME_2);
-      else if(table == this.TABLE_NAME_2)    
-        this.insertIDs(data,this.TABLE_NAME_3);
-      else if(table == this.TABLE_NAME_3)
-        this.getDatabyElements(data, this.TABLE_NAME_4);
-    }).catch(error => {
-        console.error("ERROR: " + JSON.stringify(error));
-    });
-  
-  }
-
-  getDatabyElements(data,table){
-    this.makeRequest(table, data).subscribe(result => {
-      this.insertMultipleData(result);
+  insertIDs(projects) {
+    this.inserting(projects,'IDs').subscribe(result => {
+      this.insertData(projects);
     },
-    error => console.log(JSON.stringify(error)),
-    () => console.log('DONE.')
-    );
+    error =>  this.loader.hideLoader(),
+    () => console.log('DONE'));
   }
-  /* INSERTING DATA RETURNED BY MULTIPLE FORK JOINS AND MAPPING EACH INDEX TO GET DATA ACCORDINGLY,
-    LIKE AT FIRST INDEX WE HAVE AN ARRAY WHICH ALSO AN ARRAY OF RESULT
-    DATA IS RETURNED AS WE PASSED IN OUR HTTP REQUESTS
-    AT O INDEX: ROLES
-    AT 1 INDEX: AREAS
-    AT 2 INDEX: ELEMENTS 
-  */
-  insertMultipleData(data){  
-    let roles = [];let elements = []; let areas = []; let locations = [];
-    data.forEach((element, index) => {
-      element.forEach((sub_element, sub_index) => {
-          if(sub_element.result.length > 0){
-            sub_element.result.forEach((res_element, res_index) => {
-                res_element.project_id = this.projects[index]._id;
-                res_element.customer_id = this.projects[index].customer._id;
-                if(sub_index == 0)
-                  roles.push(res_element);
-                else if(sub_index == 1)
-                  areas.push(res_element);
-                else if(sub_index == 2)
-                  elements.push(res_element);    
-                else if(sub_index == 3)
-                 locations.push(res_element);  
-            });
-          }
-      });
-    });
-    this.all_data = [];
-    this.all_data[0] = roles;
-    this.all_data[1] = areas;
-    this.all_data[2] = elements;
-    this.all_data[3] = locations
-                
-    this.insertData(this.all_data[0],this.TABLE_NAME_4);
+
+  /* INSERTING DATA TO TABLES */
+  insertData(projects) {
+    this.inserting(projects,'DATA').subscribe(result => {
+       this.getAllData();
+    },
+    error =>  this.loader.hideLoader(),
+    () => console.log('DONE'));;
   }
- 
-  /* MAKING MULTIPLE REQUESTS FOR EACH ARRAY INDEX */
-  makeRequest(table, data): Observable<any> {
-    let all_data = [];
+
+  /* ITERARING THROUGH PROJECTS ARRAY AND SAVING DATA TO SQLITE TABLES */
+  inserting(projects, value){
     return new Observable(observer => {
-      data.forEach((project, index) => {
-        this.getForkJoin(project).subscribe(reslut => {
-            all_data.push(reslut);
-            if(index == data.length - 1)
-              observer.next(all_data);
-        });   
+        projects.forEach((project,index) => {
+          this.forkJoin(project, value).subscribe(result => {
+              if(index == (projects.length -1))
+                observer.next(true);   
+          });
       });
     });
-    
+
   }
 
-  /* GETTING FORK JOIN FOR EACH INDEX , AS WE ARE HAVING ELEMENTS , ROLES, AREAS AT EACH INDEX 
-    AND WE HAVE TO GET THEIR DETAILS SO FOR ONE INDEX, WE ARE MAKING ONE FOKJOIN AND GETTING DATA FROM 
-    3 ENDPOINTS, IT WILL BE DONE FOR EACH INDEX OF PROJECTS ARRAY
-   */
-  getForkJoin(project): Observable<any> {          
-    let formData = null;
-    let request1 = null;
-    let request2 = null;
-    let request3 = null;
-    let request4 = null;
-    
-    /* MAKING REQUEST FOR ROLES */
-    this.formBuilder.initIDForm(project.roles);
-    formData = this.formBuilder.getIDForm().value;
-    request1 = this.operations.get_data('roles/getByIds', formData);
+  /* FOR EACH INDEX CREATING FORK JOIN OBSERVABLE */
+  forkJoin(data,value): Observable<any> {
+    let observablesArray = [];
+    if(value == 'IDs'){
+      const areas = this.sql.addingIDs(this.TABLE_NAME_1,data.areas);
+      const elements = this.sql.addingIDs(this.TABLE_NAME_2,data.elements);
+      const roles = this.sql.addingIDs(this.TABLE_NAME_2,data.roles);
+      observablesArray.push(areas,elements,roles);
+    }
+    else if(value == 'DATA'){
+      let _data = [];
+      _data.push(data);
+      const projects = this.sql.addData(this.TABLE_NAME,_data);
+      const areas = this.sql.addData(this.TABLE_NAME_4,data.areas_data);
+      const elements = this.sql.addData(this.TABLE_NAME_5,data.elements_data);
+      const roles = this.sql.addData(this.TABLE_NAME_6,data.roles_data);
+      const locations = this.sql.addData(this.TABLE_NAME_7,data.customer_locations);
 
-    /* MAKING REQUEST FOR AREAS */
-    this.formBuilder.initIDForm(project.areas);
-    formData = this.formBuilder.getIDForm().value;
-    request2 = this.operations.get_data('areas/getByIds', formData);
-    
-    /* MAKING REQUEST FOR ELEMENTS */
-    this.formBuilder.initIDForm(project.elements);
-    formData = this.formBuilder.getIDForm().value;
-    request3 = this.operations.get_data('elements/getByIds', formData);
-
-    request4 = this.operations.get_data('locations/getByCustomerId/',{customerID: project.customer._id});
-    let observablesArray = [request1, request2 , request3, request4];
+      observablesArray.push(areas,elements,roles,locations,projects);
+    }
 
     return Observable.forkJoin(observablesArray);
-  } 
+
+  }
 
   /* GETTING ALL DATA OF GIVEN TABLE */
   getAllData() {
@@ -334,51 +238,42 @@ export class ProjectsPage {
     }
     this.sql.isDataAvailable(this.TABLE_NAME).then(result => {
         if(result)
-           this.dropTable(refresher, this.TABLE_NAME);
-        else
-            refresher.complete();
-  }).catch(error => {
-    refresher.complete();
-    console.error('ERROR: ' + JSON.stringify(error));
-  });
+           this.dropTable(refresher);
+        else{
+          refresher.complete();
+          this.getData();
+        }
+    }).catch(error => {
+      refresher.complete();
+      console.error('ERROR: ' + JSON.stringify(error));
+    });
 }
 
   /* DROPPING ALL THE OBOVE SIX TABLES FROM DATA BASE */
-  dropTable(refresher, table){
-    this.sql.dropTable(table).then(result => {
-      if(table == this.TABLE_NAME)    
-        this.dropTable(refresher,this.TABLE_NAME_1);
-      else if(table == this.TABLE_NAME_1)
-        this.dropTable(refresher,this.TABLE_NAME_2);
-      else if(table == this.TABLE_NAME_2)    
-        this.dropTable(refresher,this.TABLE_NAME_3);
-      else if(table == this.TABLE_NAME_3)    
-        this.dropTable(refresher,this.TABLE_NAME_4);
-      else if(table == this.TABLE_NAME_4)    
-        this.dropTable(refresher,this.TABLE_NAME_5);
-      else if(table == this.TABLE_NAME_5)    
-        this.dropTable(refresher,this.TABLE_NAME_6);
-      else if(table == this.TABLE_NAME_6)    
-        this.dropTable(refresher,this.TABLE_NAME_7);
-      else if(table == this.TABLE_NAME_7)    
-        this.dropTable(refresher,'Create_Area');    
-      else if(table == 'Create_Area')    
-        this.dropTable(refresher,'Create_Role');  
-      else if(table == 'Create_Role')    
-        this.dropTable(refresher,'Create_Element');
-     else if(table == 'Create_Element')    
-        this.dropTable(refresher,'Study'); 
-     else if(table == 'Study')    
-        this.dropTable(refresher,'Study_Data');
-      else if(table == 'Study_Data'){
+  dropTable(refresher){
+
+    const table1 = this.sql.dropTable(this.TABLE_NAME);
+    const table2 = this.sql.dropTable(this.TABLE_NAME_1);
+    const table3 = this.sql.dropTable(this.TABLE_NAME_2);
+    const table4 = this.sql.dropTable(this.TABLE_NAME_3);
+    const table5 = this.sql.dropTable(this.TABLE_NAME_4);
+    const table6 = this.sql.dropTable(this.TABLE_NAME_5);
+    const table7 = this.sql.dropTable(this.TABLE_NAME_6);
+    const table8 = this.sql.dropTable(this.TABLE_NAME_7);
+
+    const tables = [table1, table2, table3, table4, table5, table6, table7, table8]
+
+    const drop = Observable.forkJoin(tables);
+
+    drop.subscribe(result => {
+       this.getData();
+    }, 
+    error => console.error(ERROR),
+    () => { 
         if(refresher !== '')
           refresher.complete();
-       this.getProfile();
-      }
-    }).catch(error => {
-       refresher.complete();
-       console.error('ERROR: ' + JSON.stringify(error));
-    });
+     });
+
   }
 
 }

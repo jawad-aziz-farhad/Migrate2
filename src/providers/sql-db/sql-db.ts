@@ -46,13 +46,12 @@ export class SqlDbProvider {
  
   /* ADDING DATA TO TABLE */
   addData(table , data): Promise<any> {
-    
     let query = this.insertQuery(table);
     return new Promise((resolve, reject) => {
 
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Elements')
+            if(table == 'Elements' || table == 'Locations')
              console.log(query + '\n' +JSON.stringify(row_data));
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));
@@ -70,37 +69,37 @@ export class SqlDbProvider {
   dataforRow(table, data, index){
       let _data = [];
       if(table == 'Projects')
-        _data = [data[index]._id, data[index].name, data[index].customer.userimage, data[index].locations[0].location , data[index].customer._id , data[index].customer.name];      
+        _data = [data[index]._id, data[index].name, this.isValueAvailable(data[index].customer.image), null , data[index].customer._id , data[index].customer.name];      
       else if(table == 'Locations')
-        _data = [data[index]._id ,data[index].customer_id , data[index].locationname, data[index].addresslineone, data[index].addresslinetwo, data[index].addresslinethree, data[index].addresslinefour, data[index].addresslinefive, data[index].contactname, data[index].telephone,
-                this.pad(data[index].monday_time.openinghour) + ' - ' + this.pad(data[index].monday_time.openingminute) + ' ' + this.isValueAvailable(data[index].monday_time.openingtimeformat)  , 
-                this.pad(data[index].tuesday_time.openinghour) + ' - ' + this.pad(data[index].tuesday_time.openingminute) + ' ' + this.isValueAvailable(data[index].tuesday_time.openingtimeformat), 
-                this.pad(data[index].wednesday_time.openinghour) + ' - ' + this.pad(data[index].wednesday_time.openingminute) + ' ' + this.isValueAvailable(data[index].wednesday_time.openingtimeformat), 
-                this.pad(data[index].thursday_time.openinghour) + ' - ' + this.pad(data[index].thursday_time.openingminute) + ' ' + this.isValueAvailable(data[index].thursday_time.openingtimeformat), 
-                this.pad(data[index].friday_time.openinghour) + ' - ' + this.pad(data[index].friday_time.openingminute) + ' ' + this.isValueAvailable(data[index].friday_time.openingtimeformat),
-                this.pad(data[index].saturday_time.openinghour) + ' - ' + this.pad(data[index].saturday_time.openingminute) + ' ' + this.isValueAvailable(data[index].saturday_time.openingtimeformat),
-                this.pad(data[index].sunday_time.openinghour) + ' - ' + this.pad(data[index].sunday_time.openingminute) + ' ' + this.isValueAvailable(data[index].sunday_time.openingtimeformat),
+        _data = [data[index]._id ,data[index].customerID , data[index].name, data[index].addressOne, data[index].addressTwo, data[index].addressThree, data[index].addressFour, null, data[index].contactName, data[index].telephone,
+                data[index].schedule[0].openingHour + ' - ' + data[index].schedule[0].openingMinute + ' ' + data[index].schedule[0].openingTimeFormat,
+                data[index].schedule[1].openingHour + ' - ' + data[index].schedule[1].openingMinute + ' ' + data[index].schedule[1].openingTimeFormat,
+                data[index].schedule[2].openingHour + ' - ' + data[index].schedule[2].openingMinute + ' ' + data[index].schedule[2].openingTimeFormat,
+                data[index].schedule[3].openingHour + ' - ' + data[index].schedule[3].openingMinute + ' ' + data[index].schedule[3].openingTimeFormat,
+                data[index].schedule[4].openingHour + ' - ' + data[index].schedule[4].openingMinute + ' ' + data[index].schedule[4].openingTimeFormat,
+                data[index].schedule[5].openingHour + ' - ' + data[index].schedule[5].openingMinute + ' ' + data[index].schedule[5].openingTimeFormat,
+                data[index].schedule[6].openingHour + ' - ' + data[index].schedule[6].openingMinute + ' ' + data[index].schedule[6].openingTimeFormat,
               
-                this.pad(data[index].monday_time.closinghour) + ' - ' + this.pad(data[index].monday_time.closingminute) + ' ' + this.isValueAvailable(data[index].monday_time.closingtimeformat)  , 
-                this.pad(data[index].tuesday_time.closinghour) + ' - ' + this.pad(data[index].tuesday_time.closingminute) + ' ' + this.isValueAvailable(data[index].tuesday_time.closingtimeformat), 
-                this.pad(data[index].wednesday_time.closinghour) + ' - ' + this.pad(data[index].wednesday_time.closingminute) + ' ' + this.isValueAvailable(data[index].wednesday_time.closingtimeformat), 
-                this.pad(data[index].thursday_time.closinghour) + ' - ' + this.pad(data[index].thursday_time.closingminute) + ' ' + this.isValueAvailable(data[index].thursday_time.closingtimeformat), 
-                this.pad(data[index].friday_time.closinghour) + ' - ' + this.pad(data[index].friday_time.closingminute) + ' ' + this.isValueAvailable(data[index].friday_time.closingtimeformat),
-                this.pad(data[index].saturday_time.closinghour) + ' - ' + this.pad(data[index].saturday_time.closingminute) + ' ' + this.isValueAvailable(data[index].saturday_time.closingtimeformat),
-                this.pad(data[index].sunday_time.closinghour) + ' - ' + this.pad(data[index].sunday_time.closingminute) + ' ' + this.isValueAvailable(data[index].sunday_time.closingtimeformat)
+                data[index].schedule[0].closingHour + ' - ' + data[index].schedule[0].closingMinute + ' ' + data[index].schedule[0].closingTimeFormat,
+                data[index].schedule[1].closingHour + ' - ' + data[index].schedule[1].closingMinute + ' ' + data[index].schedule[1].closingTimeFormat,
+                data[index].schedule[2].closingHour + ' - ' + data[index].schedule[2].closingMinute + ' ' + data[index].schedule[2].closingTimeFormat,
+                data[index].schedule[3].closingHour + ' - ' + data[index].schedule[3].closingMinute + ' ' + data[index].schedule[3].closingTimeFormat,
+                data[index].schedule[4].closingHour + ' - ' + data[index].schedule[4].closingMinute + ' ' + data[index].schedule[4].closingTimeFormat,
+                data[index].schedule[5].closingHour + ' - ' + data[index].schedule[5].closingMinute + ' ' + data[index].schedule[5].closingTimeFormat,
+                data[index].schedule[6].closingHour + ' - ' + data[index].schedule[6].closingMinute + ' ' + data[index].schedule[6].closingTimeFormat
               ]
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')        
         _data = [data[index].project_id, data[index]._id];     
       else if(table == 'Areas')
-        _data = [data[index].areaname, data[index]._id , data[index].popularity_number, null , null , data[index].project_id];
+        _data = [data[index].name, data[index]._id , data[index].popularity, null , null , data[index].project_id];
+      else if(table == 'Elements')
+        _data = [data[index].name, data[index]._id , data[index].popularity, data[index].rating, data[index].numericID, data[index].project_id];
+      else if(table == 'Roles') 
+        _data = [data[index].name, data[index]._id , data[index].popularity, null , null ,data[index].project_id]; 
       else if(table == 'Create_Area')
         _data = [data[index]._id, data[index].areaname, data[index].areatype , data[index].id_of_project, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].dateadded];   
-      else if(table == 'Roles') 
-        _data = [data[index].rolename, data[index]._id , data[index].popularity_number, null , null ,data[index].project_id]; 
       else if(table == 'Create_Role')
         _data = [data[index]._id, data[index].rolename, data[index].position , data[index].id_of_project, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].dateadded];   
-      else if(table == 'Elements')
-        _data = [data[index].description, data[index]._id , data[index].popularity_number, data[index].rating, data[index].id,  data[index].project_id];
       else if(table == 'Create_Element')
         _data = [data[index]._id, data[index].description, data[index].element_type , data[index].rating , data[index].category , data[index].popularity_number , data[index].types , data[index].id_of_project , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].dateadded];
       else if(table == 'Study')
@@ -208,7 +207,6 @@ export class SqlDbProvider {
 
   /* GETTING IDS OF ROLES, ELEMENTS, AREAS TO FETCH DATA  */
   getIDData(table, id): Promise<any> {
-
     let query = '';
     if(table == 'Locations')
       query = "SELECT * FROM " + `${table}` + " WHERE customer_id=?"
@@ -247,11 +245,11 @@ export class SqlDbProvider {
                        friday_time_to: result.rows.item(i).friday_time_to, saturday_time_to: result.rows.item(i).saturday_time_to, sunday_time_to: result.rows.item(i).sunday_time_to
                       });
           else if(table == 'Areas')
-            data.push({_id: result.rows.item(i)._id , areaname: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id});
+            data.push({_id: result.rows.item(i)._id , areaname: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity, project_id: result.rows.item(i).project_id});
           else if(table == 'Roles') 
-             data.push({_id: result.rows.item(i)._id, rolename: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity_number, project_id: result.rows.item(i).project_id}); 
+             data.push({_id: result.rows.item(i)._id, rolename: result.rows.item(i).name, popularity_number: result.rows.item(i).popularity, project_id: result.rows.item(i).project_id}); 
           else if(table == 'Elements')
-             data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity_number, rating: result.rows.item(i).rating,element_id: result.rows.item(i).element_id, project_id: result.rows.item(i).project_id});
+             data.push({_id: result.rows.item(i)._id ,description: result.rows.item(i).name , popularity_number: result.rows.item(i).popularity, rating: result.rows.item(i).rating,element_id: result.rows.item(i).element_id, project_id: result.rows.item(i).project_id});
           else if(table == 'Study')
               data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, project_id: result.rows.item(i).project_id, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime});
           else if(table == 'Study_Data')
@@ -355,8 +353,6 @@ export class SqlDbProvider {
             });    
           }
         }
-        else
-          console.log('NO DATA')
         
         resolve(data);
 
@@ -380,10 +376,8 @@ export class SqlDbProvider {
           reject(err);
         });
     });
-    
   }
 
- 
   deleteDB(): Observable<any> {
     return new Observable((observer) => {
      this.platform.ready().then(() => {

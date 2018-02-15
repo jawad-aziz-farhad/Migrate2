@@ -46,6 +46,7 @@ export class AuthProvider {
   }
   
   handleJWT(jwt: string) {
+    localStorage.setItem('TOKEN',jwt);
     return this.storage.set('jwt', jwt).then(() => this.authUser.next(jwt)).then(jwt => jwt);
   }
 
@@ -59,7 +60,6 @@ export class AuthProvider {
   }
 
   logOut(){
-    // this.storage.remove('jwt').then(() => this.authUser.next(null));
     this.storage.remove('jwt').then(() => {
        this.storage.remove('currentUser').then(() => this.authUser.next(null));
     });
@@ -94,11 +94,4 @@ export class AuthProvider {
     });
   }
 
-  getJwt(){
-    return this.storage.get('jwt').then(jwt => {
-        return jwt;
-    }).catch(error => {
-       return error 
-    });
-  }
 }

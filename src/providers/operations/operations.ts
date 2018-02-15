@@ -2,8 +2,10 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/mergeMap';
 import { Observable } from "rxjs";
 import { forkJoin } from "rxjs/observable/forkJoin";
+
 import { SERVER_URL } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
@@ -37,11 +39,82 @@ export class OperationsProvider {
   }
 
   get_data(endPoint, data){
-    this.END_POINT = SERVER_URL  + endPoint;
+    this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
-    headers.append('Authorization', `${data.token}`);
-    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json());
+    // return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json());
+     return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).switchMap(response => {
+        let res = response.json();
+        let URL = SERVER_URL + 'locations/getByCustomerId';
+        let _data = { customerID: res.customer };
+        return this.http.post(`${URL}`, _data, {headers: headers}).map(res => res.json());
+     });
   }
+
+  getdata(){
+    let res = []; let requests = [];
+    let URL = SERVER_URL + 'projects/get';
+    let headers = this.headers.getHeaders();
+    return this.http.post(`${URL}`, null ,{ headers: headers }).flatMap(response => {      
+      let res = response.json();
+      return new Observable(observer => {
+          res.forEach((project, index) => {
+            this.forkJoin(project).subscribe((result: any) => {
+                result.forEach((item,index) => {
+                    if(index >= 2 && item.result.length > 0){
+                        item.result.forEach((subitem,subindex) => {
+                            subitem.project_id = project._id;
+                        });
+                      }
+                });
+                res[index].customer = result[0];
+                res[index].customer_locations = result[1];
+                res[index].areas_data = result[2].result;
+                res[index].elements_data = result[3].result;
+                res[index].roles_data = result[4].result;
+
+                if(index == (res.length - 1))
+                  observer.next(res);
+            });   
+          });
+        });
+    });
+  }
+
+  forkJoin(project){
+       let requests = []; let request = null; let data = null;
+       
+       request = this.singleRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
+       requests.push(request);
+       
+       request = this.singleRequest('locations/getByCustomerId',{customerID: this.checkRequestData(project.customer)});
+       requests.push(request);
+       
+       request = this.singleRequest('areas/getByIds',{ids: this.checkRequestData(project.areas)});
+       requests.push(request);
+      
+       request = this.singleRequest('elements/getByIds',{ids: this.checkRequestData(project.elements)});
+       requests.push(request);
+
+       request = this.singleRequest('roles/getByIds',{ids: this.checkRequestData(project.roles)});
+       requests.push(request);
+      
+       return Observable.forkJoin(requests);
+  }
+
+  checkRequestData(data){
+    let request_data = null;
+    if(data.length > 0)
+       request_data = data
+    else
+       request_data = [];
+     return request_data;  
+  }
+
+  singleRequest(endPoint,data): Observable<any> {
+    let URL = SERVER_URL + endPoint;
+    return this.http.post(`${URL}`, data , {headers: this.headers.getHeaders()}).map(res => res.json());
+  }
+
 
   getLocationsByCustomerID(endPoint, id){
     this.END_POINT = SERVER_URL  + endPoint + `${id}`;

@@ -17,6 +17,8 @@ export class HeadersProvider {
 
   getHeaders(): Headers {
     let headers = new Headers();
+    let token = localStorage.getItem('TOKEN');
+    headers.append('Authorization',token);
     headers.append('Content-Type','application/json');
     headers.append('charset', 'utf-8');
     headers.append('Access-Control-Allow-Origin', '*');
@@ -25,6 +27,7 @@ export class HeadersProvider {
     headers.append('Access-Control-Allow-Headers', 'Content-Type, ');
     return headers;
   }
+
   getFileHeaders(){
     let headers = new Headers();
     headers.append('Access-Control-Allow-Origin', '*');
