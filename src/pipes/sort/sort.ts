@@ -12,11 +12,11 @@ export class SortPipe implements PipeTransform {
   /**
    * Takes a value and makes it lowercase.
    */
-  transform(array: Array<any>, popularity_number: string, element_id: string, order: any): Array<any> {
+  transform(array: Array<any>, popularity: string, element_id: string, order: any): Array<any> {
     array.sort((a: any, b: any) => {
-      if (a[popularity_number] < b[popularity_number]) {
+      if (a[popularity] < b[popularity]) {
         return -1;
-      } else if (a[popularity_number] > b[popularity_number]) {
+      } else if (a[popularity] > b[popularity]) {
         return 1;
       } else {
         return 0;

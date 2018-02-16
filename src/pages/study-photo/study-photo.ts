@@ -137,6 +137,7 @@ export class StudyPhotoPage {
         }
       }).catch(error => {
         this.loader.hideLoader();
+        alert(JSON.stringify(error));
         this.toast.showToast(ERROR);
       });
   }

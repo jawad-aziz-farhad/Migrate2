@@ -34,12 +34,12 @@
 
     <form [formGroup]="elementForm" *ngIf="show">
         
-      <h2>Description:</h2>
+      <h2>Name:</h2>
       
-      <ion-input type="text" placeholder="Enter Description" name="description" formControlName="description"></ion-input>
+      <ion-input type="text" placeholder="Enter name" name="name" formControlName="name"></ion-input>
 
-      <p *ngIf="!elementForm.controls.description.valid && (elementForm.controls.description.dirty)">
-        Please enter Element Description(minimum 5 Characters).
+      <p *ngIf="!elementForm.controls.name.valid && (elementForm.controls.name.dirty)">
+        Please enter element name(minimum 5 Characters).
       </p>
 
       <ion-list>
@@ -51,7 +51,7 @@
         </ion-item>       
       </ion-list>
 
-      <ion-list radio-group [(ngModel)]="typesModel" formControlName="element_type">
+      <ion-list radio-group [(ngModel)]="typesModel" formControlName="type">
           <h2>
             Types:
           </h2>
@@ -68,7 +68,7 @@
 
       </ion-list>
 
-      <ion-list radio-group [(ngModel)]="ratingModel" formControlName="element_type">
+      <ion-list radio-group [(ngModel)]="ratingModel" formControlName="type">
         <h2>
           Default Rating:
         </h2>

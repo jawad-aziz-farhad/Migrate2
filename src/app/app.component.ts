@@ -34,7 +34,7 @@ export class MyApp extends SyncOfflineData {
   rootPage: any = null;
 
   pages: Array<{title: string, component: any}>;
-  
+    
   constructor(public platform: Platform, 
               public http: Http,
               public statusBar: StatusBar, 

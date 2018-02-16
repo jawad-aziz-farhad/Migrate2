@@ -92,7 +92,7 @@
     
     <ion-list class="list_items" *ngIf="show" padding>
       <ion-item *ngFor="let role of roles;" (click)="selectRole(role)" [ngClass]="getStyle(role)">
-        <p>{{ role.rolename }}</p>
+        <p>{{ role.name }}</p>
       </ion-item>
     </ion-list>
  </div>
@@ -105,15 +105,15 @@
               </ion-col>              
           </ion-row>
          
-          <ion-item *ngFor="let role of roles | sort : 'popularity_number'; let i=index;" [ngClass]="getStyle(role)" (click)="selectRole(role)">
-            <p>{{ role.rolename }}</p>
+          <ion-item *ngFor="let role of roles | sort : 'popularity'; let i=index;" [ngClass]="getStyle(role)" (click)="selectRole(role)">
+            <p>{{ role.name }}</p>
           </ion-item>
          
       </ion-list>
     
       <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
           <ion-item *ngFor="let role of roles?.reverse(); let i=index;" (click)="selectRole(role)" [ngClass]="getStyle(role)">
-            <p>{{ role.rolename }}</p>
+            <p>{{ role.name }}</p>
         </ion-item>
       </ion-list>
       

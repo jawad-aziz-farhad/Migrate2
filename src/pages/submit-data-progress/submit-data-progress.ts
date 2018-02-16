@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ProgressHttp } from "angular-progress-http";
 import { FormBuilder, FormGroup, FormArray ,Validators } from '@angular/forms';
-import { ParseDataProvider , NetworkProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , StudyStatusProvider, ParserProvider} from '../../providers';
+import { ParseDataProvider , NetworkProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , StudyStatusProvider, ParserProvider} from '../../providers';
 import { SERVER_URL , ERROR, OFFLINE_STUDY_DATA_MSG } from '../../config/config';
 import { ProjectsPage } from '../projects/projects';
 import { AreasPage } from '../areas/areas';
@@ -41,7 +41,8 @@ export class SubmitDataProgressPage {
               public toast: ToastProvider,
               public studyStatus: StudyStatusProvider,
               public formProvider: FormBuilderProvider,
-              public parser: ParserProvider) {
+              public parser: ParserProvider,
+              public headers: HeadersProvider) {
     this.initView();           
   }
 
@@ -79,13 +80,14 @@ export class SubmitDataProgressPage {
     //this.formProvider.initFormBuilder(this.parseData.getDataArray(), this.user);
     this.formProvider.initFormBuilder(this.parser.geAllData(), this.user);
     let formData = this.formProvider.getFormBuilder().value;
+    alert(JSON.stringify(formData));
     let url = SERVER_URL + 'ras_data/add';
     this.http
         .withUploadProgressListener(progress => { 
           console.log(`Uploading ${progress.percentage}%`); 
           this.progress = progress.percentage;
         })
-        .post(`${url}`, formData)
+        .post(`${url}`, formData, {headers: this.headers.getHeaders()})
         .map(res => res.json())
         .subscribe((response) => {
             console.log("RESPONSE: " +JSON.stringify(response));

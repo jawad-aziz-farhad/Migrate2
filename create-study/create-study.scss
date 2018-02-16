@@ -1,0 +1,14 @@
+page-create-study {
+    ion-content {
+        min-height: 200px !important;
+    }
+    ion-item {
+        ion-label {
+           font-size: 25px;
+        }
+
+        ion-range {
+            font-size: 30px;
+        }
+    }
+}

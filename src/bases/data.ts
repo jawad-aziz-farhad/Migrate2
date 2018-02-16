@@ -1,7 +1,7 @@
 
 import { ViewChild } from '@angular/core';
 import { NavController, MenuController } from 'ionic-angular';
-import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider,
+import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
         OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider, Time} from '../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../config/config';
 import { TimerComponent } from '../components/timer/timer';
@@ -21,20 +21,22 @@ export class Data {
   private data: Array<any>;
   private sortedData: Array<any>;
 
-
-  constructor(protected navCtrl: NavController,
-              protected menuCtrl: MenuController,
-              protected sql: SqlDbProvider, 
-              protected loader: LoaderProvider,
-              protected formBuilder: FormBuilderProvider,
-              protected search: SearchProvider,
-              protected operations: OperationsProvider,
-              protected network: NetworkProvider,
-              protected studyStatus: StudyStatusProvider,
-              protected toast: ToastProvider,
-              protected alert: AlertProvider,
-              protected time: Time
-             ){}
+  constructor(public navCtrl: NavController,
+              public time: Time ,
+              public parseData: ParseDataProvider,
+              public search: SearchProvider,
+              public loader: LoaderProvider,
+              public operations: OperationsProvider,
+              public sql: SqlDbProvider,
+              public network: NetworkProvider,
+              public studyStatus: StudyStatusProvider,
+              public alert: AlertProvider,
+              public formBuilder: FormBuilderProvider,
+              public menuCtrl: MenuController,
+              public toast: ToastProvider){
+    
+    
+  }
 
   init(TABLE_NAME: string, TABLE_NAME_1: string, project: any){
       this.TABLE_NAME = TABLE_NAME;

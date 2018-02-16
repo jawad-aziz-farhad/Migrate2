@@ -6,7 +6,7 @@ import { SelectAreaPage } from '../select-area/select-area';
 import { CreateRolePage } from '../create-role/create-role';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
          AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../../providers';
-import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../../config/config';
+import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { Role, DummyData , StudyData } from '../../models';
 import { Observable } from "rxjs";
 import { FormBuilder } from '@angular/forms/src/form_builder';
@@ -110,8 +110,14 @@ export class SelectRolePage {
     this.roles = [];
     this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
       console.log('ROLE IDS: '+ JSON.stringify(data));
-      this.formBuilder.initIDForm(data);
-      this.getData();
+      if(data.length > 0){
+        this.formBuilder.initIDForm(data);
+        this.getData();
+      }
+      else{
+        this.toast.showBottomToast(NO_DATA_FOUND);
+        this.loader.hideLoader();
+      }
     }).catch(error => {
         this.loader.hideLoader();
         console.error("ERROR: " + JSON.stringify(error));

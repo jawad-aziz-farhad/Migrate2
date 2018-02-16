@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController,  NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthProvider , ToastProvider, LoaderProvider } from '../../providers/index';
-import { EMAIL_REGEXP, MESSAGE } from '../../config/config';
+import { EMAIL_REGEXP, MESSAGE, ERROR } from '../../config/config';
 import { ResetPasswordPage } from '../reset-password/reset-password';
 
 /**
@@ -55,21 +55,15 @@ export class LoginPage {
     .subscribe(res => {
       this.handleResponse(res);
     },
-    err => this.handleError(err));
+    err => {
+      this.handleError(err)
+    });
   }
 
   handleResponse(response: any){
     if(response.success == false )
-        this.openModal(response.msg);
+      this.openModal(response.msg);
     else{
-      /*
-      this.authProvider.handleJWT(response.token).then(() => {
-        console.log('LOGGED IN.');
-        //this.setUserInfo(response.token);
-      }).catch(error => {
-        console.error('ERROR IN LOGGING IN.');
-      });
-      */
       this.authProvider._decodeUser(response.token).then(res => {
         this.handleJWT(response.token); 
       }).catch(error => {
@@ -96,13 +90,14 @@ export class LoginPage {
 
   /* HANDLING LOGIN ERROR */
   handleError(error){
-    let message: string;
-    message  = 'Login Failed';
-    this.toast.showToast(message);
+    if(error.success == false )
+      this.openModal(error.msg);
+    else
+      this.toast.showToast(ERROR);
+    
   }
   /* OPENING MODAL */
   openModal(error) {
-
     let modal = this.modalCtrl.create('AlertModalPage', {error: error, email: this.loginForm.value.email}, { cssClass: 'inset-modal login-error-modal' });
     modal.onDidDismiss(data => {
       if(data.action == 'reset_password')

@@ -65,13 +65,14 @@ export class CreateAreaPage {
   /* INITIALIZE FORM BUILDER */
   initFormBuilder(){
     this.areaForm = this.formBuilder.group({
-      areaname: ['', Validators.required],
-      areatype: [this.types[0], Validators.required],
-      addedby:  '',
-      id_of_addedby:  '',
-      id_of_project: this.project._id,
-      status:  'active',
-      dateadded:  new Date()
+      name: ['', Validators.required],
+      addedBy:  this.formBuilder.group({
+                    _id: '',
+                    name :'',
+                    date : new Date()
+                  }),
+      projectID: this.project._id,
+      status:  'active'
     });
   }
 
@@ -82,8 +83,8 @@ setUserInfo() {
     this.storage.get('currentUser').then(user => {
       let name = user.firstname + ' ' + user.lastname;
       let id = user._id;
-      this.areaForm.controls['addedby'].setValue(name);
-      this.areaForm.controls['id_of_addedby'].setValue(id);
+      this.areaForm.get('addedBy.name').setValue(name);
+      this.areaForm.get('addedBy._id').setValue(id);
       this.checkInternet();
     });
   }
@@ -123,7 +124,7 @@ setUserInfo() {
 
   /* INSERTING DATA TO TABLE */
   insertData(data) {
-    let _data = {project_id: this.project._id, _id: data._id};
+    let _data = {projectID: this.project._id, _id: data._id};
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.toast.showToast('Area added succesfully.');                
       this.loader.hideLoader();
@@ -145,13 +146,12 @@ setUserInfo() {
 
   /* CREATING NEW AREA IN OFFLINE MODE */
   create_Offline_Area(){
-    let areaname = this.areaForm.get('areaname').value;
-    let areatype = this.areaForm.get('areatype').value;
-    let username = this.areaForm.get('addedby').value;
-    let userid   = this.areaForm.get('id_of_addedby').value;
-    let dateadded= this.areaForm.get('dateadded').value;
-    let _data    = [{ _id: dateadded + '-area' ,areaname: areaname,areatype: areatype ,id_of_project: this.project._id, addedby:username , 
-                      id_of_addedby: userid, status: 'active', dateadded: dateadded}];
+    let areaname = this.areaForm.get('name').value;
+    let username = this.areaForm.get('addedBy.name').value;
+    let userid   = this.areaForm.get('addedBy._id').value;
+    let date= this.areaForm.get('addedBy.date').value;
+    let _data    = [{ _id: date + '-area' ,areaname: areaname, id_of_project: this.project._id, addedby:username , 
+                      id_of_addedby: userid, status: 'active', date: date}];
     this.sql.addData(this.TABLE_NAME_2,_data).then(result => {
       this.addArea();
     }).catch(error => {
@@ -161,9 +161,9 @@ setUserInfo() {
 
   /* ADDING NEWLY CREATED AREA IN AREAS TABLE */
   addArea(){
-    let areaname = this.areaForm.get('areaname').value;
-    let dateadded= this.areaForm.get('dateadded').value;
-    let _data = [{ areaname: areaname, _id: dateadded + '-area'  , popularity_number: 0, rating: null, id: null, project_id: this.project._id}];
+    let areaname = this.areaForm.get('name').value;
+    let date= this.areaForm.get('addedBy.date').value;
+    let _data = [{ areaname: areaname, _id: date + '-area'  , popularity_number: 0, rating: null, id: null, projectID: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Area added succesfully.');                
       this.areaForm.reset();

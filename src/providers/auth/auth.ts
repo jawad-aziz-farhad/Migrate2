@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http , Headers, RequestOptions } from '@angular/http';
+import { Http , Headers, RequestOptions, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { ReplaySubject, Observable } from "rxjs";
 import { Storage } from "@ionic/storage";
@@ -16,7 +16,7 @@ import { HeadersProvider } from '../headers/headers';
 export class AuthProvider {
   
   public END_POINT: any;
-  public currentUser = { _id: '', username: '', role: '', firstname:'', lastname:'', email:'', status:'', userpermission:'' , userimage: ''};
+  public currentUser = { _id: '', username: '', firstname:'', lastname:'', email:'', status:'',  userimage: ''};
   public authUser = new ReplaySubject<any>(1);
   
   constructor(private readonly http: Http, 
@@ -41,9 +41,14 @@ export class AuthProvider {
     this.END_POINT = SERVER_URL + 'users/authenticate/app';
     return this.http.post(`${this.END_POINT}`, credentials)
     .map(res => res.json())
-    .map(jwt => jwt);
-;    
+    .map(jwt => jwt)
+    .catch(this.handleError);
+    
   }
+
+   handleError(error: Response) {
+     return Observable.throw(error.json());
+   }
   
   handleJWT(jwt: string) {
     localStorage.setItem('TOKEN',jwt);
@@ -73,14 +78,14 @@ export class AuthProvider {
   decodeUser(decodedUser) {
     this.currentUser._id = decodedUser._id;
     this.currentUser.username = decodedUser.username;
-    this.currentUser.firstname = decodedUser.firstname;
-    this.currentUser.lastname = decodedUser.lastname;
+    this.currentUser.firstname = decodedUser.name;
+    this.currentUser.lastname = decodedUser.lastName;
     this.currentUser.email = decodedUser.email;
-    this.currentUser.userimage = decodedUser.userimage;
+    if(typeof decodedUser.userimage !== 'undefined' && decodedUser.userimage !== null && decodedUser.userimage !== '')
+      this.currentUser.userimage = decodedUser.userimage;
+    else
+    this.currentUser.userimage = null;
     this.currentUser.status = decodedUser.status;
-    this.currentUser.role = decodedUser.role;
-    this.currentUser.userpermission = decodedUser.userpermission;
-    
     return this.currentUser;
   }
 

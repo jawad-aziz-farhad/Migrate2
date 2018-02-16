@@ -31,9 +31,9 @@
   <form [formGroup]="areaForm">
       <ion-item margin-bottom no-padding>
           <ion-label color="dark" stacked>Name</ion-label>
-          <ion-input type="text" placeholder="Enter Area" name="areaname" formControlName="areaname"></ion-input>
+          <ion-input type="text" placeholder="Enter Area" name="name" formControlName="name"></ion-input>
       
-          <p *ngIf="!areaForm.controls.areaname.valid && (areaForm.controls.areaname.dirty)">
+          <p *ngIf="!areaForm.controls.name.valid && (areaForm.controls.name.dirty)">
               Please enter Area Name.
           </p>
       </ion-item>

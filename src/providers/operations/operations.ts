@@ -41,13 +41,7 @@ export class OperationsProvider {
   get_data(endPoint, data){
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
-    // return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json());
-     return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).switchMap(response => {
-        let res = response.json();
-        let URL = SERVER_URL + 'locations/getByCustomerId';
-        let _data = { customerID: res.customer };
-        return this.http.post(`${URL}`, _data, {headers: headers}).map(res => res.json());
-     });
+    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json());
   }
 
   getdata(){
@@ -62,7 +56,7 @@ export class OperationsProvider {
                 result.forEach((item,index) => {
                     if(index >= 2 && item.result.length > 0){
                         item.result.forEach((subitem,subindex) => {
-                            subitem.project_id = project._id;
+                            subitem.projectID = project._id;
                         });
                       }
                 });
@@ -124,7 +118,7 @@ export class OperationsProvider {
 
   addData(formData , endPoint){
     let url = SERVER_URL + endPoint;
-    return this.http.post(`${url}`, formData).map(res => res.json());
+    return this.http.post(`${url}`, formData,{headers: this.headers.getHeaders()}).map(res => res.json());
   }
 
   uploadFile(data: any): Promise<any>{
@@ -133,15 +127,20 @@ export class OperationsProvider {
     
     filename = filename.split("?");
     filename = filename[0];
+    let headers = this.headers.getHeaders();
+    
     let options = {
       fileKey: 'photo',
       fileName: filename,
       chunkedMode: false,
       mimeType: "image/jpeg",
+      headers: headers
     };
   
     const fileTransfer: FileTransferObject = this.transfer.create();
-    this.END_POINT = SERVER_URL + data.endPoint;
+    //this.END_POINT = SERVER_URL + data.endPoint;
+    
+    this.END_POINT = 'http://retime-dev.herokuapp.com/' + data.endPoint;
     // Using the FileTransfer to upload the image and returning Promise
     return new Promise((resolve, reject) => {
 
@@ -168,6 +167,7 @@ export class OperationsProvider {
       fileName: filename,
       chunkedMode: false,
       mimeType: "image/jpeg",
+      headers: {Autorization: localStorage.getItem('TOKEN')}
     };
   
     const fileTransfer: FileTransferObject = this.transfer.create();
@@ -187,34 +187,6 @@ export class OperationsProvider {
       });  
      });
   }
-
-  // syncData(): Promise<any>{
-  //    return new Promise((resolve, reject) => {
-  //       this.sql.getAllData('Study_Data').then(result => {
-  //         resolve(result);      
-  //       }).catch(error => {
-  //         console.error('SYNC ERROR: ' + JSON.stringify(error));
-  //         reject(error);
-  //       });
-  //    });
-  // }
-
-  // checkForImages(data){
-
-  //    for(let i=0; i<data.length; i++ ) {
-  //      if(data[i].photo.indexOf('file:///') > -1) {
-  //         let params = {endPoint:'ras_data/study_image' , key :'photo', file: data[i].photo};
-  //         this.uploadFile(params).then(response => {
-  //             data[i].photo = response.path;
-  //             this.parseData.getDataArray()[i].setPhoto(response.path);
-  //         }).catch(error => {
-  //             console.error('ERROR: ' + JSON.stringify(error));
-  //         });
-  //      }
-  //      else 
-  //       console.error('NOT FOUND.');
-  //    }
-  // }
 
   uploadPhoto(photo: any): Promise<any>{  
    return new Promise((resolve, reject) => {

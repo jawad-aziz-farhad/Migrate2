@@ -36,21 +36,17 @@
 
     <ion-item margin-bottom no-padding>
       <ion-label color="dark" stacked>Role Name</ion-label>
-      <ion-input type="text" placeholder="Enter Role Name" formControlName="rolename"></ion-input>
+      <ion-input type="text" placeholder="Enter Role Name" formControlName="name"></ion-input>
 
-      <p *ngIf="!roleForm.controls.rolename.valid && (roleForm.controls.rolename.dirty)">
+      <p *ngIf="!roleForm.controls.name.valid && (roleForm.controls.name.dirty)">
         Please enter Role Name.
       </p>
     </ion-item>
 
-    <!-- <ion-item margin-bottom no-padding>
-        <ion-label color="dark" stacked>Position</ion-label>
-        <ion-input type="radio" *ngFor="let role of roles; let i=index;" value="{{role}}">{{ role }}</ion-input>
-    </ion-item> -->
     <ion-list radio-group formControlName="position">
-      <ion-item *ngFor="let role of roles; let i=index;">
-        <ion-radio value="{{ role }}" [checked]="i == 0"></ion-radio>
-        <ion-label>{{ role }}</ion-label>
+      <ion-item *ngFor="let position of positions; let i=index;">
+        <ion-radio value="{{ position.id }}" [checked]="i == 0"></ion-radio>
+        <ion-label>{{ position.value }}</ion-label>
       </ion-item>
     </ion-list>
 

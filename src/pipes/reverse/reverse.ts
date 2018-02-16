@@ -6,12 +6,12 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 
 export class ReversePipe implements PipeTransform {
-  transform (array: Array<any>, element_id: string, order: any) {
+  transform (array: Array<any>, numericID: string, order: any) {
     array.sort((a: any, b: any) => {
       if(order == 'ascending'){
-        if (a[element_id] < b[element_id]) {
+        if (a[numericID] < b[numericID]) {
           return -1;
-        } else if (a[element_id] > b[element_id]) {
+        } else if (a[numericID] > b[numericID]) {
           return 1;
         } else {
           return 0;
@@ -19,9 +19,9 @@ export class ReversePipe implements PipeTransform {
       }
 
       else if(order == 'descending'){
-        if (a[element_id] < b[element_id]) {
+        if (a[numericID] < b[numericID]) {
           return 1;
-        } else if (a[element_id] > b[element_id]) {
+        } else if (a[numericID] > b[numericID]) {
           return -1;
         } else {
           return 0;

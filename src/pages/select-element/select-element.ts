@@ -7,7 +7,7 @@ import { AddFrequencyPage } from '../add-frequency/add-frequency';
 import { CreateElementPage } from '../create-element/create-element';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
          OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider , AlertProvider } from '../../providers';
-import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../../config/config';
+import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { StudyData } from '../../models';
 import { Element , DummyData} from '../../models';
 import { Observable } from "rxjs";
@@ -110,8 +110,14 @@ export class SelectElementPage {
     this.loader.showLoader(MESSAGE);
     this.elements = [];
     this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
-      this.formBuilder.initIDForm(data);
-      this.getData();
+      if(data.length > 0){
+        this.formBuilder.initIDForm(data);
+        this.getData();
+      }
+      else{
+        this.toast.showBottomToast(NO_DATA_FOUND);
+        this.loader.hideLoader();
+      }
     }).catch(error => {
       this.loader.hideLoader();
       console.error("ERROR: " + JSON.stringify(error));

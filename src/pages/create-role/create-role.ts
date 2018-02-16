@@ -22,7 +22,7 @@ export class CreateRolePage {
 
   @ViewChild(TimerComponent) timer: TimerComponent;
   public roleForm: FormGroup;
-  public roles: any;
+  public positions: any;
   public project: any;
   private TABLE_NAME: string = 'Roles';
   private TABLE_NAME_1: string = 'Roles_IDs';
@@ -52,7 +52,12 @@ export class CreateRolePage {
   }
 
   initView(){
-    this.roles = ['Director', 'Manager', 'Supervisor', 'Colleague', 'Customer'];
+    this.positions = [
+    { id: 1, value: 'Director' },
+    { id: 2, value: 'Manager' },
+    { id: 3, value: 'Supervisor/Team Leader' },
+    { id: 4, value: 'Colleague' }
+  ];
     this.project = this.navParams.get('project');
     this.initFormBuilder();  
   }
@@ -61,13 +66,15 @@ export class CreateRolePage {
   initFormBuilder(){
     
     this.roleForm = this.formBuilder.group({
-        rolename: ['', Validators.required],
-        position: [this.roles[0], Validators.required],
-        addedby:'',
-        id_of_addedby: '',
+        name: ['', Validators.required],
+        position: [this.positions[0], Validators.required],
+        addedBy:  this.formBuilder.group({
+                    _id: '',
+                    name :'',
+                    date : new Date()
+                  }),
         status: 'active',
-        id_of_project: this.project._id,
-        dateadded: new Date()
+        projectID: this.project._id
       });
   }
  
@@ -76,9 +83,8 @@ setUserInfo() {
     this.storage.get('currentUser').then(user => {
       let name = user.firstname + ' ' + user.lastname;
       const id = user._id;
-      this.roleForm.controls['addedby'].setValue(name);
-      this.roleForm.controls['id_of_addedby'].setValue(id);
-      
+      this.roleForm.get('addedBy.name').setValue(name);
+      this.roleForm.get('addedBy._id').setValue(id);
       this.checkInternet();
     });
   }
@@ -89,21 +95,22 @@ setUserInfo() {
       this.createRole();
     else
       this.createTable();  
-  } 
+  }
 
-      
   /* ADD A NEW ROLE */
   createRole() {
+      alert(JSON.stringify(this.roleForm.value))
       this.loader.showLoader(MESSAGE);
       this.operations.addData(this.roleForm.value,'roles/add').subscribe(res => {
-          if(res.rolename == this.roleForm.value.rolename) 
+          alert(JSON.stringify(res));
+          if(res.name == this.roleForm.value.name) 
             this.dropTable(res);
           else
             this.toast.showToast(ERROR);
         },
         error => {
           this.loader.hideLoader();
-          console.error('ERROR: ' + JSON.stringify(error));
+          alert('ERROR: ' + JSON.stringify(error));
     });
   }
 
@@ -119,7 +126,7 @@ setUserInfo() {
 
   /* INSERTING DATA TO TABLE */
   insertData(data) {
-    let _data = {project_id: this.project._id, _id: data._id};
+    let _data = {projectID: this.project._id, _id: data._id};
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.toast.showToast('Role added succesfully.');                
       this.loader.hideLoader();
@@ -141,13 +148,13 @@ setUserInfo() {
 
   /* CREATING NEW ROLE IN OFFLINE MODE */
   create_Offline_Role(){
-    let rolename = this.roleForm.get('rolename').value;
+    let rolename = this.roleForm.get('name').value;
     let position = this.roleForm.get('position').value;
-    let username = this.roleForm.get('addedby').value;
-    let userid   = this.roleForm.get('id_of_addedby').value;
-    let dateadded= this.roleForm.get('dateadded').value;
-    let _data    = [{ _id: dateadded + '-role' , rolename: rolename, position: position, id_of_project: this.project._id, addedby:username, id_of_addedby: userid,
-                      status: 'active', dateadded: dateadded}];
+    let username = this.roleForm.get('addedBy.name').value;
+    let userid   = this.roleForm.get('addedBy._id').value;
+    let date= this.roleForm.get('addedBy.date').value;
+    let _data    = [{ _id: date + '-role' , rolename: rolename, position: position, id_of_project: this.project._id, addedby:username, id_of_addedby: userid,
+                      status: 'active', date: date}];
     this.sql.addData(this.TABLE_NAME_2,_data).then(result => {
       this.addRole();
     }).catch(error => {
@@ -157,9 +164,9 @@ setUserInfo() {
 
   /* ADDING NEWLY CREATED ROLE IN ROLES TABLE */
   addRole(){
-    let rolename = this.roleForm.get('rolename').value;
-    let dateadded= this.roleForm.get('dateadded').value;
-    let _data = [{ rolename: rolename, _id: dateadded + '-role' , popularity_number: 0, rating: null, element_id: null, project_id: this.project._id}];
+    let rolename = this.roleForm.get('name').value;
+    let date= this.roleForm.get('addedBy.date').value;
+    let _data = [{ rolename: rolename, _id: date + '-role' , popularity: 0, rating: null, numbericID: null, projectID: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Role added succesfully.');                
       this.roleForm.reset();

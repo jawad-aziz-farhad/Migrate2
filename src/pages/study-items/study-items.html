@@ -51,8 +51,8 @@
         <ng-template ngFor let-round [ngForOf]="study_data?.rounds | studyItems : isStudyEnded" let-i="index">
           <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
             <td>
-              <div class="number-icon">{{ item.element.numericID ? item.element.numericID : (j + 1) }}</div>
-                {{ item.element.description }}
+              <div class="number-icon">{{ item.element.numericID }}</div>
+                {{ item.element.name }}
             </td>
             <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
             <td>{{ item.rating }}</td>

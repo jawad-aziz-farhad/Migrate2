@@ -115,7 +115,7 @@
 
     <ion-list class="list_items" *ngIf="!isFiltering" padding>
         <ion-item *ngFor="let element of elements; let i=index;" (click)="selectElement(element)" [ngClass]="getStyle(element)">
-          <p>{{ element.description }}</p>
+          <p>{{ element.name }}</p>
         </ion-item>
         
     </ion-list>
@@ -127,14 +127,14 @@
                   <div class="sub-heading">Position</div>
                 </ion-col>              
             </ion-row>
-            <ion-item *ngFor="let element of elements | sort : 'popularity_number': 'element_id' : order; let i=index;" [ngClass]="getStyle(element)" (click)="selectElement(element)">
-              <p>{{ element.description }}</p>
+            <ion-item *ngFor="let element of elements | sort : 'popularity': 'numericID' : order; let i=index;" [ngClass]="getStyle(element)" (click)="selectElement(element)">
+              <p>{{ element.name }}</p>
             </ion-item>
         </ion-list>
       
         <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
-            <ion-item *ngFor="let element of elements?.reverse() | reverse: 'element_id' : order; let i=index;" (click)="selectElement(element)" [ngClass]="getStyle(element)">
-              <p>{{ element.description }}</p>
+            <ion-item *ngFor="let element of elements?.reverse() | reverse: 'numericID' : order; let i=index;" (click)="selectElement(element)" [ngClass]="getStyle(element)">
+              <p>{{ element.name }}</p>
             </ion-item>
         </ion-list>
     </div>

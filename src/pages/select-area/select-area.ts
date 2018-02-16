@@ -5,7 +5,7 @@ import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { SelectElementPage } from '../select-element/select-element';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider, TimerService,
         OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider , AlertProvider} from '../../providers';
-import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../../config/config';
+import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { DummyData } from '../../models';
 import { CreateAreaPage } from '../create-area/create-area';
 /**
@@ -109,10 +109,14 @@ export class SelectAreaPage {
     this.loader.showLoader(MESSAGE);
     this.areas = [];
     this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
-      this.formBuilder.initIDForm(data);
-      setTimeout(() => {
+       if(data.length > 0){
+        this.formBuilder.initIDForm(data);
         this.getData();
-      },300);
+      }
+     else{
+        this.toast.showBottomToast(NO_DATA_FOUND);
+        this.loader.hideLoader();
+      }
       
     }).catch(error => {
         this.loader.hideLoader();

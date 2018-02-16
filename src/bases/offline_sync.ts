@@ -51,7 +51,7 @@ export class SyncOfflineData {
               protected parser: ParserProvider,
               protected headers: HeadersProvider,
               protected storage: Storage,
-              protected http: Http
+              public http: Http
               ){}
 
   /* GETTING CURRENT USER INFO FROM LOCAL STORAGE */

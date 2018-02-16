@@ -89,7 +89,7 @@
     <ion-list class="list_items" *ngIf="!isFiltering" padding>
 
         <ion-item *ngFor="let area of areas; let i=index;" (click)="selectArea(area)" [ngClass]="getStyle(area)">
-          <p>{{ area.areaname}}</p>
+          <p>{{ area.name}}</p>
         </ion-item>
         
     </ion-list>
@@ -102,14 +102,14 @@
                   <div class="sub-heading">Position</div>
                 </ion-col>              
             </ion-row>
-            <ion-item *ngFor="let area of areas | sort : 'popularity_number'; let i=index;" [ngClass]="getStyle(area)" (click)="selectArea(area)">
-              <p>{{ area.areaname }}</p>
+            <ion-item *ngFor="let area of areas | sort : 'popularity'; let i=index;" [ngClass]="getStyle(area)" (click)="selectArea(area)">
+              <p>{{ area.name }}</p>
             </ion-item>
         </ion-list>
       
         <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
           <ion-item *ngFor="let area of areas?.reverse(); let i=index;" (click)="selectArea(area)" [ngClass]="getStyle(area)">
-              <p>{{ area.areaname }}</p>
+              <p>{{ area.name }}</p>
             </ion-item>
       </ion-list>
     </div>

@@ -164,9 +164,9 @@ export class ProjectsPage {
   forkJoin(data,value): Observable<any> {
     let observablesArray = [];
     if(value == 'IDs'){
-      const areas = this.sql.addingIDs(this.TABLE_NAME_1,data.areas);
-      const elements = this.sql.addingIDs(this.TABLE_NAME_2,data.elements);
-      const roles = this.sql.addingIDs(this.TABLE_NAME_2,data.roles);
+      const areas = this.sql.addData(this.TABLE_NAME_1,data.areas);
+      const elements = this.sql.addData(this.TABLE_NAME_2,data.elements);
+      const roles = this.sql.addData(this.TABLE_NAME_2,data.roles);
       observablesArray.push(areas,elements,roles);
     }
     else if(value == 'DATA'){
@@ -210,12 +210,12 @@ export class ProjectsPage {
     
     if(typeof image !== 'undefined' && image !== null && image !== ''){
         
-      if(this.network.isInternetAvailable()){
-        imagePath = SERVER_URL + image;
-      }
+      if(this.network.isInternetAvailable())
+        //imagePath = SERVER_URL + image;
+        imagePath =  'http://retime-dev.herokuapp.com/' + image;
+      
       else 
          imagePath = 'assets/images/person.jpg';
-      
     return imagePath;
 
   }
