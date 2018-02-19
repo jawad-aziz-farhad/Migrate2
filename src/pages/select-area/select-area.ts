@@ -8,6 +8,7 @@ import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { DummyData } from '../../models';
 import { CreateAreaPage } from '../create-area/create-area';
+import { Data } from '../../bases/data';
 /**
  * Generated class for the SelectAreaPage page.
  *
@@ -20,7 +21,32 @@ import { CreateAreaPage } from '../create-area/create-area';
   selector: 'page-select-area',
   templateUrl: 'select-area.html',
 })
-export class SelectAreaPage {
+ export class SelectAreaPage {
+  
+//   constructor(navCtrl: NavController,  
+//               protected navParams: NavParams,
+//               time: Time ,
+//               parseData: ParseDataProvider,
+//               search: SearchProvider,
+//               loader: LoaderProvider,
+//               operations: OperationsProvider,
+//               sql: SqlDbProvider,
+//               network: NetworkProvider,
+//               studyStatus: StudyStatusProvider,
+//               alert: AlertProvider,
+//               formBuilder: FormBuilderProvider,
+//               menuCtrl: MenuController,
+//               toast: ToastProvider) {
+//     super(navCtrl,time,parseData,search,loader,operations,sql,network,studyStatus,alert, formBuilder,menuCtrl,toast);
+//   }
+
+//   ionViewDidLoad() {
+//     console.log('ionViewDidLoad SelectAerPage');
+//   }
+
+//   ionViewWillEnter(){
+//     this.init('Areas','Areas_IDs',this.navParams.get('project'), SelectElementPage);
+//  }
 
   @ViewChild(TimerComponent) timer: TimerComponent;
 
@@ -99,6 +125,8 @@ export class SelectAreaPage {
               this.populateData(result);
         }).catch(error => {
           console.error('ERROR: ' + JSON.stringify(error));
+          if(error.code == 5)
+              this.getIDs();
         });   
     });
     
@@ -129,7 +157,12 @@ export class SelectAreaPage {
       let formData = this.formBuilder.getIDForm().value;
       this.operations.get_data('areas/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
+        data.result.forEach((element, index) => {
+            element.projectID = this.project._id;
+        });
+
         this.createTable(data.result);
+
       },
       error => {
           this.loader.hideLoader();
@@ -259,7 +292,7 @@ getAllData() {
     this.sortedAreas = this.areas;
     for(let i=0; i<this.sortedAreas.length; i++) {
         for(let j = ( this.sortedAreas.length - 1); j > i ; j--) {
-          if(this.sortedAreas[i].popularity_number < this.sortedAreas[j].popularity_number){
+          if(this.sortedAreas[i].popularity < this.sortedAreas[j].popularity){
               let temp = this.sortedAreas[j];
               this.sortedAreas[j] = this.sortedAreas[i];
               this.sortedAreas[i] = temp;

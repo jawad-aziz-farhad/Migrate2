@@ -48,11 +48,10 @@ export class SqlDbProvider {
   addData(table , data): Promise<any> {
     let query = this.insertQuery(table);
     return new Promise((resolve, reject) => {
-
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Elements' || table == 'Locations')
-             console.log(query + '\n' +JSON.stringify(row_data));
+            if(table == 'Areas' || table == 'Roles')
+             alert(query + '\n' +JSON.stringify(row_data));
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));
             }, err => {
@@ -89,7 +88,7 @@ export class SqlDbProvider {
                 data[index].schedule[6].closingHour + ' - ' + data[index].schedule[6].closingMinute + ' ' + data[index].schedule[6].closingTimeFormat
               ]
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')        
-        _data = [data[index].projectID, data[index]._id];     
+        _data = [localStorage.getItem('projectID'), data[index]];     
       else if(table == 'Areas')
         _data = [data[index].name, data[index]._id , data[index].popularity, null , null , data[index].projectID];
       else if(table == 'Elements')
@@ -97,16 +96,17 @@ export class SqlDbProvider {
       else if(table == 'Roles') 
         _data = [data[index].name, data[index]._id , data[index].popularity, null , null ,data[index].projectID]; 
       else if(table == 'Create_Area')
-        _data = [data[index]._id, data[index].name, data[index].areatype , data[index].projectID, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date];   
+        _data = [data[index]._id, data[index].name, data[index].projectID, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date];   
       else if(table == 'Create_Role')
         _data = [data[index]._id, data[index].name, data[index].position , data[index].projectID, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date];   
       else if(table == 'Create_Element')
         _data = [data[index]._id, data[index].name, data[index].type , data[index].rating , data[index].category , data[index].popularity , data[index].types , data[index].projectID , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date , data[index].userAdded];
       else if(table == 'Study')
         _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime()];
-      else if(table == 'Study_Data'){
+      else if(table == 'Study_Data')
         _data = [data[index].role._id , data[index].area._id , data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo ,  data[index].observationTime, this.parser.geAllData().getRoundData()[this.studyDataIndex].roundStartTime , this.parser.geAllData().getRoundData()[this.studyDataIndex].roundEndTime, this.studyID];  
-      } 
+      else if(table == 'Categories')
+         _data = [data[index].role._id , data[index].name];
       return _data;
   }
 
@@ -159,7 +159,8 @@ export class SqlDbProvider {
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT)';
       else if(table == 'Create_Element')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, type TEXT, rating TEXT, category TEXT,  types TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT, userAdded boolean)';  
-      
+      else if(table == 'Categories')
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT)';
         return this.database.executeSql(query, {}).then(() => {
           return table + ' created successfully.';
         }).catch(error => {
@@ -185,9 +186,11 @@ export class SqlDbProvider {
     else if(table == 'Create_Role')
       query = 'INSERT INTO ' + table + '(_id ,name , position, projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Area')
-      query = 'INSERT INTO ' + table + '(_id ,name , areatype, projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ? , ?, ?, ?, ?)' ;
+      query = 'INSERT INTO ' + table + '(_id ,name , projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Element')  
       query = 'INSERT INTO ' + table + '(_id ,name , type , rating , category , popularity , types , projectID , addedby, id_of_addedby, status, date, userAdded )  VALUES (? , ? , ?  , ? , ?, ?, ?, ?, ? , ? , ? , ? , ?)';
+    else if(table == 'Categories')  
+      query = 'INSERT INTO ' + table + '(_id , name) VALUES (? , ? )';
     return query;  
   }
   
@@ -217,15 +220,18 @@ export class SqlDbProvider {
     else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
      
-    return this.database.executeSql(query, [id]).then((result) => {
+    return new Promise((resolve, reject) => {
+      this.database.executeSql(query, [id]).then((result) => {
       let data = [];
       if (result.rows.length > 0) 
           data = this.putDatainArray(table, result);
-      return data;
+      resolve(data);
     }, err => {
       console.log('Error AT TABLE: '+ table + ' ' + JSON.stringify(err));
-      return [];
+      reject(err);
     });
+    }); 
+    
   }
 
 
@@ -266,6 +272,8 @@ export class SqlDbProvider {
                       userId: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date, userAdded: result.rows.item(i).userAdded});
           else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
             data.push(result.rows.item(i)._id);
+          else if(table == 'Categories')
+            data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name });
         }
       
       return data;
@@ -342,20 +350,20 @@ export class SqlDbProvider {
     });
   }
 
-  deleteDB(): Observable<any> {
-    return new Observable((observer) => {
-     this.platform.ready().then(() => {
-       this.sqlite.deleteDatabase(this.config)
-       .then((db: SQLiteObject) => {
-           observer.next(db);
-           observer.complete();
-       }).catch(error => {
-         observer.next(error);
-         observer.complete();
-       });
-    });
-     
-   });
+  dropAllTables(): Observable<any> {
+
+    const table1 = this.dropTable("Projects");
+    const table2 = this.dropTable("Roles");
+    const table3 = this.dropTable("Roles_IDs");
+    const table4 = this.dropTable("Areas");
+    const table5 = this.dropTable("Areas_IDs");
+    const table6 = this.dropTable("Elements");
+    const table7 = this.dropTable("Elements_IDs");
+    const table8 = this.dropTable("Locations");
+
+    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8];
+
+    return Observable.forkJoin(observableArray);
   }
 
 

@@ -10,7 +10,7 @@ import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY
 import { Role, DummyData , StudyData } from '../../models';
 import { Observable } from "rxjs";
 import { FormBuilder } from '@angular/forms/src/form_builder';
-
+import { Data } from '../../bases/data';
 /**
  * Generated class for the SelectRolePage page.
  *
@@ -24,6 +24,31 @@ import { FormBuilder } from '@angular/forms/src/form_builder';
   templateUrl: 'select-role.html',
 })
 export class SelectRolePage {
+  
+//   constructor(navCtrl: NavController,  
+//               protected navParams: NavParams,
+//               time: Time ,
+//               parseData: ParseDataProvider,
+//               search: SearchProvider,
+//               loader: LoaderProvider,
+//               operations: OperationsProvider,
+//               sql: SqlDbProvider,
+//               network: NetworkProvider,
+//               studyStatus: StudyStatusProvider,
+//               alert: AlertProvider,
+//               formBuilder: FormBuilderProvider,
+//               menuCtrl: MenuController,
+//               toast: ToastProvider) {
+//     super(navCtrl,time,parseData,search,loader,operations,sql,network,studyStatus,alert, formBuilder,menuCtrl,toast);
+//   }
+
+//   ionViewDidLoad() {
+//     console.log('ionViewDidLoad SelectAerPage');
+//   }
+
+//   ionViewWillEnter(){
+//     this.init('Roles','Roles_IDs',this.navParams.get('project'), SelectAreaPage);
+//  }
   
   @ViewChild(TimerComponent) timer: TimerComponent;
   
@@ -100,6 +125,8 @@ export class SelectRolePage {
                 this.populateData(result);
           }).catch(error => {
             console.error('ERROR: ' + JSON.stringify(error));
+            if(error.code == 5)
+              this.getIDs();
           });   
     });
   }
@@ -109,7 +136,6 @@ export class SelectRolePage {
     this.loader.showLoader(MESSAGE);
     this.roles = [];
     this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
-      console.log('ROLE IDS: '+ JSON.stringify(data));
       if(data.length > 0){
         this.formBuilder.initIDForm(data);
         this.getData();
@@ -128,7 +154,9 @@ export class SelectRolePage {
   getData() {    
     let formData = this.formBuilder.getIDForm().value;
     this.operations.get_data('roles/getByIds', formData).subscribe(data => {
-      console.log("RESULT: \n" +JSON.stringify(data));
+      data.result.forEach((element, index) => {
+        element.projectID = this.project._id;
+      });
       this.createTable(data.result, this.TABLE_NAME);
     },
     error => {
@@ -274,7 +302,7 @@ getAllData() {
     this.sortedRoles = this.roles;
     for(let i=0; i<this.sortedRoles.length; i++) {
         for(let j = ( this.sortedRoles.length - 1); j > i ; j--) {
-          if(this.sortedRoles[i].popularity_number < this.sortedRoles[j].popularity_number){
+          if(this.sortedRoles[i].popularity < this.sortedRoles[j].popularity){
               let temp = this.sortedRoles[j];
               this.sortedRoles[j] = this.sortedRoles[i];
               this.sortedRoles[i] = temp;

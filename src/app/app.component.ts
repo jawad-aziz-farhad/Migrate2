@@ -127,8 +127,10 @@ export class MyApp extends SyncOfflineData {
   checkSession() {
         this.isMenuOpened = false;
         this.authProvider.authUser.subscribe(jwt => {
-            if(jwt) {              
-                this.rootPage = ProjectsPage;
+            if(jwt) {  
+
+                this.checkandGo();
+               
                 // used for an example of ngFor and navigation
                 this.pages = [
                   { title: 'Projects',component: ProjectsPage },
@@ -145,6 +147,19 @@ export class MyApp extends SyncOfflineData {
         });
     
         this.authProvider.checkLogin();
+  }
+
+  checkandGo(){
+    if(this.network.isInternetAvailable()){
+      this.sql.dropAllTables().subscribe( result => {
+                this.rootPage = ProjectsPage
+              },
+              error =>  console.error(error),
+              () => this.rootPage = ProjectsPage);      
+    }     
+
+    else
+      this.rootPage = ProjectsPage;
   }
 
   /* OPENING PAGE  */

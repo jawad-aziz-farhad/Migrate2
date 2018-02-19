@@ -69,9 +69,14 @@ export class CreateElementPage {
     this.loader.showLoader(MESSAGE);
     this.show = this.e_study = this.r_study = this.a_time = false;
     this.ratings = this.types = this.study_types = [];
-    this.ratings = [100 , 'Not Rated', 'Field User Input'];
-    this.study_types = ['Efficiency Study' , 'Activity Time' , 'Role Study'];
-    this.types = ['variable', 'fixed'];
+    this.ratings = [{ id: 1, name: 'Not Rated' },
+                    { id: 2, name: '100' },
+                    { id: 3, name: 'Field User Input' },
+                  ];
+    this.study_types = [ { id: 1, name: 'Efficiency Study' },
+                         { id: 2, name: 'Activity Study' },
+                         { id: 3, name: 'Role Study' }];
+    this.types = [{id: 1, name: 'Fixed'}, { id: 2, name: 'Variable'}];
     this.project = this.navParams.get('project')
     this.timer.startTimer();
     this.getCategories();
@@ -79,9 +84,8 @@ export class CreateElementPage {
 
   /* GETTING CATEGORIES FOR CREATING NEW ELEMENT*/
   getCategories(){
-    this.operations.get_data('categories',null).subscribe(result => {
+    this.operations.get_data('categories/get',null).subscribe(result => {
       this.loader.hideLoader();
-      alert(JSON.stringify(result))
       this.categories = result;
       this.initFormBuilder();
     },
@@ -159,7 +163,7 @@ export class CreateElementPage {
   createElement(){
    this.loader.showLoader(MESSAGE); 
    this.operations.addData(this.elementForm.value, 'elements/add').subscribe(res => {
-      if(res.description == this.elementForm.value.description)
+      if(res.success) 
         this.dropTable(res);
       else
          this.toast.showToast(ERROR);
@@ -182,7 +186,7 @@ export class CreateElementPage {
 
   /* INSERTING DATA TO TABLE */
   insertData(data) {
-    let _data = {projectID: this.project._id, _id: data._id};
+    let _data = {projectID: this.project._id, _id: data.elementID};
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.toast.showToast('Element added succesfully.');                
       this.loader.hideLoader();
@@ -204,28 +208,27 @@ export class CreateElementPage {
 
   /* CREATING NEW ELEMENT IN OFFLINE MODE */
   create_Offline_Element() {
-    let name = this.elementForm.get('name').value;
+    let name     = this.elementForm.get('name').value;
     let category = this.elementForm.get('category').value;
     let username = this.elementForm.get('addedBy.name').value;
     let userid   = this.elementForm.get('addedBy._id').value;
-    let date= this.elementForm.get('addedBy.date').value;
+    let date     = this.elementForm.get('addedBy.date').value;
     let userAdded = this.elementForm.get('userAdded').value;
     let _data = [{ _id: date + '-element', name: name, type: this.typesModel , rating: this.ratingModel , category:category,  
                    types: this.offline_types, projectID: this.project._id, addedby:username , 
                    id_of_addedby: userid, status: 'active', date: date, userAdded : userAdded}];
     this.sql.addData(this.TABLE_NAME_2,_data).then(result => {
-      this.addElement();
+      this.addElement(_data);
     }).catch(error => {
       console.log("ERROR: " + JSON.stringify(error));
     });
   }
 
+  
+
   /* ADDING NEWLY CREATED ELEMENT IN ELEMENTS TABLE */
-  addElement(){
-    let description = this.elementForm.get('name').value;
-    let rating = this.elementForm.get('rating').value;
-    let date  = this.elementForm.get('addedBy.date').value;
-    let _data = [{ description: description, _id: date + '-element' , popularity_number: 0, rating: rating, numericID: 0, projectID: this.project._id}];
+  addElement(data){
+    let _data = [{ name: data[0].name, _id: data[0].date + '-element' , popularity: 0, rating: data[0].rating, numericID: 0, projectID: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Element added succesfully.');                
       this.elementForm.reset();

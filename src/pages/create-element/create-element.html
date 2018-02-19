@@ -46,7 +46,7 @@
         <ion-item>
           <ion-label><h3>Categories</h3></ion-label>
           <ion-select formControlName="category">
-            <ion-option *ngFor="let category of categories; let i=index;" [value]="category.name"> {{ category.name }}</ion-option>
+            <ion-option *ngFor="let category of categories; let i=index;" [value]="category._id"> {{ category.name }}</ion-option>
           </ion-select>
         </ion-item>       
       </ion-list>
@@ -56,37 +56,34 @@
             Types:
           </h2>
         
-          <ion-item>
-            <ion-label> Fixed</ion-label>
-            <ion-radio value="fixed"></ion-radio>
+          <ion-item *ngFor="let type of types;">
+            <ion-label> {{ type.name }}</ion-label>
+            <ion-radio [value]="type.id"></ion-radio>
           </ion-item>
-
-          <ion-item>
-            <ion-label> Variable</ion-label>
-            <ion-radio value="variable"></ion-radio>
-          </ion-item>
-
+          
       </ion-list>
 
       <ion-list radio-group [(ngModel)]="ratingModel" formControlName="type">
         <h2>
           Default Rating:
         </h2>
+
+         <ion-item *ngFor="let rating of ratings;">
+            <ion-label>{{ rating.name }}</ion-label>
+            <ion-radio [value]="rating.id"></ion-radio>
+         </ion-item>
       
-        <ion-item>
+        <!--<ion-item>
           <ion-label> 100</ion-label>
-          <ion-radio value="100"></ion-radio>
+          <ion-radio value="2"></ion-radio>
         </ion-item>
 
         <ion-item>
           <ion-label> Field User Input</ion-label>
-          <ion-radio value="Field User Input"></ion-radio>
-        </ion-item>
+          <ion-radio value="3"></ion-radio>
+        </ion-item>-->
 
-        <ion-item>
-          <ion-label> Not Rated</ion-label>
-          <ion-radio value="Not Rated"></ion-radio>
-        </ion-item>
+       
 
     </ion-list>
 

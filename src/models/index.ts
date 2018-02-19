@@ -9,3 +9,4 @@ export * from './round-data.interface';
 export * from './dummy_data.interface';
 export * from './projects.interface';
 export * from './ids.interface';
+export * from './aer.interface';

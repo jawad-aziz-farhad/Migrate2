@@ -4,6 +4,9 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
+
+ <!--<in-one tablename="Areas" [isFiltering]="isFiltering" [items]="data" (is_Filtering)="is_Filtering($event)" 
+      (selectedItem)="selectItem($event)" (create)="createItem($event)" (refresh)="doRefresh($event)"></in-one>-->
 <ion-header class="blue-header" no-border>
     <ion-toolbar color="primary" *ngIf="!isSearching">
     <button ion-button (click)="openMenu()" class="men_btn">
@@ -34,17 +37,17 @@
 
 <ion-content>
 
-    <ion-refresher (ionRefresh)="doRefresh($event)">
-        <ion-refresher-content
-            pullingIcon="arrow-dropdown"
-            pullingText="Pull to refresh">
-        </ion-refresher-content>
-    </ion-refresher>
+      <ion-refresher (ionRefresh)="doRefresh($event)">
+          <ion-refresher-content
+              pullingIcon="arrow-dropdown"
+              pullingText="Pull to refresh">
+          </ion-refresher-content>
+      </ion-refresher>
 
       <div class="blue-header">
         <timer></timer>
       </div>
-      
+        
       <ion-toolbar class="sub-header bottom-border" [hidden]="isFiltering">
         <ion-grid>
           <ion-row>

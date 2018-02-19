@@ -25,6 +25,7 @@ import { ProjectsPage } from '../pages/projects/projects';
 import { ProfilePage } from '../pages/profile/profile';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { SelectAreaPage } from '../pages/select-area/select-area';
+import { SelectAerPage } from '../pages/select-aer/select-aer';
 import { SelectElementPage } from '../pages/select-element/select-element';
 import { SelectRolePage } from '../pages/select-role/select-role';
 import { RatingsPage } from '../pages/ratings/ratings';
@@ -120,7 +121,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SettingsPage,
     PrivacyPolicyPage,
     TermsOfServicesPage,
-    PopOverPage
+    PopOverPage,
+    SelectAerPage
 
   ],
   imports: [
@@ -170,7 +172,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SettingsPage,
     PrivacyPolicyPage,
     TermsOfServicesPage,
-    PopOverPage
+    PopOverPage,
+    SelectAerPage
   ],
   providers: [
     StatusBar,

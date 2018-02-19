@@ -5,8 +5,13 @@ import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, Ale
         OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider, Time} from '../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../config/config';
 import { TimerComponent } from '../components/timer/timer';
-import { DummyData } from '../models';
+import { DummyData , StudyData} from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
+import { CreateElementPage } from '../pages/create-element/create-element';
+import { CreateRolePage } from '../pages/create-role/create-role';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs/observable/of';
+
 
 export class Data {
   
@@ -16,10 +21,11 @@ export class Data {
   protected TABLE_NAME_1: string = '';
   protected project: any;
   protected temp: any;
+  protected _temp: any;
   protected isFiltering: boolean;
-  
-  private data: Array<any>;
-  private sortedData: Array<any>;
+  protected show: boolean;
+  protected data: Array<any>;
+  protected nextComponent: any;
 
   constructor(public navCtrl: NavController,
               public time: Time ,
@@ -34,99 +40,131 @@ export class Data {
               public formBuilder: FormBuilderProvider,
               public menuCtrl: MenuController,
               public toast: ToastProvider){
-    
-    
   }
 
-  init(TABLE_NAME: string, TABLE_NAME_1: string, project: any){
+  init(TABLE_NAME: string, TABLE_NAME_1: string, project: any, nextComponent: any){
+      this.show = false;
+      this.nextComponent = nextComponent;
       this.TABLE_NAME = TABLE_NAME;
       this.TABLE_NAME_1 = TABLE_NAME_1;
       this.project = project;
-      //alert(this.TABLE_NAME + '\n' + this.TABLE_NAME_1 + '\n' +JSON.stringify(this.project));
-      this.checkDB();
+      this.pullSQLData();
+  }
+
+  /* PULLING SQLite DATA */
+  pullSQLData(){
+
+    const data = Observable.fromPromise(this.sql.getIDData(this.TABLE_NAME,this.project._id));
+
+    data.subscribe((result: any) => {
+        if(result.length > 0)
+          this.populateData(result);
+        else
+          this.pullServerData();  
+    },
+    error => console.error(error));    
   }           
-  /* CHECKING LOCAL DATA BASE IF ELEMENTS ARE ALREADY THERE OR NOT */
-  checkDB(){
-    this.sql.getDatabaseState().subscribe(ready  => {    
-      if(ready)
-        this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
-            if(result.length == 0 || typeof result == 'undefined' || result == null)
-              this.getIDs();
-            else{
-             this.temp = result;
-             this.data = result;
-           }
-        }).catch(error => {
-          console.error('ERROR: ' + JSON.stringify(error));
-        });   
-    });
-    
-  }
-
-  /* GETTING ROLES IDs FROM Areas_IDs TABLE TO GET ROLES ACCORDINGLY */
-  getIDs(){
+ 
+  /* PULLING DATA FROM SERVER */
+  pullServerData(){
     this.loader.showLoader(MESSAGE);
-    this.data = [];
-    this.sql.getIDData(this.TABLE_NAME_1, this.project._id).then(data => {
-      this.formBuilder.initIDForm(data);
-      setTimeout(() => {
-        this.getData();
-      },300);
-      
-    }).catch(error => {
-        this.loader.hideLoader();
-        console.error("ERROR: " + JSON.stringify(error));
-    });
-  }
-
-  /* GETTING DATA FROM SERVER */
-  getData() {
+    const source = Observable.fromPromise(this.sql.getIDData(this.TABLE_NAME_1, this.project._id));
+    //map to inner observable and flatten
+    const data = source.flatMap(result => {
+      this.formBuilder.initIDForm(result);
       let formData = this.formBuilder.getIDForm().value;
-      this.operations.get_data(this.TABLE_NAME.toLowerCase(), formData).subscribe(data => {
-        console.log("RESULT: \n" +JSON.stringify(data));
-        this.createTable(data.result);
-      },
-      error => {
-          this.loader.hideLoader();
-        console.error('ERROR: ' + JSON.stringify(error.json()));
+      return this.operations.get_data(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
+    });
+
+    data.subscribe(data => {
+      if(data.lenght == 0){
+        this.loader.hideLoader();
+        return;
+      }
+      data.result.forEach((element,index) => {
+        element.projectID = this.project._id;  
       });
+      
+      this.saveData(data)
+    },
+    error => this.handleError(error));    
   }
 
-  /* CREATING TABLE TO SAVE TO LOCAL DATA BASE */
-createTable(data) {
-  this.sql.createTable(this.TABLE_NAME).then(res => {
-    this.insertData(data);
-  });
-}
+  /* SAVING DATA LOCALLY */
+  saveData(data){
 
-/* INSERTING DATA TO TABLE */
-insertData(data) {
-this.sql.addData(this.TABLE_NAME,data).then(result => {
-    this.getAllData();
-}).catch(error => {
-    console.error("ERROR: " + JSON.stringify(error));
-});
-}
+    const save = this.sql.addData(this.TABLE_NAME, data);
+    const get = this.sql.getAllData(this.TABLE_NAME);
+    
+    const concat = Observable.concat(save, get);
+    concat.subscribe(result => {
+      if(result.length > 0)
+        this.populateData(result);
+    },
+    error => console.error('ERROR: ' + JSON.stringify(error)),
+    () => this.loader.hideLoader()
+    );
+  }
 
-/* GETTING ALL DATA OF GIVEN TABLE */
-getAllData() {
-  this.sql.getAllData(this.TABLE_NAME).then(data => {
-    this.loader.hideLoader();
+
+ /* POPULATING DATA */
+  populateData(data){
     this.data = [];
+    this._temp = {};
     this.data = data;
-  }).catch(error => {
-      console.error("ERROR: " + JSON.stringify(error));
-  });
-}
-
-  /*POPULATING DATA */
-  get_Data(){
-    return this.data;
- }
-
-  goNext(component) {
-    this.navCtrl.push(component, { project: this.project});
+    this.temp = data;
+    this.show = true;
   }
+
+  /* SELECTED ELEMENT FOR STUDY */
+  selectItem(item){
+    this._temp = item;
+    this._parseData(item);
+  }
+
+  /* PARSING ROUND TIME TO NEXT PAGE */
+  _parseTime(){
+    this.timer.stopTimer();
+    this.timer.pauseTimer()
+    this.time.setTime(this.timer.getRemainingTime());
+  }
+  /* PARSING STUDY DATA */
+  _parseData(item: any){
+     let study_data = null;
+     if(this.parseData.getData() == null || typeof this.parseData.getData() == 'undefined')
+        study_data = new StudyData();
+     else
+        study_data = this.parseData.getData();   
+     
+    if(this.TABLE_NAME == 'Areas')
+      study_data.setArea(item);
+    else if(this.TABLE_NAME == 'Elements')
+      study_data.setElement(item);
+    else if(this.TABLE_NAME == 'Roles')
+      study_data.setRole(item);
+    
+    this.parseData.setData(study_data);
+    this.goNext();
+  }
+
+
+  goNext() {
+    this.time.setTime(this.timer.getRemainingTime())
+    this.navCtrl.push(this.nextComponent, { project: this.project});
+  }
+
+  getStyle(item){
+    if(this._temp._id == item._id)
+      return 'list-checked';
+    else
+      return 'disabled';  
+  }
+
+  handleError(error){
+    this.loader.hideLoader();
+    console.error('ERROR: ' + error);
+  }
+
 
  onSearchInput(searchInput): any{
     if(typeof searchInput !== 'undefined' && searchInput.length > 3){
@@ -157,15 +195,9 @@ getAllData() {
       refresher.complete();
       return;
     }
-    this.sql.isDataAvailable(this.TABLE_NAME).then(result => {
-        if(result)
-           this.dropTable(refresher);
-        else
-            refresher.complete();
-  }).catch(error => {
-    refresher.complete();
-    console.error('ERROR: ' + JSON.stringify(error));
-  })
+    
+    this.dropTable(refresher);
+    
   }
 
   /* DROPPING TABLE FROM DATA BASE */
@@ -173,45 +205,13 @@ getAllData() {
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(refresher !== '')
         refresher.complete();
-      this.getIDs();
+      this.pullServerData();
     }).catch(error => {
        refresher.complete();
        console.error('ERROR: ' + JSON.stringify(error));
     });
   }
-  /* SORTING AREAS USING POPULARITY NUMBER  */
-  sortAreasbyPopularity() {
-    this.sortedData = [];
-    this.sortedData = this.data;
-    for(let i=0; i<this.sortedData.length; i++) {
-        for(let j = ( this.sortedData.length - 1); j > i ; j--) {
-          if(this.sortedData[i].popularity_number < this.sortedData[j].popularity_number){
-              let temp = this.sortedData[j];
-              this.sortedData[j] = this.sortedData[i];
-              this.sortedData[i] = temp;
-              console.log('SORTED ARRAY: '+ JSON.stringify(this.sortedData));
-            }
-
-        }
-    }
-  }
-
-  /* sort DATA BASED ON MOST POPULARITY ATTRIBUTE */
-  sortData() {
-    if(!this.isFiltering)
-       this.temp = this.OriginalArray(this.data);
-    else{
-      this.data = this.OriginalArray(this.temp);
-      this.sortedData = this.OriginalArray(this.temp);
-    }
-    this.isFiltering = !this.isFiltering;
-    
-  }
-  /* COPYING ORIGINAL ARRAY */
-  OriginalArray(arr) { 
-    return arr.slice().sort();
-  }
-
+  
   /* OPENING MENU */
   openMenu(){
     if(this.studyStatus.getStatus())
@@ -224,7 +224,6 @@ getAllData() {
   cancelStudy() {
     this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
-          //this.time.setStatus(true);
           this.timer.killTimer();
           this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
@@ -238,11 +237,20 @@ getAllData() {
   }
 
   /* NAVIGATING TO CREATE ROLE PAGE FOR CREATING A NEW ROLE */
-  createArea(){
-    this.navCtrl.push(CreateAreaPage, {project: this.project});
+  createItem(event){
+    let component = null;
+    if(this.TABLE_NAME == 'Areas')
+      component = CreateAreaPage;
+    else if(this.TABLE_NAME == 'Elements')
+      component = CreateElementPage
+    else if(this.TABLE_NAME == 'Roles')
+      component = CreateRolePage;
+    
+    this.navCtrl.push(component, {project: this.project});
   }
 
-
-
+  is_Filtering(){
+    this.isFiltering = !this.isFiltering;
+  }
     
 }

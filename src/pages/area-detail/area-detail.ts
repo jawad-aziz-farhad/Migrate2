@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , ModalController } from 'ionic-angular';
 import { SelectRolePage } from '../select-role/select-role';
+import { SelectAerPage } from '../select-aer/select-aer';
 import { Time } from '../../providers/time/time';
 import { StudyData } from '../../models';
 import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider , StudyStatusProvider } from '../../providers';
@@ -67,7 +68,7 @@ openModal() {
                 this.studyStatus.setStatus(true);
                 this.time.setRoundTime(data.roundTime);
                 this.time.setTime(data.roundTime);
-                this.navCtrl.push(SelectRolePage, { project: this.project }); 
+                 this.navCtrl.push(SelectRolePage, { project: this.project }); 
              }  
              else
                console.log('USER DONT WANT TO START STUDY.');       

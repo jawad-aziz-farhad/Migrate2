@@ -371,6 +371,10 @@ export class SyncOfflineData {
     })
   }
 
+  drop_Table(){
+    
+  }
+
     /*HANDLING ERRORS */
   handleError(){
     this.loader.hideLoader();

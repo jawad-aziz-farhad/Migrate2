@@ -101,7 +101,7 @@ setUserInfo() {
   createArea() {
       this.loader.showLoader(MESSAGE)
       this.operations.addData(this.areaForm.value,'areas/add').subscribe( res => {
-          if(res.areaname == this.areaForm.value.areaname) 
+          if(res.success)  
             this.dropTable(res);              
           else
             this.toast.showToast(ERROR);
@@ -124,7 +124,7 @@ setUserInfo() {
 
   /* INSERTING DATA TO TABLE */
   insertData(data) {
-    let _data = {projectID: this.project._id, _id: data._id};
+    let _data = {projectID: this.project._id, _id: data.areaID};
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.toast.showToast('Area added succesfully.');                
       this.loader.hideLoader();
@@ -146,24 +146,22 @@ setUserInfo() {
 
   /* CREATING NEW AREA IN OFFLINE MODE */
   create_Offline_Area(){
-    let areaname = this.areaForm.get('name').value;
+    let name = this.areaForm.get('name').value;
     let username = this.areaForm.get('addedBy.name').value;
     let userid   = this.areaForm.get('addedBy._id').value;
-    let date= this.areaForm.get('addedBy.date').value;
-    let _data    = [{ _id: date + '-area' ,areaname: areaname, id_of_project: this.project._id, addedby:username , 
+    let date     = this.areaForm.get('addedBy.date').value;
+    let _data    = [{ _id: date + '-area' ,name: name, projectID: this.project._id, addedby:username , 
                       id_of_addedby: userid, status: 'active', date: date}];
     this.sql.addData(this.TABLE_NAME_2,_data).then(result => {
-      this.addArea();
+      this.addArea(_data);
     }).catch(error => {
       console.log("ERROR: " + JSON.stringify(error));
     });
   }
 
   /* ADDING NEWLY CREATED AREA IN AREAS TABLE */
-  addArea(){
-    let areaname = this.areaForm.get('name').value;
-    let date= this.areaForm.get('addedBy.date').value;
-    let _data = [{ areaname: areaname, _id: date + '-area'  , popularity_number: 0, rating: null, id: null, projectID: this.project._id}];
+  addArea(data){
+    let _data = [{ name: data[0].name, _id: data[0].date + '-area'  , popularity: 0, rating: null, id: null, projectID: this.project._id}];
     this.sql.addData(this.TABLE_NAME,_data).then(result => {
       this.toast.showToast('Area added succesfully.');                
       this.areaForm.reset();

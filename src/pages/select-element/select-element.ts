@@ -11,7 +11,7 @@ import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE, 
 import { StudyData } from '../../models';
 import { Element , DummyData} from '../../models';
 import { Observable } from "rxjs";
-
+import { Data } from '../../bases/data';
 /**
  * Generated class for the SelectElementPage page.
  *
@@ -24,6 +24,31 @@ import { Observable } from "rxjs";
   templateUrl: 'select-element.html',
 })
 export class SelectElementPage {
+  
+//   constructor(navCtrl: NavController,  
+//               protected navParams: NavParams,
+//               time: Time ,
+//               parseData: ParseDataProvider,
+//               search: SearchProvider,
+//               loader: LoaderProvider,
+//               operations: OperationsProvider,
+//               sql: SqlDbProvider,
+//               network: NetworkProvider,
+//               studyStatus: StudyStatusProvider,
+//               alert: AlertProvider,
+//               formBuilder: FormBuilderProvider,
+//               menuCtrl: MenuController,
+//               toast: ToastProvider) {
+//     super(navCtrl,time,parseData,search,loader,operations,sql,network,studyStatus,alert, formBuilder,menuCtrl,toast);
+//   }
+
+//   ionViewDidLoad() {
+//     console.log('ionViewDidLoad SelectAerPage');
+//   }
+
+//   ionViewWillEnter(){
+//     this.init('Elements','Elements_IDs',this.navParams.get('project'), RatingsPage);
+//  }
 
   @ViewChild(TimerComponent) timer: TimerComponent;
  
@@ -101,6 +126,8 @@ export class SelectElementPage {
               this.populateData(result);
         }).catch(error => {
           console.error('ERROR: ' + JSON.stringify(error));
+          if(error.code == 5)
+              this.getIDs();
         });   
     });
   }
@@ -129,6 +156,9 @@ export class SelectElementPage {
       let formData = this.formBuilder.getIDForm().value;
       this.operations.get_data('elements/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
+        data.result.forEach((element, index) => {
+            element.projectID = this.project._id;
+        });
         this.createTable(data.result);
       },
       error => {

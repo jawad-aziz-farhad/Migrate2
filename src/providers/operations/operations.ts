@@ -53,9 +53,10 @@ export class OperationsProvider {
       return new Observable(observer => {
           res.forEach((project, index) => {
             this.forkJoin(project).subscribe((result: any) => {
-                result.forEach((item,index) => {
-                    if(index >= 2 && item.result.length > 0){
+                result.forEach((item,_index) => {
+                    if(_index >= 2 && item.result.length > 0){
                         item.result.forEach((subitem,subindex) => {
+                            alert(index + '\n' + project._id + '\n' + project.name)
                             subitem.projectID = project._id;
                         });
                       }

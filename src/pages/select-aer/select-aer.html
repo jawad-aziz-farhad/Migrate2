@@ -1,0 +1,62 @@
+<!--
+  Generated template for the SelectAerPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+ <in-one *ngIf="show" tablename="TABLE_NAME" tablename1="TABLE_NAME" [isFiltering]="isFiltering" [items]="data" (is_Filtering)="is_Filtering($event)" (selectedItem)="selectItem($event)"></in-one>
+<!--<ion-header>
+
+  <ion-navbar>
+    <ion-title>Select {{ TABLE_NAME | slice:0:-1 }}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+
+     
+    <ion-toolbar class="sub-header bottom-border">
+       <ion-grid>
+         <ion-row>
+           <ion-col col-6>
+             <div class="sub-heading">{{ !isFiltering ? 'Select '+ (TABLE_NAME | slice:0:-1) : 'Sort By' }}</div>
+           </ion-col>
+           <ion-col col-6 text-right (click)="is_Filtering()">
+             <div class="sub-heading" *ngIf="!isFiltering">FILTER &nbsp; <ion-icon name="options"></ion-icon></div>
+             <div class="sub-heading" *ngIf="isFiltering"><ion-icon name="close"></ion-icon></div>
+           </ion-col>
+         </ion-row>
+       </ion-grid>
+    </ion-toolbar>
+
+    <ion-toolbar class="sub-header bottom-border segment_btn_css" *ngIf="isFiltering">
+       <ion-segment [(ngModel)]="filter">
+           <ion-segment-button  value="recently_added" >
+             RECENTLY ADDED
+           </ion-segment-button>
+           <ion-segment-button  value="most_popular">
+             MOST POPULAR
+           </ion-segment-button>
+         </ion-segment>
+   </ion-toolbar>
+
+   <ion-toolbar class="sub-header bottom-border segment_btn_css" *ngIf="isFiltering && (TABLE_NAME == 'Elements')">
+          <ion-segment [(ngModel)]="order" style="margin-top:0px !important;">
+              <ion-segment-button value="ascending">
+                  ASCENDING
+              </ion-segment-button>
+              <ion-segment-button value="descending">
+                  DESCENDING
+              </ion-segment-button>
+          </ion-segment>
+      </ion-toolbar>
+
+    <ion-list class="list_items" *ngIf="show" padding>
+      <ion-item *ngFor="let item of ((isFiltering && filter == 'most_popular') ? (data | sort : 'popularity' : 'numericID': order) : (data?.reverse() | reverse :  'numericID': order))" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+        <p>{{ item.name }}</p>
+      </ion-item>
+    </ion-list>
+</ion-content>-->
