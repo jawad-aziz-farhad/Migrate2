@@ -56,8 +56,7 @@ export class OperationsProvider {
                 result.forEach((item,_index) => {
                     if(_index >= 2 && item.result.length > 0){
                         item.result.forEach((subitem,subindex) => {
-                            alert(index + '\n' + project._id + '\n' + project.name)
-                            subitem.projectID = project._id;
+                          subitem.projectID = project._id;
                         });
                       }
                 });
@@ -67,9 +66,16 @@ export class OperationsProvider {
                 res[index].elements_data = result[3].result;
                 res[index].roles_data = result[4].result;
 
-                if(index == (res.length - 1))
-                  observer.next(res);
-            });   
+                if(index == (res.length - 1)){
+                  this.singleRequest('categories/get',null).subscribe(result => {
+                      res[0].categories = result;
+                      observer.next(res);
+                  },
+                  error => console.error(error));
+                  
+                }
+            },
+            error => console.error("ERROR:" +JSON.stringify(error)));   
           });
         });
     });

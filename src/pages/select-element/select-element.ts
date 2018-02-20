@@ -106,30 +106,27 @@ export class SelectElementPage {
     this.initView(); 
   }
 
-  /* GETTING DATA */
-  gettingData(){
-    if(this.network.isInternetAvailable())
-      this.dropTable('');
-    else  
-      this.checkDB();   
-  }
-  
 
   /* CHECKING LOCAL DATA BASE IF ELEMENTS ARE ALREADY THERE OR NOT */
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {    
       if(ready)
-       this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
-            if(result.length == 0 || typeof result == 'undefined' || result == null)
-              this.getIDs();
-            else
-              this.populateData(result);
-        }).catch(error => {
-          console.error('ERROR: ' + JSON.stringify(error));
-          if(error.code == 5)
-              this.getIDs();
-        });   
+        this.getAllData();   
     });
+  }
+
+  /* GETTING ALL DATA OF GIVEN TABLE */
+  getAllData() {
+    this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
+        if(result.length == 0 || typeof result == 'undefined' || result == null)
+          this.getIDs();
+        else
+          this.populateData(result);
+    }).catch(error => {
+      console.error('ERROR: ' + JSON.stringify(error));
+      if(error.code == 5)
+          this.getIDs();
+    });   
   }
 
   /* GETTING ROLES IDs FROM Elements_IDs TABLE TO GET ROLES ACCORDINGLY */
@@ -156,6 +153,11 @@ export class SelectElementPage {
       let formData = this.formBuilder.getIDForm().value;
       this.operations.get_data('elements/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
+        if(data.result.length == 0){
+          this.toast.showBottomToast(NO_DATA_FOUND);
+          this.loader.hideLoader();
+          return;
+        }
         data.result.forEach((element, index) => {
             element.projectID = this.project._id;
         });
@@ -183,15 +185,6 @@ insertData(data) {
   });
 }
 
-/* GETTING ALL DATA OF GIVEN TABLE */
-getAllData() {
-  this.sql.getAllData(this.TABLE_NAME).then(data => {
-    this.loader.hideLoader();
-    this.populateData(data);
-  }).catch(error => {
-    console.error("ERROR: " + JSON.stringify(error));
-  })
-}
 
 /* POPULATING DATA */
 populateData(elements){
