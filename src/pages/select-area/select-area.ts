@@ -117,10 +117,10 @@ import { Data } from '../../bases/data';
   /* GETTING ALL DATA OF GIVEN TABLE */
   getAllData() {
     this.sql.getIDData(this.TABLE_NAME, this.project._id).then(result => {
-        if(result.length == 0 || typeof result == 'undefined' || result == null)
-          this.getIDs();
-        else
-          this.populateData(result);
+      if(result.length == 0 || typeof result == 'undefined' || result == null)
+        this.getIDs();
+      else
+        this.populateData(result);
     }).catch(error => {
       console.error('ERROR: ' + JSON.stringify(error));
       if(error.code == 5)
@@ -166,7 +166,7 @@ import { Data } from '../../bases/data';
 
       },
       error => {
-          this.loader.hideLoader();
+       this.loader.hideLoader();
         console.error('ERROR: ' + JSON.stringify(error.json()));
       });
   }
@@ -180,11 +180,13 @@ createTable(data) {
 
 /* INSERTING DATA TO TABLE */
 insertData(data) {
-this.sql.addData(this.TABLE_NAME,data).then(result => {
+  this.sql.addData(this.TABLE_NAME,data).then(result => {
+    this.loader.hideLoader();
     this.getAllData();
-}).catch(error => {
+  }).catch(error => {
+    this.loader.hideLoader();
     console.error("ERROR: " + JSON.stringify(error));
-});
+  });
 }
 
   

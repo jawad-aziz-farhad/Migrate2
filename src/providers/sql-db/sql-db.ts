@@ -50,7 +50,7 @@ export class SqlDbProvider {
     return new Promise((resolve, reject) => {
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Areas' || table == 'Roles')
+            if(table == 'Locations')
              console.log(query + '\n' +JSON.stringify(row_data));
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));
@@ -106,7 +106,7 @@ export class SqlDbProvider {
       else if(table == 'Study_Data')
         _data = [data[index].role._id , data[index].area._id , data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo ,  data[index].observationTime, this.parser.geAllData().getRoundData()[this.studyDataIndex].roundStartTime , this.parser.geAllData().getRoundData()[this.studyDataIndex].roundEndTime, this.studyID];  
       else if(table == 'Categories')
-         _data = [data[index].role._id , data[index].name];
+         _data = [data[index]._id , data[index].name];
       return _data;
   }
 
@@ -360,8 +360,9 @@ export class SqlDbProvider {
     const table6 = this.dropTable("Elements");
     const table7 = this.dropTable("Elements_IDs");
     const table8 = this.dropTable("Locations");
+    const table9 = this.dropTable("Categories");
 
-    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8];
+    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9];
 
     return Observable.forkJoin(observableArray);
   }

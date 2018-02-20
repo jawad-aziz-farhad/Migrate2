@@ -46,21 +46,27 @@ export class AreasPage {
   checkDB(){
     this.sql.getDatabaseState().subscribe(ready  => {        
       if(ready)
-          this.sql.getIDData(this.TABLE_NAME, this.project.customer_id).then(result => {
-            if(result.length == 0 || typeof result == 'undefined' || result == null)
-              this.getData();
-            else
-              this.populateData(result);
-        }).catch(error => {
-          console.error('ERROR: ' + JSON.stringify(error));
-        });   
+        this.getAllData();
     });
   }
+
+  /* GETTING ALL DATA OF GIVEN TABLE */
+getAllData() {
+   this.sql.getIDData(this.TABLE_NAME, this.project.customer_id).then(result => {
+        if(result.length == 0 || typeof result == 'undefined' || result == null)
+          this.getData();
+        else
+          this.populateData(result);
+    }).catch(error => {
+      console.error('ERROR: ' + JSON.stringify(error));
+    });   
+}
   
   /* GETTING DATA FROM SERVER */
   getData() {
+    this.locations = [];
     this.loader.showLoader(MESSAGE);
-    this.operations.getLocationsByCustomerID('locations/getByCustomerId/', this.project.customer_id).subscribe(res => {
+    this.operations.singleRequest('locations/getByCustomerId', {customerID: this.project.customer_id}).subscribe(res => {
       this.createTable(res);
     },
     error => {
@@ -73,31 +79,23 @@ export class AreasPage {
 createTable(data) {
   this.sql.createTable(this.TABLE_NAME).then(res => {
     this.insertData(data);
+  }).catch(error => {
+     this.loader.hideLoader();
   });
 }
 
 /* INSERTING DATA TO TABLE */
 insertData(data) {
-  this.sql.addData(this.TABLE_NAME,data.result).then(result => {
+  this.sql.addData(this.TABLE_NAME,data).then(result => {
+    this.loader.hideLoader();
     this.getAllData();
   }).catch(error => {
-      console.error("ERROR: " + JSON.stringify(error));
+     this.loader.hideLoader();
+     console.error("ERROR: " + JSON.stringify(error));
   });
 }
 
-/* GETTING ALL DATA OF GIVEN TABLE */
-getAllData() {
-    this.sql.getAllData(this.TABLE_NAME).then(data => {
-      console.log('SQL DATA: ' + JSON.stringify(data))
-      this.loader.hideLoader();
-      this.populateData(data);
-    }).catch(error => {
-      this.loader.hideLoader();
-      console.error("ERROR: " + JSON.stringify(error));
-    })
-}
 checkValue(location: any){
-  
   if(typeof location.locationname !== 'undefined' && location.locationname !== '' && location.locationname !== null)
     return true;
   else

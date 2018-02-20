@@ -24,7 +24,7 @@ export class CreateElementPage {
   @ViewChild(TimerComponent) timer: TimerComponent;
   public elementForm: FormGroup;
   public project: any;
-  private categories: Observable<Array<any>>;
+  private categories: Array<any>;
   private ratings: Array<any> = [];
   private types: Array<any> = [];
   private study_types: Array<any> = [];
@@ -79,7 +79,10 @@ export class CreateElementPage {
     this.types = [{id: 1, name: 'Fixed'}, { id: 2, name: 'Variable'}];
     this.project = this.navParams.get('project')
     this.timer.startTimer();
-    this.getCategories();
+    if(this.network.isInternetAvailable())
+        this.getCategories();
+    else
+      this.getOfflineCategories();    
   }
 
   /* GETTING CATEGORIES FOR CREATING NEW ELEMENT*/
@@ -92,7 +95,13 @@ export class CreateElementPage {
     error => {
       this.loader.hideLoader();
     });
-    
+  }
+
+  getOfflineCategories(){
+    this.sql.getAllData('Categories').then(result => {
+      this.categories = result;
+      this.initFormBuilder();
+    }).catch(error => console.error(error));
   }
 
   /* INITIALIZING FORM BUILDER */

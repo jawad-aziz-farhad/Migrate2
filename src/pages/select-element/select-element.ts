@@ -164,7 +164,7 @@ export class SelectElementPage {
         this.createTable(data.result);
       },
       error => {
-          this.loader.hideLoader();
+        this.loader.hideLoader();
         console.error('ERROR: ' + JSON.stringify(error.json()));
       });
   }
@@ -173,14 +173,18 @@ export class SelectElementPage {
 createTable(data) {
   this.sql.createTable(this.TABLE_NAME).then(res => {
     this.insertData(data);
+  }).catch(error => {
+    this.loader.hideLoader();
   });
 }
 
 /* INSERTING DATA TO TABLE */
 insertData(data) {
   this.sql.addData(this.TABLE_NAME,data).then(result => {
+    this.loader.hideLoader();
     this.getAllData();
   }).catch(error => {
+    this.loader.hideLoader();
       console.error("ERROR: " + JSON.stringify(error));
   });
 }

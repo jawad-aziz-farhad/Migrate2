@@ -94,9 +94,9 @@ export class ProjectsPage {
   /* GETTING DATA FROM SERVER */
   getData() {
     this.loader.showLoader(MESSAGE);
-    this.show = false;this.projects = [];
+    this.show = false;
+    this.projects = [];
     this.operations.getdata().subscribe((res: any) => {
-      alert(JSON.stringify(res));
       this.projects = res;
       if(res.length > 0) 
         this.createTable(res, this.TABLE_NAME);
@@ -105,7 +105,7 @@ export class ProjectsPage {
     },
     error => {
       this.loader.hideLoader();
-      console.log('ERROR: ' + JSON.stringify(error))
+      console.error('ERROR: ' + JSON.stringify(error))
     });
   }
 

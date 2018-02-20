@@ -170,15 +170,19 @@ export class SelectRolePage {
 createTable(data, table) {
   this.sql.createTable(table).then(res => {
     this.insertData(data);
+  }).catch(error => {
+    this.loader.hideLoader();
   });
 }
 
 /* INSERTING DATA TO TABLE */
 insertData(data) {
   this.sql.addData(this.TABLE_NAME,data).then(result => {
+    this.loader.hideLoader();
     this.getAllData();
   }).catch(error => {
-      console.error("ERROR: " + JSON.stringify(error));
+    this.loader.hideLoader();
+    console.error("ERROR: " + JSON.stringify(error));
   });
 }
 
