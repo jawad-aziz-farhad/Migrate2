@@ -70,7 +70,6 @@ export class StudyPhotoPage {
 
   /* TAKING A PHOTO USING MOBILE CAMERA */
   takePhoto() {
-
     this.camera.getPicture(this.getCameraOptions()).then((imageData) => {
      this.resolvePath(imageData);
     }, (err) => {
@@ -112,7 +111,7 @@ export class StudyPhotoPage {
     if(!this.network.isInternetAvailable()){
         this._parseData(this.photo);
         this.toast.showToast(FILE_SAVED_LOCALLY);
-        this.isUploaded = true;
+        this.goNext();
     }
     else
       this.uploadPhoto();    
@@ -129,15 +128,13 @@ export class StudyPhotoPage {
         if(response.success){
           this.toast.showToast(FILE_UPLOADED_MESSAGE);
           this._parseData(response.path);
-          //this.isUploaded = true;
           this.goNext();
         }
-        else{
+        else
           this.toast.showToast(ERROR);
-        }
+        
       }).catch(error => {
         this.loader.hideLoader();
-        alert(JSON.stringify(error));
         this.toast.showToast(ERROR);
       });
   }

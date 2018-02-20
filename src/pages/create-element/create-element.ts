@@ -66,7 +66,6 @@ export class CreateElementPage {
   }
 
   initView(){
-    this.loader.showLoader(MESSAGE);
     this.show = this.e_study = this.r_study = this.a_time = false;
     this.ratings = this.types = this.study_types = [];
     this.ratings = [{ id: 1, name: 'Not Rated' },
@@ -87,6 +86,7 @@ export class CreateElementPage {
 
   /* GETTING CATEGORIES FOR CREATING NEW ELEMENT*/
   getCategories(){
+    this.loader.showLoader(MESSAGE);
     this.operations.get_data('categories/get',null).subscribe(result => {
       this.loader.hideLoader();
       this.categories = result;
@@ -99,8 +99,10 @@ export class CreateElementPage {
 
   getOfflineCategories(){
     this.sql.getAllData('Categories').then(result => {
-      this.categories = result;
-      this.initFormBuilder();
+      if(result.length > 0){
+        this.categories = result;
+        this.initFormBuilder();
+      }
     }).catch(error => console.error(error));
   }
 
@@ -108,8 +110,8 @@ export class CreateElementPage {
   initFormBuilder(){
       this.elementForm = this.formBuilder.group({
         name: ['', [Validators.required, Validators.minLength(5)]],
-        studyTypes: this.formBuilder.array([]),
-        type: [''],
+        studyTypes: [this.formBuilder.array([]), Validators.required],
+        type: ['', Validators.required],
         rating: ['', Validators.required],
         category: [this.categories[0], Validators.required],
         addedBy:  this.formBuilder.group({
@@ -122,7 +124,15 @@ export class CreateElementPage {
         userAdded: true
       });
 
-     this.show = true; 
+    this.setStudyTypes();
+  }
+
+  setStudyTypes(){
+    const type = this.study_types.map(studyType => this.formBuilder.group(studyType));
+    const typeArray = this.formBuilder.array(type);
+    this.elementForm.setControl('studyTypes',typeArray);
+    console.log(JSON.stringify(this.elementForm.get('studyTypes').value));
+    this.show = true; 
   }
 
    /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */

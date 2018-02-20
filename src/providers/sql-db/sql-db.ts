@@ -50,7 +50,7 @@ export class SqlDbProvider {
     return new Promise((resolve, reject) => {
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Locations')
+            if(table == 'Categories')
              console.log(query + '\n' +JSON.stringify(row_data));
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));

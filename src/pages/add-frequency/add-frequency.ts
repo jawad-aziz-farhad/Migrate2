@@ -26,7 +26,7 @@ export class AddFrequencyPage {
   @ViewChild(TimerComponent) timer: TimerComponent;
   
   public roundTime: number = 0;
-  public numbers: any;
+  public numbers: Array<number>;
   public frequency: any;
 
   constructor(public navCtrl: NavController, 
@@ -41,14 +41,13 @@ export class AddFrequencyPage {
    }
    
    ionViewDidLoad() {     
-     this.numbers = ['0','1', '2', '3', '4', '5', '6' , '7','8', '9'];
+     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
      console.log('SelectElementPage');
    }
 
   ionViewWillEnter() {
     this.timer.resumeTimer();
   }
-
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){

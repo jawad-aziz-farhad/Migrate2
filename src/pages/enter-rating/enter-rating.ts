@@ -22,7 +22,7 @@ export class EnterRatingPage {
   
   public roundTime: number = 0; 
   public rating: any;
-  public numbers: any;
+  public numbers: Array<number>;
   
   constructor(public navCtrl: NavController, 
     public navParams: NavParams , 
@@ -34,8 +34,8 @@ export class EnterRatingPage {
   }
 
   ionViewDidLoad() {
-    this.numbers = ['0','1', '2', '3', '4', '5', '6' , '7','8', '9'];
     console.log('ionViewDidLoad RatingsPage');
+    this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
   }
 
   ionViewWillEnter() {

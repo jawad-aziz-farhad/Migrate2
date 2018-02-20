@@ -12,7 +12,7 @@
           
           <ion-title>Create Element</ion-title>
           <ion-buttons end  *ngIf="show">
-            <button ion-button icon-only margin-right (click)="setUserInfo()">
+            <button ion-button icon-only margin-right [disabled]="elementForm.invalid" (click)="setUserInfo()">
               <span>Save</span>
             </button>
           </ion-buttons>
@@ -51,19 +51,23 @@
         </ion-item>       
       </ion-list>
 
-      <ion-list radio-group [(ngModel)]="typesModel" formControlName="type">
+      <ion-list radio-group formControlName="type" >
           <h2>
             Types:
           </h2>
         
-          <ion-item *ngFor="let type of types;">
+          <ion-item *ngFor="let type of types;" >
             <ion-label> {{ type.name }}</ion-label>
             <ion-radio [value]="type.id"></ion-radio>
           </ion-item>
+
+           <p *ngIf="!elementForm.controls.type.valid && (elementForm.controls.type.dirty)">
+              Please select a type.
+            </p>
           
       </ion-list>
 
-      <ion-list radio-group [(ngModel)]="ratingModel" formControlName="type">
+      <ion-list radio-group formControlName="rating">
         <h2>
           Default Rating:
         </h2>
@@ -72,6 +76,10 @@
             <ion-label>{{ rating.name }}</ion-label>
             <ion-radio [value]="rating.id"></ion-radio>
          </ion-item>
+
+         <p *ngIf="!elementForm.controls.rating.valid && (elementForm.controls.rating.dirty)">
+              Please select a rating.
+         </p>
       
         <!--<ion-item>
           <ion-label> 100</ion-label>
@@ -87,7 +95,7 @@
 
     </ion-list>
 
-      <ion-list class="options-list">
+      <!--<ion-list class="options-list">
           <h2>Study Types:</h2>
           <ion-item no-padding no-border >
             <ion-label color="text-grey">Efficiency Study</ion-label>
@@ -105,7 +113,16 @@
               <ion-checkbox [(ngModel)]="r_study" formControlName="status"></ion-checkbox>
             </ion-item>
           
+        </ion-list>-->
+
+        <ion-list formArrayName="studyTypes">
+           <ion-item no-padding no-border *ngFor="let study_type of elementForm.controls.studyTypes.controls; let i=index;" [formGroupName]="i">
+            <ion-label color="text-grey">{{ study_type.name }}</ion-label>
+            <ion-checkbox></ion-checkbox>
+          </ion-item>
         </ion-list>
+
+        <!--<pre>{{ elementForm | json}}</pre>-->
 
     </form>
 

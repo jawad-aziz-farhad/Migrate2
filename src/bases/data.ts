@@ -202,6 +202,7 @@ export class Data {
 
   /* DROPPING TABLE FROM DATA BASE */
   dropTable(refresher){
+    this.data = [];
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(refresher !== '')
         refresher.complete();

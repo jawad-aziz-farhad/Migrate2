@@ -141,7 +141,7 @@ export class OperationsProvider {
       fileName: filename,
       chunkedMode: false,
       mimeType: "image/jpeg",
-      headers: headers
+      headers:  { Authorization: localStorage.getItem("TOKEN") }
     };
   
     const fileTransfer: FileTransferObject = this.transfer.create();

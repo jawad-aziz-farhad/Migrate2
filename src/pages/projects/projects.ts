@@ -155,8 +155,19 @@ export class ProjectsPage {
     return new Observable(observer => {
         projects.forEach((project,index) => {
           this.forkJoin(project, value).subscribe(result => {
-              if(index == (projects.length -1))
-                observer.next(true);   
+              if(index == (projects.length -1)){
+                if(value == 'IDs')
+                 observer.next(true);   
+                 else {
+                   this.sql.addData(this.TABLE_NAME_8, projects[0].categories).then(res => {
+                      observer.next(true);
+                   }).catch(error => {
+                     console.error(error);
+                     this.loader.hideLoader();
+                   });
+                 }
+                  
+              }
           });
       });
     });
