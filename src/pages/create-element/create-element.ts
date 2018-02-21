@@ -213,7 +213,7 @@ export class CreateElementPage {
 
   /* CREATING NEW ELEMENT IN OFFLINE MODE */
   create_Offline_Element() {
-    const typesArray = <FormArray>this.elementForm.get('studyTypes');
+    const typesArray = <FormArray>this.elementForm.get('studyTypes').value;
     for(let i=0;i<typesArray.length;i++){
       this.offline_types += typesArray[i];
       if(i < (typesArray.length - 1))

@@ -208,15 +208,18 @@ isLoaded1stTime(){
 /* GOING TO THE NEXT VIEW */
 goNext() {
   this._parseTime();
-  if(this._temp.rating == null){
-    this._temp.rating = 100;
-    this.navCtrl.push(RatingsPage, {element: this._temp});
+  
+  if(this._temp.rating == null || this._temp.rating == 3){
+    this.navCtrl.push(RatingsPage);
   }
-  else if(this._temp.rating.toLowerCase().trim() == "field user input")
-    this.navCtrl.push(RatingsPage, {element: this._temp});
   else{
     /* SETTING RATING VALUE AND SKIPPING RATINGS PAGE */
-    this.parseData.getData().setRating(this._temp.rating);
+    let rating = null
+    if(this._temp.rating == 1)
+      rating = 'Not Rated';
+    else if(this._temp.rating == 2)
+      rating = 100;  
+    this.parseData.getData().setRating(rating);
     this.parseData.setData(this.parseData.getData());
     this.navCtrl.push(AddFrequencyPage)
   }

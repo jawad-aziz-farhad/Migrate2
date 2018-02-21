@@ -47,31 +47,9 @@ export class RatingsPage {
   /* iNITIALIZING VIEW  */
   initView(){
     this.temp = {};
-    this.getRatings();
+    this.enterRating(this.ratings[0]);
   }
-
   
-  /* GETTING RATINGS */
-  getRatings() {
-    this.element = this.navParams.get('element');
-    let rating = this.element.rating.toLowerCase().trim();
-    /* IF RATING IS FIELD USER INPUT */
-    if(rating == 'field user input')
-      this.enterRating(this.ratings[0]);
-    /* IF RATING IS NOT RATED */  
-    else if(rating == 'not rated'){
-      this.enterRating(this.ratings[(this.ratings.length - 1)]);
-    }
-    /* IF RATING IS A NUMBER */  
-    else{
-      const index = this.ratings.indexOf(parseInt(this.element.rating));
-      if(index > -1)
-        this.enterRating(this.ratings[index]);
-      else
-        this.enterRating(this.ratings[0]);
-    } 
-  }
-
   /* GOING TO ENTER RATING PAGE */
   goToEnterRating(){
     this._parseTime();
