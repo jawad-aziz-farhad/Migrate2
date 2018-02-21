@@ -34,9 +34,7 @@ export class CreateElementPage {
   private r_study: boolean;
   private show: boolean;
 
-  private typesModel: any;
-  private ratingModel: any;
-  private offline_types: Array<any> = [];
+  private offline_types: any;
 
   private TABLE_NAME: string = 'Elements';
   private TABLE_NAME_1: string = 'Elements_IDs';
@@ -152,37 +150,12 @@ export class CreateElementPage {
   setUserInfo() {
     this.storage.get('currentUser').then(user => {
       this.elementForm.get('addedBy.name').setValue(name);
-      this.elementForm.get('addedBy._id').setValue(user._id);;
-      this.addTypes();      
+      this.elementForm.get('addedBy._id').setValue(user._id);
+      this.checkInternet();
     });
   }
 
-  /* ADDING TYPES */
-  addTypes(){
-    const formCtrl = <FormArray>this.elementForm.controls['studyTypes'];
-    for(let i=0; i<this.study_types.length;i++){
-        if(i == 0 && this.e_study){
-          this.offline_types.push(1);
-          formCtrl.push(this.formBuilder.control(1));
-        }
-        
-        if(i == 1 && this.a_time){
-          this.offline_types.push(2);
-          formCtrl.push(this.formBuilder.control(2));
-        }
-          
-        if(i == 2 && this.r_study){
-          this.offline_types.push(3);
-          formCtrl.push(this.formBuilder.control(3));
-        }
-    }
-
-    this.elementForm.get('rating').setValue(this.ratingModel);
-    this.elementForm.get('type').setValue(this.typesModel);
-
-    this.checkInternet();
-  }
-
+    
   /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
   checkInternet(){
     if(this.network.isInternetAvailable())
@@ -193,17 +166,17 @@ export class CreateElementPage {
  
   /* CREATING A NEW ELEMENT */
   createElement(){
-   this.loader.showLoader(MESSAGE); 
-   this.operations.addData(this.elementForm.value, 'elements/add').subscribe(res => {
-      if(res.success) 
-        this.dropTable(res);
-      else
-         this.toast.showToast(ERROR);
-   },
-   error => {
-      this.loader.hideLoader();
-      this.operations.handleError(error)
-   });
+      this.loader.showLoader(MESSAGE); 
+      this.operations.addData(this.elementForm.value, 'elements/add').subscribe(res => {
+          if(res.success) 
+            this.dropTable(res);
+          else
+            this.toast.showToast(ERROR);
+      },
+      error => {
+          this.loader.hideLoader();
+          this.operations.handleError(error)
+      });
   }
 
    /* DROPPING TABLE FROM DATA BASE */
@@ -240,13 +213,20 @@ export class CreateElementPage {
 
   /* CREATING NEW ELEMENT IN OFFLINE MODE */
   create_Offline_Element() {
+    const typesArray = <FormArray>this.elementForm.get('studyTypes');
+    for(let i=0;i<typesArray.length;i++){
+      this.offline_types += typesArray[i];
+      if(i < (typesArray.length - 1))
+      this.offline_types += ',';
+    }
     let name     = this.elementForm.get('name').value;
     let category = this.elementForm.get('category').value;
     let username = this.elementForm.get('addedBy.name').value;
     let userid   = this.elementForm.get('addedBy._id').value;
     let date     = this.elementForm.get('addedBy.date').value;
     let userAdded = this.elementForm.get('userAdded').value;
-    let _data = [{ _id: date + '-element', name: name, type: this.typesModel , rating: this.ratingModel , category:category,  
+    let rating   = this.elementForm.get('rating').value;
+    let _data = [{ _id: date + '-element', name: name, type: this.offline_types , rating: rating , category:category,  
                    types: this.offline_types, projectID: this.project._id, addedby:username , 
                    id_of_addedby: userid, status: 'active', date: date, userAdded : userAdded}];
     this.sql.addData(this.TABLE_NAME_2,_data).then(result => {

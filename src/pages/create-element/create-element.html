@@ -51,13 +51,13 @@
         </ion-item>       
       </ion-list>
 
-      <ion-list radio-group formControlName="type" >
+      <ion-list radio-group formControlName="type">
           <h2>
             Types:
           </h2>
         
-          <ion-item *ngFor="let type of types;" >
-            <ion-label> {{ type.name }}</ion-label>
+          <ion-item *ngFor="let type of types;">
+            <ion-label> {{ type.name }} </ion-label>
             <ion-radio [value]="type.id"></ion-radio>
           </ion-item>
 
