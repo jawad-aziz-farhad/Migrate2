@@ -2,13 +2,14 @@ import { Component , ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { TimerComponent } from '../../components/timer/timer';
 import { NewTimerComponent } from '../../components/new-timer/new-timer';
-import { Time , OperationsProvider  , ParseDataProvider , ParserProvider, StudyStatusProvider } from '../../providers';
+import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , ParserProvider, StudyStatusProvider } from '../../providers';
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { StudyItemsPage } from '../study-items/study-items';
 import { importExpr } from '@angular/compiler/src/output/output_ast';
 import { SelectRolePage } from '../select-role/select-role';
 import { Rounds } from '../../models/index';
+import { FREQUENCY_INPUT_ERROR } from '../../config/config';
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -36,6 +37,7 @@ export class AddFrequencyPage {
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
                public studyStatus: StudyStatusProvider,
+               public toast: ToastProvider,
                public parser: ParserProvider) {
       this.frequency = ''; 
    }
@@ -51,6 +53,9 @@ export class AddFrequencyPage {
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){
+     if(this.frequency.length == 0 && num == 0)
+      this.toast.showBottomToast(FREQUENCY_INPUT_ERROR);
+    else  
     this.frequency = this.frequency + num;
   } 
 
