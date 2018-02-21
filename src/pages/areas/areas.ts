@@ -66,7 +66,7 @@ getAllData() {
   getData() {
     this.locations = [];
     this.loader.showLoader(MESSAGE);
-    this.operations.singleRequest('locations/getByCustomerId', {customerID: this.project.customer_id}).subscribe(res => {
+    this.operations.postRequest('locations/getByCustomerId', {customerID: this.project.customer_id}).subscribe(res => {
       this.createTable(res);
     },
     error => {

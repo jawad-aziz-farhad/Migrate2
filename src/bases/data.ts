@@ -73,7 +73,7 @@ export class Data {
     const data = source.flatMap(result => {
       this.formBuilder.initIDForm(result);
       let formData = this.formBuilder.getIDForm().value;
-      return this.operations.get_data(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
+      return this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
     });
 
     data.subscribe(data => {
@@ -87,7 +87,10 @@ export class Data {
       
       this.saveData(data)
     },
-    error => this.handleError(error));    
+    error => {
+      this.handleError(error);
+      this.operations.handleError(error);
+    });    
   }
 
   /* SAVING DATA LOCALLY */

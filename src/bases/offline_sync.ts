@@ -337,7 +337,7 @@ export class SyncOfflineData {
 
 /* SYNCING DATA TO SERVER */
   syncData() {    
-    this.operations.addData(this.offlineData$[0], 'ras_data/add').subscribe(result => {
+    this.operations.postRequest('ras_data/add' , this.offlineData$[0]).subscribe(result => {
         console.log("RAS RESULT: " + JSON.stringify(result));
         if(result.success)
           this.dropTable(this.TABLE_NAME);
@@ -346,7 +346,7 @@ export class SyncOfflineData {
     }),
     error => {
       this.handleError();
-      console.log('ERROR: '+ JSON.stringify(error));
+      this.operations.handleError(error);
     };
   }
 
@@ -378,7 +378,6 @@ export class SyncOfflineData {
     /*HANDLING ERRORS */
   handleError(){
     this.loader.hideLoader();
-    this.toast.showToast(ERROR);
   }
    
 }

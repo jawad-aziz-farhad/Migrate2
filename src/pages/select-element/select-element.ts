@@ -151,7 +151,7 @@ export class SelectElementPage {
   /* GETTING DATA FROM SERVER */
   getData() {
       let formData = this.formBuilder.getIDForm().value;
-      this.operations.get_data('elements/getByIds', formData).subscribe(data => {
+      this.operations.postRequest('elements/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
         if(data.result.length == 0){
           this.toast.showBottomToast(NO_DATA_FOUND);
@@ -165,7 +165,7 @@ export class SelectElementPage {
       },
       error => {
         this.loader.hideLoader();
-        console.error('ERROR: ' + JSON.stringify(error.json()));
+        this.operations.handleError(error);
       });
   }
 
@@ -188,7 +188,6 @@ insertData(data) {
       console.error("ERROR: " + JSON.stringify(error));
   });
 }
-
 
 /* POPULATING DATA */
 populateData(elements){

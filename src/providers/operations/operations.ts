@@ -7,14 +7,13 @@ import 'rxjs/add/operator/mergeMap';
 import { Observable } from "rxjs";
 import { forkJoin } from "rxjs/observable/forkJoin";
 
-import { SERVER_URL , ENTRY_ALREADY_EXIST } from '../../config/config';
+import { SERVER_URL , ENTRY_ALREADY_EXIST , SESSION_EXPIRED, ERROR } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { SqlDbProvider } from '../sql-db/sql-db';
 import { ParseDataProvider } from '../parse-data/parse-data';
-import 'rxjs/add/operator/catch';
 /*
   Generated class for the OperationsProvider provider.
 
@@ -34,24 +33,12 @@ export class OperationsProvider {
               public parseData: ParseDataProvider) {
     console.log('Hello OperationsProvider Provider');
   }
-
-  get(endPoint): Observable<any>{
-    this.END_POINT = SERVER_URL + endPoint + '/get';
-    console.log(this.END_POINT);
-    return this.http.get(this.END_POINT, {headers: this.headers.getHeaders()}).map(res => res.json());
-  }
-
-  get_data(endPoint, data){
-    this.END_POINT = SERVER_URL + endPoint;
-    let headers = this.headers.getHeaders();
-    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json());
-  }
-
+  
   getdata(){
     let res = []; let requests = [];
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
-    return this.http.post(`${URL}`, null ,{ headers: headers })
+    return this.http.post(`${URL}`, null ,{ headers: headers }).catch(this.catchError)
                     .flatMap(response => {      
       let res = response.json();
       return new Observable(observer => {
@@ -71,12 +58,11 @@ export class OperationsProvider {
                 res[index].roles_data = result[4].result;
 
                 if(index == (res.length - 1)){
-                  this.singleRequest('categories/get',null).subscribe(result => {
+                  this.postRequest('categories/get',null).subscribe(result => {
                       res[0].categories = result;
                       observer.next(res);
                   },
-                  error => console.error(error));
-                  
+                  error => this.handleError(error));
                 }
             },
             error => console.error("ERROR:" +JSON.stringify(error)));   
@@ -88,22 +74,28 @@ export class OperationsProvider {
   forkJoin(project){
        let requests = []; let request = null; let data = null;
        
-       request = this.singleRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
+       request = this.postRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
        requests.push(request);
        
-       request = this.singleRequest('locations/getByCustomerId',{customerID: this.checkRequestData(project.customer)});
+       request = this.postRequest('locations/getByCustomerId',{customerID: this.checkRequestData(project.customer)});
        requests.push(request);
        
-       request = this.singleRequest('areas/getByIds',{ids: this.checkRequestData(project.areas)});
+       request = this.postRequest('areas/getByIds',{ids: this.checkRequestData(project.areas)});
        requests.push(request);
       
-       request = this.singleRequest('elements/getByIds',{ids: this.checkRequestData(project.elements)});
+       request = this.postRequest('elements/getByIds',{ids: this.checkRequestData(project.elements)});
        requests.push(request);
 
-       request = this.singleRequest('roles/getByIds',{ids: this.checkRequestData(project.roles)});
+       request = this.postRequest('roles/getByIds',{ids: this.checkRequestData(project.roles)});
        requests.push(request);
       
        return Observable.forkJoin(requests);
+  }
+
+  postRequest(endPoint, data){
+    this.END_POINT = SERVER_URL + endPoint;
+    let headers = this.headers.getHeaders();
+    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catchError);
   }
 
   checkRequestData(data){
@@ -115,24 +107,6 @@ export class OperationsProvider {
      return request_data;  
   }
 
-  singleRequest(endPoint,data): Observable<any> {
-    let URL = SERVER_URL + endPoint;
-    return this.http.post(`${URL}`, data , {headers: this.headers.getHeaders()}).map(res => res.json()).catch(this.catchError);
-  }
-
-  getLocationsByCustomerID(endPoint, id){
-    this.END_POINT = SERVER_URL  + endPoint + `${id}`;
-    console.log(this.END_POINT);
-    return this.http.get(`${this.END_POINT}` ,{headers: this.headers.getHeaders()}).map(res => res.json()).take(1);
-  }
-
-  addData(formData , endPoint){
-    let url = SERVER_URL + endPoint;
-    return this.http.post(`${url}`, formData,{headers: this.headers.getHeaders()})
-                    .map(res => res.json())
-                    .catch(this.catchError);
-  }
-
   catchError(error: Response) {
     return Observable.throw(error.json() || 'Server Error');
   }
@@ -140,6 +114,16 @@ export class OperationsProvider {
   handleError(error){
     if(error.code == 11000)
         this.toast.showBottomToast(ENTRY_ALREADY_EXIST);
+    else if([990, 991, 992, 993, 'TokenExpiredError'].indexOf(error.code) !== -1){
+      if(typeof error.msg !== 'undefined' && error.msg !== null && error.msg !== '')
+        this.toast.showBottomToast(error.msg);
+      else
+        this.toast.showBottomToast(SESSION_EXPIRED);
+      this.auth.logOut();
+    }
+    else 
+      this.toast.showToast(ERROR);
+    
   }
 
 

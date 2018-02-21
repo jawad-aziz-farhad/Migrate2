@@ -99,7 +99,7 @@ setUserInfo() {
   /* ADD A NEW ROLE */
   createRole() {
       this.loader.showLoader(MESSAGE);
-      this.operations.addData(this.roleForm.value,'roles/add').subscribe(res => {
+      this.operations.postRequest('roles/add' , this.roleForm.value).subscribe(res => {
           if(res.success) 
             this.dropTable(res);
           else

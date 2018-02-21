@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ProgressHttp } from "angular-progress-http";
 import { FormBuilder, FormGroup, FormArray ,Validators } from '@angular/forms';
-import { ParseDataProvider , NetworkProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , StudyStatusProvider, ParserProvider} from '../../providers';
+import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , StudyStatusProvider, ParserProvider} from '../../providers';
 import { SERVER_URL , ERROR, OFFLINE_STUDY_DATA_MSG } from '../../config/config';
 import { ProjectsPage } from '../projects/projects';
 import { AreasPage } from '../areas/areas';
@@ -42,7 +42,8 @@ export class SubmitDataProgressPage {
               public studyStatus: StudyStatusProvider,
               public formProvider: FormBuilderProvider,
               public parser: ParserProvider,
-              public headers: HeadersProvider) {
+              public headers: HeadersProvider,
+              private operations: OperationsProvider) {
     this.initView();           
   }
 
@@ -93,6 +94,10 @@ export class SubmitDataProgressPage {
                this.show = true;
             else
               console.error(ERROR);   
+        },
+        error => {
+          let _error = error.json();
+          this.operations.handleError(_error);
         });
   }
 
@@ -158,7 +163,6 @@ getAllData(){
   });
 }
 
-
 /* GOING TO THE PREVIOUS PAGE BY CLICKING BUTTON  */
 go(value: string) {
     this.parseData.clearDataArray();
@@ -169,7 +173,5 @@ go(value: string) {
     else
       this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 1))); 
   }
-
-  
 
 }

@@ -100,7 +100,7 @@ setUserInfo() {
   /* ADD A NEW ROLE */
   createArea() {
       this.loader.showLoader(MESSAGE)
-      this.operations.addData(this.areaForm.value,'areas/add').subscribe( res => {
+      this.operations.postRequest('areas/add', this.areaForm.value).subscribe( res => {
           if(res.success)  
             this.dropTable(res);              
           else

@@ -151,7 +151,7 @@ import { Data } from '../../bases/data';
   /* GETTING DATA FROM SERVER */
   getData() {
       let formData = this.formBuilder.getIDForm().value;
-      this.operations.get_data('areas/getByIds', formData).subscribe(data => {
+      this.operations.postRequest('areas/getByIds', formData).subscribe(data => {
         console.log("RESULT: \n" +JSON.stringify(data));
         if(data.result.length == 0){
           this.toast.showBottomToast(NO_DATA_FOUND);
@@ -166,8 +166,8 @@ import { Data } from '../../bases/data';
 
       },
       error => {
-       this.loader.hideLoader();
-        console.error('ERROR: ' + JSON.stringify(error.json()));
+        this.loader.hideLoader();
+        this.operations.handleError(error);
       });
   }
 

@@ -82,7 +82,7 @@ export class CreateElementPage {
 
   /* GETTING CATEGORIES FOR CREATING NEW ELEMENT*/
   getCategories(){    
-    this.operations.get_data('categories/get',null).subscribe(result => {
+    this.operations.postRequest('categories/get',null).subscribe(result => {
       this.loader.hideLoader();
       this.categories = result;
       this.initFormBuilder();
@@ -167,7 +167,7 @@ export class CreateElementPage {
   /* CREATING A NEW ELEMENT */
   createElement(){
       this.loader.showLoader(MESSAGE); 
-      this.operations.addData(this.elementForm.value, 'elements/add').subscribe(res => {
+      this.operations.postRequest('elements/add' , this.elementForm.value).subscribe(res => {
           if(res.success) 
             this.dropTable(res);
           else

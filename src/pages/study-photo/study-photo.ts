@@ -135,7 +135,7 @@ export class StudyPhotoPage {
         
       }).catch(error => {
         this.loader.hideLoader();
-        this.toast.showToast(ERROR);
+        this.operations.handleError(JSON.parse(error));
       });
   }
 

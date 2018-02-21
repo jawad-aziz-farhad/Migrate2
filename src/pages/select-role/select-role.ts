@@ -149,7 +149,7 @@ export class SelectRolePage {
   /* GETTING DATA FROM SERVER */
   getData() {    
     let formData = this.formBuilder.getIDForm().value;
-    this.operations.get_data('roles/getByIds', formData).subscribe(data => {
+    this.operations.postRequest('roles/getByIds', formData).subscribe(data => {
       if(data.result.length == 0){
           this.toast.showBottomToast(NO_DATA_FOUND);
           this.loader.hideLoader();
@@ -162,7 +162,7 @@ export class SelectRolePage {
     },
     error => {
       this.loader.hideLoader();
-      console.error('ERROR: ' + JSON.stringify(error.json()));
+      this.operations.handleError(error);
     });
    }
 
