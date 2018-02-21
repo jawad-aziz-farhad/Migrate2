@@ -251,17 +251,7 @@ export class ProjectsPage {
       refresher.complete();
       return;
     }
-    this.sql.isDataAvailable(this.TABLE_NAME).then(result => {
-        if(result)
-           this.dropTable(refresher);
-        else{
-          refresher.complete();
-          this.getData();
-        }
-    }).catch(error => {
-      refresher.complete();
-      console.error('ERROR: ' + JSON.stringify(error));
-    });
+    this.dropTable(refresher);
 }
 
   /* DROPPING ALL THE OBOVE SIX TABLES FROM DATA BASE */

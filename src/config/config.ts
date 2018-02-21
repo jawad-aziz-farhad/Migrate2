@@ -23,3 +23,4 @@ export let STUDY_ENDED = "Study has now ended";
 export let DELETE_TITLE = 'Delete Item';
 export let DELETE_MSG = 'Are you sure that you want to delete this Item ?';
 export let FREQUENCY_INPUT_ERROR = "Only positive numbers are allowed";
+export let ENTRY_ALREADY_EXIST = "An entry with the same name already exists."

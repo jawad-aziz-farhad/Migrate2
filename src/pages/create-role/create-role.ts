@@ -64,10 +64,9 @@ export class CreateRolePage {
 
   /* INITIALIZE FORM BUILDER */
   initFormBuilder(){
-    
     this.roleForm = this.formBuilder.group({
         name: ['', Validators.required],
-        position: [this.positions[0], Validators.required],
+        position: ['', Validators.required],
         addedBy:  this.formBuilder.group({
                     _id: '',
                     name :'',
@@ -108,7 +107,7 @@ setUserInfo() {
         },
         error => {
           this.loader.hideLoader();
-          console.log('ERROR: ' + JSON.stringify(error));
+          this.operations.handleError(error);
     });
   }
 

@@ -230,9 +230,8 @@ export class SqlDbProvider {
       console.log('Error AT TABLE: '+ table + ' ' + JSON.stringify(err));
       reject(err);
     });
-    }); 
-    
-  }
+   }); 
+ }
 
 
   putDatainArray(table, result){

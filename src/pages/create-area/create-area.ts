@@ -108,7 +108,7 @@ setUserInfo() {
       },
       error => {
         this.loader.hideLoader();
-        console.error('ERROR: ' + JSON.stringify(error));
+        this.operations.handleError(error);
       });
     }
 

@@ -1,18 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from "rxjs";
 import { forkJoin } from "rxjs/observable/forkJoin";
 
-import { SERVER_URL } from '../../config/config';
+import { SERVER_URL , ENTRY_ALREADY_EXIST } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
+import { ToastProvider } from '../toast/toast';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
 import { SqlDbProvider } from '../sql-db/sql-db';
 import { ParseDataProvider } from '../parse-data/parse-data';
-
+import 'rxjs/add/operator/catch';
 /*
   Generated class for the OperationsProvider provider.
 
@@ -28,6 +30,7 @@ export class OperationsProvider {
               private auth: AuthProvider,
               public headers: HeadersProvider,
               public sql: SqlDbProvider,
+              public toast: ToastProvider,
               public parseData: ParseDataProvider) {
     console.log('Hello OperationsProvider Provider');
   }
@@ -48,7 +51,8 @@ export class OperationsProvider {
     let res = []; let requests = [];
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
-    return this.http.post(`${URL}`, null ,{ headers: headers }).flatMap(response => {      
+    return this.http.post(`${URL}`, null ,{ headers: headers })
+                    .flatMap(response => {      
       let res = response.json();
       return new Observable(observer => {
           res.forEach((project, index) => {
@@ -113,9 +117,8 @@ export class OperationsProvider {
 
   singleRequest(endPoint,data): Observable<any> {
     let URL = SERVER_URL + endPoint;
-    return this.http.post(`${URL}`, data , {headers: this.headers.getHeaders()}).map(res => res.json());
+    return this.http.post(`${URL}`, data , {headers: this.headers.getHeaders()}).map(res => res.json()).catch(this.catchError);
   }
-
 
   getLocationsByCustomerID(endPoint, id){
     this.END_POINT = SERVER_URL  + endPoint + `${id}`;
@@ -125,8 +128,20 @@ export class OperationsProvider {
 
   addData(formData , endPoint){
     let url = SERVER_URL + endPoint;
-    return this.http.post(`${url}`, formData,{headers: this.headers.getHeaders()}).map(res => res.json());
+    return this.http.post(`${url}`, formData,{headers: this.headers.getHeaders()})
+                    .map(res => res.json())
+                    .catch(this.catchError);
   }
+
+  catchError(error: Response) {
+    return Observable.throw(error.json() || 'Server Error');
+  }
+
+  handleError(error){
+    if(error.code == 11000)
+        this.toast.showBottomToast(ENTRY_ALREADY_EXIST);
+  }
+
 
   uploadFile(data: any): Promise<any>{
     

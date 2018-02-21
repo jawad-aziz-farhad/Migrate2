@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators , FormControl } from '@angular/forms
 import { TimerComponent } from '../../components/timer/timer';
 import { Storage } from "@ionic/storage";
 import { OperationsProvider , LoaderProvider , AuthProvider, ToastProvider, SqlDbProvider, Time , NetworkProvider} from '../../providers';
-import { MESSAGE, ERROR } from '../../config/config';
+import { MESSAGE, ERROR  } from '../../config/config';
 import { Observable } from 'rxjs/Observable';
 import { FormArray } from '@angular/forms/src/model';
 /**
@@ -202,7 +202,7 @@ export class CreateElementPage {
    },
    error => {
       this.loader.hideLoader();
-      console.error("ERROR: "+ JSON.stringify(error))
+      this.operations.handleError(error)
    });
   }
 
