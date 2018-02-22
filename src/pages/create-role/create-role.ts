@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TimerComponent } from '../../components/timer/timer';
+
 import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider, SqlDbProvider, Time, NetworkProvider } from '../../providers';
 import { MESSAGE, ERROR } from '../../config/config';
 import { Network } from '@ionic-native/network';
@@ -20,7 +20,6 @@ import { Network } from '@ionic-native/network';
 })
 export class CreateRolePage {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
   public roleForm: FormGroup;
   public positions: any;
   public project: any;
@@ -48,7 +47,6 @@ export class CreateRolePage {
 
   ionViewWillEnter(){
     console.log('ionViewWillEnter CreateRolePage');
-    this.timer.startTimer();
   }
 
   initView(){
@@ -173,8 +171,6 @@ setUserInfo() {
 
   /* GOING BACK TO PREVIOUS  */
   goBack(){
-    this.timer.pauseTimer();
-    this.time.setTime(this.timer.getRemainingTime());
     this.navCtrl.pop();
   }
     

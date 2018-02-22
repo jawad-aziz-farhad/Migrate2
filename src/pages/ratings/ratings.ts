@@ -1,7 +1,5 @@
 import { Component , ViewChild , Input } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { EnterRatingPage} from '../enter-rating/enter-rating';
 import { AddFrequencyPage} from '../add-frequency/add-frequency';
 import { Time , OperationsProvider , ParseDataProvider , StudyStatusProvider } from '../../providers';
@@ -20,8 +18,6 @@ import { StudyData , DummyData} from '../../models';
 })
 export class RatingsPage {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
-  
   public roundTime: number; 
   public ratings: any;
   public temp: any;
@@ -52,15 +48,7 @@ export class RatingsPage {
   
   /* GOING TO ENTER RATING PAGE */
   goToEnterRating(){
-    this._parseTime();
     this.gotoNextPage(EnterRatingPage);
-  }
-
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
   }
 
   /* PARSING ROUND DATA TO NEXT PAGE */
@@ -72,7 +60,6 @@ export class RatingsPage {
 
   /* GOING TO NEXT PAGE */
   gotoNextPage(page: any){
-    this._parseTime();
     this.navCtrl.push(page);
   }
 
@@ -99,7 +86,7 @@ export class RatingsPage {
   onCancelStudy(event){
     if(event)
       {
-        this.timer.killTimer();
+        this.time.destroyTimer();
         this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }

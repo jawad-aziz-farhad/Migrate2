@@ -1,6 +1,5 @@
 import { Component , ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
 import { AddFrequencyPage} from '../add-frequency/add-frequency';
 import { Time , OperationsProvider , ParseDataProvider} from '../../providers';
 import { StudyData } from '../../models';
@@ -18,8 +17,6 @@ import { StudyData } from '../../models';
 })
 export class EnterRatingPage {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
-  
   public roundTime: number = 0; 
   public rating: any;
   public numbers: Array<number>;
@@ -40,7 +37,6 @@ export class EnterRatingPage {
 
   ionViewWillEnter() {
     this.roundTime = this.time.getTime();
-    this.timer.startTimer();
   }
 
   /* CONCATINATING RATING WITH THE PREVIOUS ONE*/
@@ -57,9 +53,6 @@ export class EnterRatingPage {
   /* ADDING RATING TO THE ROUND DATA AND MOVING TO NEXT PAGE */
   addRatings(){
     console.log('RATING IS: ' + this.rating);
-    this.timer.pauseTimer();
-    this.timer.stopTimer();
-    this.time.setTime(this.timer.getRemainingTime());
     this._parseData(parseInt(this.rating));
     this.navCtrl.push(AddFrequencyPage);
   }

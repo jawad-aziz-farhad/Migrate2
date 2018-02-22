@@ -1,7 +1,6 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
-import { TimerComponent } from '../../components/timer/timer';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider , SqlDbProvider , Time, NetworkProvider } from '../../providers';
 import { MESSAGE, ERROR } from '../../config/config';
@@ -19,7 +18,6 @@ import { MESSAGE, ERROR } from '../../config/config';
 })
 export class CreateAreaPage {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
   public areaType: any;
   public types: any;
   public areaForm: FormGroup;
@@ -49,7 +47,6 @@ export class CreateAreaPage {
 
   ionViewWillEnter(){
     console.log('ionViewWillEnter CreateAreaPage');
-    this.timer.startTimer();
   }
 
   onChange(){
@@ -173,8 +170,6 @@ setUserInfo() {
 
   /* GOING BACK TO PREVIOUS PAGE */
   goBack(){
-    this.timer.pauseTimer();
-    this.time.setTime(this.timer.getRemainingTime());
     this.navCtrl.pop();
   }
 

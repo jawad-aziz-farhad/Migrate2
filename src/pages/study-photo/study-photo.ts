@@ -1,8 +1,6 @@
 import { Component , ViewChild , ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { Time , ParseDataProvider , OperationsProvider, LoaderProvider , ToastProvider , AlertProvider,
         SqlDbProvider , NetworkProvider, ParserProvider , StudyStatusProvider} from '../../providers';
 import { StudyItemsPage } from '../study-items/study-items';
@@ -26,8 +24,6 @@ import { Rounds } from '../../models/index';
 })
 export class StudyPhotoPage {
   
-  @ViewChild(TimerComponent) timer: TimerComponent;
-
   public isPhotoTaken: boolean;
   public photo : any;
   public roundTime: number = 0;
@@ -57,7 +53,6 @@ export class StudyPhotoPage {
     this.isUploaded = false;
     this.isPhotoTaken = false;
     this.TABLE_NAME = 'Study_Data';
-    this.timer.resumeTimer();
   }
 
   ionViewDidLoad() {
@@ -139,14 +134,7 @@ export class StudyPhotoPage {
       });
   }
 
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    console.log('REMAINING TIME AT STUDY PHOTO PAGE: '+ this.timer.getRemainingTime());
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
-  }
-
+ 
   /* PARSING DATA */
   _parseData(imagPath: any) {
     this.parseData.getData().setPhoto(imagPath);
@@ -157,12 +145,10 @@ export class StudyPhotoPage {
   
   /* GOING TO THE NEXT PAGE */
   goNext() {
-    
-    this._parseTime();
     this.parseData.clearData();
 
     /* IF TIMER IS FINISHED, WE ARE ENDING THE STUDY AND GOING TO THE PAGE WHERE ALL DATA FOR STUDY ITEMS WILL BE SHOWN */
-    if(this.timer.hasFinished() || this.timer.getRemainingTime() <= 0){
+    if(this.time.ticks <= 0){
       this.parser.getRounds().setRoundData(this.parseData.getDataArray());
       this.parser.getRounds().setRoundEndTime(new Date().getTime())
       this.parser.setRounds(this.parser.getRounds());
@@ -189,7 +175,7 @@ export class StudyPhotoPage {
   onCancelStudy(event){
     if(event){
       {
-        this.timer.killTimer();
+        this.time.destroyTimer();
         this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }

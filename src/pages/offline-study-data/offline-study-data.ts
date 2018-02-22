@@ -7,7 +7,6 @@ import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, INTERNET_ERROR } from '../.
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { Observable } from 'rxjs';
 import * as $ from 'jQuery';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 /**
  * Generated class for the OfflineStudyDataPage page.
  *

@@ -1,6 +1,5 @@
 import { Component , Input, Output , EventEmitter, ViewChild , OnInit , OnDestroy } from '@angular/core';
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
-import { TimerComponent } from '../timer/timer';
 import { SelectAreaPage } from '../../pages/select-area/select-area';
 import { CreateAreaPage } from '../../pages/create-area/create-area';
 import { CreateElementPage } from '../../pages/create-element/create-element';
@@ -24,8 +23,6 @@ import { FormBuilder } from '@angular/forms/src/form_builder';
 })
 export class InOneComponent implements OnInit {
 
-  @ViewChild(TimerComponent)timer: TimerComponent;
-
   @Input('tablename') TABLE_NAME;
   @Input('items') items: Array<any> = [];
   @Input('isFiltering') isFiltering : boolean = false;
@@ -48,9 +45,6 @@ export class InOneComponent implements OnInit {
   ngOnInit() {
     this.filter = 'most_popular';
     this.order  = 'ascending';
-    setTimeout(() => {
-      this.timer.startTimer();
-    },100);
   }
 
   ngOnDestroy(){
@@ -63,7 +57,6 @@ export class InOneComponent implements OnInit {
 
   selectItem(item){
     this._temp = item;
-    this.timer.stopTimer();
     this.selectedItem.emit(item);
   }
 

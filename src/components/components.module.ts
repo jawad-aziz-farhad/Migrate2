@@ -5,7 +5,6 @@ import { IonicModule } from 'ionic-angular';
 import { HeaderComponent } from './header/header';
 import { TimerComponent } from './timer/timer';
 import { NavMenuComponent } from './nav-menu/nav-menu';
-import { NewTimerComponent } from './new-timer/new-timer';
 import { ImgComponent } from './img/img';
 import { InStudyHeaderComponent } from './in-study-header/in-study-header';
 import { ProgressBarComponent } from './progress-bar/progress-bar';
@@ -16,7 +15,6 @@ import { PipesModule } from "../pipes/pipes.module";
 	declarations: [HeaderComponent , TimerComponent,
     NavMenuComponent,
     TimerComponent,
-    NewTimerComponent,
     ImgComponent,
     InStudyHeaderComponent,
     ProgressBarComponent,
@@ -26,7 +24,6 @@ import { PipesModule } from "../pipes/pipes.module";
 	exports: [HeaderComponent , TimerComponent,
     NavMenuComponent,
     TimerComponent,
-    NewTimerComponent,
     ImgComponent,
     InStudyHeaderComponent,
     ProgressBarComponent,

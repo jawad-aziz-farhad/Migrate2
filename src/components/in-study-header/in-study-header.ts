@@ -2,7 +2,6 @@ import { Component, ViewChild , Input, Output, EventEmitter } from '@angular/cor
 import { IonicPage, NavController, NavParams, MenuController, ViewController} from 'ionic-angular';
 import { AlertProvider, StudyStatusProvider} from '../../providers';
 import { ALERT_TITLE, STUDY_CANCELING_MESSAGE, ERROR } from '../../config/config';
-import { TimerComponent } from '../../components/timer/timer';
 import { PopoverController } from 'ionic-angular/components/popover/popover-controller';
 import { PopOverPage } from '../../pages/pop-over/pop-over';
 import { PrivacyPolicyPage } from '../../pages/privacy-policy/privacy-policy';
@@ -21,7 +20,6 @@ import { timer } from 'rxjs/observable/timer';
 })
 export class InStudyHeaderComponent {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
   @Input() title: string;
 
   @Output() cancel: EventEmitter<boolean> = new EventEmitter<boolean>();

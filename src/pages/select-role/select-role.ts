@@ -1,14 +1,11 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { SelectAreaPage } from '../select-area/select-area';
 import { CreateRolePage } from '../create-role/create-role';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
          AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { Role, DummyData , StudyData } from '../../models';
-import { Observable } from "rxjs";
 import { FormBuilder } from '@angular/forms/src/form_builder';
 import { Data } from '../../bases/data';
 /**
@@ -50,8 +47,6 @@ export class SelectRolePage {
 //     this.init('Roles','Roles_IDs',this.navParams.get('project'), SelectAreaPage);
 //  }
   
-  @ViewChild(TimerComponent) timer: TimerComponent;
-  
   public roles: Array<Role>;
   public searchInput: any;
   public isSearching: boolean;
@@ -89,7 +84,7 @@ export class SelectRolePage {
     this.isFiltering = this.isSearching = this.show = false;        
     this.project  = this.navParams.get('project');
     this.filter = 'recently_added'; 
-    this.timer.startTimer();
+    //this.timer.startTimer();
     this.checkDB();       
   }
 
@@ -103,7 +98,6 @@ export class SelectRolePage {
   }
 
   ionViewWillLeave(){
-    this.timer.clearTimer();
   }
   /* CHECKING LOCAL DATA BASE IF ROLES ARE ALREADY THERE OR NOT */
   checkDB() {
@@ -209,7 +203,6 @@ insertData(data) {
 
   /* GOING TO THE NEXT PAGE */
   goNext() {
-    this._parseTime();
     this.navCtrl.push(SelectAreaPage, { project: this.project});
   }
 
@@ -218,13 +211,6 @@ insertData(data) {
       return 'list-checked';
     else
       return 'disabled';  
-  }
-
-  /* PARSING STUDY TIME */
-  _parseTime(){
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
   }
 
   /* PARSING STUDY DATA */
@@ -334,7 +320,7 @@ insertData(data) {
   cancelStudy() {
     this.alertProvider.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
-          this.timer.killTimer();
+          this.time.destroyTimer();
           this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }
@@ -348,7 +334,6 @@ insertData(data) {
 
   /* NAVIGATING TO CREATE ROLE PAGE FOR CREATING A NEW ROLE */
   createRole(){
-    this._parseTime();
     this.navCtrl.push(CreateRolePage, { project: this.project });
   }
 

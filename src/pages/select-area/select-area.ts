@@ -1,7 +1,5 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { SelectElementPage } from '../select-element/select-element';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider, TimerService,
         OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider , AlertProvider} from '../../providers';
@@ -47,8 +45,6 @@ import { Data } from '../../bases/data';
 //   ionViewWillEnter(){
 //     this.init('Areas','Areas_IDs',this.navParams.get('project'), SelectElementPage);
 //  }
-
-  @ViewChild(TimerComponent) timer: TimerComponent;
 
   public roundTime: number = 0;
   public areas: any;
@@ -101,7 +97,6 @@ import { Data } from '../../bases/data';
   }
 
   ionViewWillEnter() {
-    this.timer.resumeTimer();
     this.initView();
   }
 
@@ -209,17 +204,9 @@ insertData(data) {
   }
 
   goNext() {
-    this._parseTime();
     this.navCtrl.push(SelectElementPage, { project: this.project});
   }
 
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
-  }
-  
   _parseData(area: any) {
     this.parseData.getData().setArea(area);
     this.parseData.setData(this.parseData.getData());
@@ -327,7 +314,7 @@ insertData(data) {
     this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
           //this.time.setStatus(true);
-          this.timer.killTimer();
+          this.time.destroyTimer();
           this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }
@@ -341,7 +328,6 @@ insertData(data) {
 
   /* NAVIGATING TO CREATE ROLE PAGE FOR CREATING A NEW ROLE */
   createArea(){
-    this._parseTime();
     this.navCtrl.push(CreateAreaPage, {project: this.project});
   }
 

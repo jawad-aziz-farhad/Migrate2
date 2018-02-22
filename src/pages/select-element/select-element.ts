@@ -1,7 +1,5 @@
 import { Component , ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { RatingsPage } from '../ratings/ratings';
 import { AddFrequencyPage } from '../add-frequency/add-frequency';
 import { CreateElementPage } from '../create-element/create-element';
@@ -50,8 +48,6 @@ export class SelectElementPage {
 //     this.init('Elements','Elements_IDs',this.navParams.get('project'), RatingsPage);
 //  }
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
- 
   public roundTime: number = 0;
   public elements: any;
   public isClicked: boolean;
@@ -94,7 +90,6 @@ export class SelectElementPage {
     this.project  = this.navParams.get('project');    
     this.filter = 'recently_added'; 
     this.order = 'ascending';
-    this.timer.resumeTimer();
     this.checkDB();
   }
   
@@ -199,15 +194,8 @@ populateData(elements){
   this.temp  = elements;
 }
 
-/* START TIMER WHEN THE VIEW IS LOADED 1st TIME */
-isLoaded1stTime(){
-  this.timer.startTimer();
-  this.show = true;
-}
 /* GOING TO THE NEXT VIEW */
 goNext() {
-  this._parseTime();
-  
   if(this._temp.rating == null || this._temp.rating == 3){
     this.navCtrl.push(RatingsPage);
   }
@@ -233,12 +221,6 @@ goNext() {
     },50);
   }
 
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
-  }
   /* PARSING STUDY DATA */
   _parseData(element: any){
     this.parseData.getData().setElement(element);
@@ -331,7 +313,7 @@ goNext() {
   cancelStudy() {
     this.alertProvider.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
       if(action == 'yes'){
-        this.timer.killTimer();
+        this.time.destroyTimer();
         this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }
@@ -345,7 +327,6 @@ goNext() {
 
   /* NAVIGATING TO CREATE ELEMENT PAGE FOR CREATING A NEW ELEMENT */
   createElement(){
-    this._parseTime();
     this.navCtrl.push(CreateElementPage, {project: this.project});
   }
 

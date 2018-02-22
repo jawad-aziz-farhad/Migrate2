@@ -6,7 +6,6 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from "rxjs";
 import { forkJoin } from "rxjs/observable/forkJoin";
-
 import { SERVER_URL , ENTRY_ALREADY_EXIST , SESSION_EXPIRED, ERROR } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
@@ -115,7 +114,7 @@ export class OperationsProvider {
     if(error.code == 11000)
         this.toast.showBottomToast(ENTRY_ALREADY_EXIST);
     else if([990, 991, 992, 993, 'TokenExpiredError'].indexOf(error.code) !== -1){
-      if(typeof error.msg !== 'undefined' && error.msg !== null && error.msg !== '')
+      if(error.msg)
         this.toast.showBottomToast(error.msg);
       else
         this.toast.showBottomToast(SESSION_EXPIRED);
@@ -194,16 +193,5 @@ export class OperationsProvider {
      });
   }
 
-  uploadPhoto(photo: any): Promise<any>{  
-   return new Promise((resolve, reject) => {
-      let params = {endPoint:'ras_data/study_image' , key :'photo', file: photo};
-      this.uploadFile(params).then(res => {
-        let response = JSON.parse(res);
-        resolve(response);
-      }).catch(error => {
-          reject(error);
-      });
-    });
-  }
 
 }

@@ -11,7 +11,6 @@ import { TermsOfServicesPage } from '../../pages/terms-of-services/terms-of-serv
 import { VersionInfoPage } from '../../pages/version-info/version-info';
 import { PrivacyPolicyPage } from '../../pages/privacy-policy/privacy-policy';
 import { AlertOptions } from 'ionic-angular/components/alert/alert-options';
-import { TimerComponent } from '../../components/timer/timer';
 /**
  * Generated class for the HeaderComponent component.
  *
@@ -24,7 +23,6 @@ import { TimerComponent } from '../../components/timer/timer';
 })
 export class HeaderComponent {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
   @Input() title: string;
   @Input() sub_title: string;
   @Input() button: string;
@@ -131,7 +129,7 @@ export class HeaderComponent {
     this.alertProvider.presentConfirm(title,message).then(action => {
         if(action == 'yes'){
           //this.time.setStatus(true);
-          this.timer.killTimer();
+          this.time.destroyTimer();
           this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }

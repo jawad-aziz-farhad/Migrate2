@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators , FormControl } from '@angular/forms';
-import { TimerComponent } from '../../components/timer/timer';
 import { Storage } from "@ionic/storage";
 import { OperationsProvider , LoaderProvider , AuthProvider, ToastProvider, SqlDbProvider, Time , NetworkProvider} from '../../providers';
 import { MESSAGE, ERROR  } from '../../config/config';
@@ -21,7 +20,6 @@ import { FormArray } from '@angular/forms/src/model';
 })
 export class CreateElementPage {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
   public elementForm: FormGroup;
   public project: any;
   private categories: Array<any>;
@@ -76,7 +74,6 @@ export class CreateElementPage {
                          { id: 3, name: 'Role Study' }];
     this.types = [{id: 1, name: 'Fixed'}, { id: 2, name: 'Variable'}];
     this.project = this.navParams.get('project')
-    this.timer.startTimer();
     this.getCategories();
   }
 
@@ -250,8 +247,6 @@ export class CreateElementPage {
 
   /* GOING BACK */
   goBack(){
-    this.timer.pauseTimer();
-    this.time.setTime(this.timer.getRemainingTime());
     this.navCtrl.pop({});
   }
   

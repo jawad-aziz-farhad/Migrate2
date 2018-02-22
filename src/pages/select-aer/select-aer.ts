@@ -1,6 +1,5 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
 import { SelectAreaPage } from '../select-area/select-area';
 import { CreateRolePage } from '../create-role/create-role';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
@@ -24,7 +23,6 @@ import { Data } from '../../bases/data';
   templateUrl: 'select-aer.html',
 })
 export class SelectAerPage extends Data {
-
   
   constructor(navCtrl: NavController,  
               protected navParams: NavParams,

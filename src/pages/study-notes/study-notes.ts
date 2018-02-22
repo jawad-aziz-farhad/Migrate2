@@ -1,7 +1,5 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { Time , AlertProvider , ParseDataProvider, ParserProvider , StudyStatusProvider } from '../../providers';
 import { NOTES_ALERT_TITLE , NOTES_ALERT_MESSAGE } from '../../config/config'; 
 import { StudyPhotoPage } from '../study-photo/study-photo';
@@ -21,8 +19,6 @@ import { Rounds } from '../../models/index';
 })
 export class StudyNotesPage {
  
-  @ViewChild(TimerComponent) timer: TimerComponent;
-  
   private study_photo: boolean; 
   public roundTime: number = 0;
   public notes: any;
@@ -41,7 +37,6 @@ export class StudyNotesPage {
   }
 
   ionViewWillEnter() {
-    this.timer.resumeTimer();
   }
 
   initView(){
@@ -56,7 +51,6 @@ export class StudyNotesPage {
         this.alertProvider.showAlert(NOTES_ALERT_TITLE, NOTES_ALERT_MESSAGE);
       
       else{
-          this._parseTime();
           this._parseData(this.notes);
 
           if(this.study_photo)
@@ -66,7 +60,7 @@ export class StudyNotesPage {
             this.parseData.setDataArray(this.parseData.getData());
             this.parseData.clearData();
 
-            if(this.timer.hasFinished() || this.timer.getRemainingTime() <= 0){
+            if(this.time.ticks <= 0){
               this.parser.getRounds().setRoundData(this.parseData.getDataArray());
               this.parser.getRounds().setRoundEndTime(new Date().getTime());
               this.parser.setRounds(this.parser.getRounds());
@@ -85,14 +79,6 @@ export class StudyNotesPage {
       }  
   }
 
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    console.log('REMAINING TIME AT STUDY NOTES PAGE: '+ this.timer.getRemainingTime());
-    this.timer.stopTimer();
-    this.timer.pauseTimer();
-    this.time.setTime(this.timer.getRemainingTime());
-  }
-
   _parseData(notes: string) {    
     this.parseData.getData().setNotes(notes);
     this.parseData.setData(this.parseData.getData());
@@ -103,7 +89,7 @@ export class StudyNotesPage {
   onCancelStudy(event){
     if(event){
       {
-        this.timer.killTimer();
+        this.time.destroyTimer();
         this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }

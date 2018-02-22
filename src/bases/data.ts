@@ -4,7 +4,6 @@ import { NavController, MenuController } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
         OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider, Time} from '../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../config/config';
-import { TimerComponent } from '../components/timer/timer';
 import { DummyData , StudyData} from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateElementPage } from '../pages/create-element/create-element';
@@ -15,8 +14,6 @@ import { of } from 'rxjs/observable/of';
 
 export class Data {
   
-  protected timer: TimerComponent;
-
   protected TABLE_NAME: string = '';
   protected TABLE_NAME_1: string = '';
   protected project: any;
@@ -125,12 +122,6 @@ export class Data {
     this._parseData(item);
   }
 
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
-  }
   /* PARSING STUDY DATA */
   _parseData(item: any){
      let study_data = null;
@@ -152,7 +143,6 @@ export class Data {
 
 
   goNext() {
-    this.time.setTime(this.timer.getRemainingTime())
     this.navCtrl.push(this.nextComponent, { project: this.project});
   }
 
@@ -228,7 +218,7 @@ export class Data {
   cancelStudy() {
     this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
-          this.timer.killTimer();
+          this.time.destroyTimer();
           this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }

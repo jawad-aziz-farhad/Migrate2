@@ -68,7 +68,8 @@ openModal() {
                 this.studyStatus.setStatus(true);
                 this.time.setRoundTime(data.roundTime);
                 this.time.setTime(data.roundTime);
-                 this.navCtrl.push(SelectRolePage, { project: this.project }); 
+                this.time.runTimer();
+                this.navCtrl.push(SelectRolePage, { project: this.project }); 
              }  
              else
                console.log('USER DONT WANT TO START STUDY.');       

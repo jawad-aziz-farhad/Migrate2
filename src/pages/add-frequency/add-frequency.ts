@@ -1,7 +1,5 @@
 import { Component , ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { NewTimerComponent } from '../../components/new-timer/new-timer';
 import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , ParserProvider, StudyStatusProvider } from '../../providers';
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
@@ -24,8 +22,6 @@ import { FREQUENCY_INPUT_ERROR } from '../../config/config';
 })
 export class AddFrequencyPage {
 
-  @ViewChild(TimerComponent) timer: TimerComponent;
-  
   public roundTime: number = 0;
   public numbers: Array<number>;
   public frequency: any;
@@ -48,7 +44,6 @@ export class AddFrequencyPage {
    }
 
   ionViewWillEnter() {
-    this.timer.resumeTimer();
   }
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
@@ -68,16 +63,7 @@ export class AddFrequencyPage {
   /* ADDING FREQUENCY TO THE ROUND DATA AND MOVING TO NEXT PAGE */
   addFrequency(){
     console.log('FREQUENCY IS: ' + this.frequency);
-    this._parseTime();
     this.openModal();
-  }
-
-  /* PARSING ROUND TIME TO NEXT PAGE */
-  _parseTime(){
-    console.log('REMAINING TIME AT FREQUENCY PAGE: '+ this.timer.getRemainingTime());   
-    this.timer.stopTimer();
-    this.timer.pauseTimer()
-    this.time.setTime(this.timer.getRemainingTime());
   }
 
   /* PARSING DATA */
@@ -107,7 +93,6 @@ export class AddFrequencyPage {
       let modal = this.modalCtrl.create('StudyOptionsPage', null, { cssClass: 'inset-modal study-options-modal' });        
       modal.onDidDismiss(data => {
 
-              this._parseTime();
               this._parseData(this.frequency);
         
               /* IF USER CLICKED CONTINUE */
@@ -120,7 +105,7 @@ export class AddFrequencyPage {
               }
               /* IF USER CLICKED END */
               else{
-                if(this.timer.hasFinished() || this.timer.getRemainingTime() <= 0)
+                if(this.time.ticks <= 0)
                   this.goToStudyItemsPage();
                 else
                   this.startNextObservation();
@@ -162,7 +147,7 @@ export class AddFrequencyPage {
   /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
   onCancelStudy(event){
     if(event){
-      this.timer.killTimer();
+      this.time.destroyTimer();
       this.studyStatus.setStatus(false);
       this.navCtrl.popToRoot();
     }

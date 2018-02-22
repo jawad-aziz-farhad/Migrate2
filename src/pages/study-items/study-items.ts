@@ -133,7 +133,7 @@ export class StudyItemsPage implements OnInit {
     this.parseData.clearData();
     this.parseData.clearDataArray();
     this.parser.clearRounds();
-    this.time.setTime(this.time.getRoundTime());
+    this.time.runTimer();
     this.parser.getRounds().setRoundStartTime(new Date().getTime());
     this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length()- (this.navCtrl.length() - 3)));
   }
