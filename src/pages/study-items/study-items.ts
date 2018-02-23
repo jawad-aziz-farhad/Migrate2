@@ -1,7 +1,7 @@
 import { Component , ViewChild, OnInit} from '@angular/core';
 import { Location } from '@angular/common';
 import { IonicPage, NavController, NavParams , ModalController} from 'ionic-angular';
-import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider, StudyStatusProvider } from '../../providers';
+import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider } from '../../providers';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { SubmitDataProgressPage } from  '../submit-data-progress/submit-data-progress';
 import { ALERT_TITLE , REMOVING_STUDY_ITEMS_MSG, ROUND_ENDED, STUDY_ENDED } from '../../config/config'
@@ -36,7 +36,6 @@ export class StudyItemsPage implements OnInit {
               public alert: AlertProvider,
               public parser: ParserProvider,
               public toast: ToastProvider,
-              public studyStatus:StudyStatusProvider,
               public location: Location) {
   }
 
@@ -77,7 +76,6 @@ export class StudyItemsPage implements OnInit {
 
         if(component == 'SubmitDataDialogPage'){
           if(data.action == 'submit'){
-            this.studyStatus.setStatus(false);
             this.navCtrl.push(SubmitDataProgressPage);
           }
           else{
@@ -152,7 +150,6 @@ export class StudyItemsPage implements OnInit {
   /* WHEN USER CANCEL THE STUDY , NAVIGATE USER TO ROOT PAGE */
   onCancelStudy(event){
     if(event){
-      this.studyStatus.setStatus(false);
       this.navCtrl.popToRoot();
     }
   }

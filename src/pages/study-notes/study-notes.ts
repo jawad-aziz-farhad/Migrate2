@@ -1,6 +1,6 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { Time , AlertProvider , ParseDataProvider, ParserProvider , StudyStatusProvider } from '../../providers';
+import { Time , AlertProvider , ParseDataProvider, ParserProvider } from '../../providers';
 import { NOTES_ALERT_TITLE , NOTES_ALERT_MESSAGE } from '../../config/config'; 
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyItemsPage } from '../study-items/study-items';
@@ -28,8 +28,7 @@ export class StudyNotesPage {
               public time: Time,
               public alertProvider: AlertProvider,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider,
-              public studyStatus: StudyStatusProvider) {
+              public parser: ParserProvider) {
     this.initView();
   }
 
@@ -90,7 +89,6 @@ export class StudyNotesPage {
     if(event){
       {
         this.time.destroyTimer();
-        this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }
     }

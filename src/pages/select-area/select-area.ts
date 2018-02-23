@@ -1,8 +1,8 @@
 import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { SelectElementPage } from '../select-element/select-element';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider, TimerService,
-        OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider , AlertProvider} from '../../providers';
+import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
+        OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider} from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { DummyData } from '../../models';
 import { CreateAreaPage } from '../create-area/create-area';
@@ -30,12 +30,11 @@ import { Data } from '../../bases/data';
 //               operations: OperationsProvider,
 //               sql: SqlDbProvider,
 //               network: NetworkProvider,
-//               studyStatus: StudyStatusProvider,
 //               alert: AlertProvider,
 //               formBuilder: FormBuilderProvider,
 //               menuCtrl: MenuController,
 //               toast: ToastProvider) {
-//     super(navCtrl,time,parseData,search,loader,operations,sql,network,studyStatus,alert, formBuilder,menuCtrl,toast);
+//     super(navCtrl,time,parseData,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
 //   }
 
 //   ionViewDidLoad() {
@@ -71,12 +70,10 @@ import { Data } from '../../bases/data';
               public operations: OperationsProvider,
               public sql: SqlDbProvider,
               public network: NetworkProvider,
-              public studyStatus: StudyStatusProvider,
               public alert: AlertProvider,
               public formBuilder: FormBuilderProvider,
               public menuCtrl: MenuController,
-              public toast: ToastProvider,
-              public timerService: TimerService) {             
+              public toast: ToastProvider) {             
      
   }
 
@@ -303,7 +300,7 @@ insertData(data) {
 
   /* OPENING MENU */
   openMenu(){
-    if(this.studyStatus.getStatus())
+    if(this.time.isTimerRunning)
        this.cancelStudy();
     else
       this.menuCtrl.open();
@@ -313,9 +310,7 @@ insertData(data) {
   cancelStudy() {
     this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
-          //this.time.setStatus(true);
           this.time.destroyTimer();
-          this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }
         else

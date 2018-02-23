@@ -2,7 +2,7 @@ import { Component , ViewChild , ElementRef } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Time , ParseDataProvider , OperationsProvider, LoaderProvider , ToastProvider , AlertProvider,
-        SqlDbProvider , NetworkProvider, ParserProvider , StudyStatusProvider} from '../../providers';
+        SqlDbProvider , NetworkProvider, ParserProvider } from '../../providers';
 import { StudyItemsPage } from '../study-items/study-items';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { MESSAGE , ERROR , FILE_UPLOADED_MESSAGE , FILE_SAVED_LOCALLY } from '../../config/config';
@@ -44,8 +44,7 @@ export class StudyPhotoPage {
               public network: NetworkProvider,
               public sql: SqlDbProvider,
               public alertProvider: AlertProvider,
-              public parser: ParserProvider,
-              public studyStatus: StudyStatusProvider) {
+              public parser: ParserProvider) {
      
   }
 
@@ -120,6 +119,7 @@ export class StudyPhotoPage {
       this.operations.uploadFile(params).then(res => {
         this.loader.hideLoader();
         let response = JSON.parse(res);
+        console.log("IMAGE RESPONSE: "+ JSON.stringify(response));
         if(response.success){
           this.toast.showToast(FILE_UPLOADED_MESSAGE);
           this._parseData(response.path);
@@ -176,7 +176,6 @@ export class StudyPhotoPage {
     if(event){
       {
         this.time.destroyTimer();
-        this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }
     }

@@ -1,6 +1,7 @@
-import { Injectable, ViewChild } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { TimerObservable } from "rxjs/observable/TimerObservable";
 import { ModalController } from 'ionic-angular';
+import 'rxjs/add/operator/takeWhile';
 
 @Injectable()
 export class Time {
@@ -8,12 +9,9 @@ export class Time {
     public time: number;
     public roundTime: number;
     public isTimerRunning: boolean;
-    public ticks = 0;
-    // Subscription object
-    public sub: Subscription;
-
+    public ticks: number = 0;
+    
     constructor(private modalCtrl: ModalController){
-      this.isTimerRunning = false;
     }
 
     setRoundTime(roundTime: number){
@@ -32,26 +30,26 @@ export class Time {
       return this.time;
     }
     
-    setStatus(isTimerRunning: boolean){
-      this.isTimerRunning = isTimerRunning;
-    }
-
-    getStatus(){
-      return this.isTimerRunning;
-    }
-
     runTimer() {
-      let timer = Observable.timer(1, 1000);
-      this.sub = timer.subscribe(t => {
-        this.ticks = this.getTime() - t;
-        console.log('Ticks: '+ this.ticks);
-        if(this.ticks <= 0)
-          this.destroyTimer();
+      this.isTimerRunning = true;
+      TimerObservable.create(1, 1000)
+      .takeWhile(() => this.isTimerRunning)
+      .subscribe(t => {
+          this.ticks = this.getTime() - t;
+          console.log('Ticks: '+ this.ticks);
+          if(this.ticks <= 0)
+            this.timerEnds();
       });
     }
-    
+
     destroyTimer(){
-      this.sub.unsubscribe();
+      console.log('Destorying Timer.');
+      this.isTimerRunning = false;
+    }
+    
+    timerEnds(){
+      console.log('Timer Ended.');
+      this.isTimerRunning = false;
       this.openModal();
     }
 
@@ -61,10 +59,6 @@ export class Time {
     modal.onDidDismiss(data => {
         console.log('TIME EXPIRED FOR ROUND.');
     });
-     
     modal.present();
-
   }
-  
-
 }

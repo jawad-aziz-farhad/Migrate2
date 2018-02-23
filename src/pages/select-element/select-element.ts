@@ -4,7 +4,7 @@ import { RatingsPage } from '../ratings/ratings';
 import { AddFrequencyPage } from '../add-frequency/add-frequency';
 import { CreateElementPage } from '../create-element/create-element';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
-         OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider , AlertProvider } from '../../providers';
+         OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider } from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { StudyData } from '../../models';
 import { Element , DummyData} from '../../models';
@@ -32,7 +32,6 @@ export class SelectElementPage {
 //               operations: OperationsProvider,
 //               sql: SqlDbProvider,
 //               network: NetworkProvider,
-//               studyStatus: StudyStatusProvider,
 //               alert: AlertProvider,
 //               formBuilder: FormBuilderProvider,
 //               menuCtrl: MenuController,
@@ -76,7 +75,6 @@ export class SelectElementPage {
               public sql: SqlDbProvider,
               public network: NetworkProvider,
               public toast: ToastProvider,
-              public studyStatus: StudyStatusProvider,
               public formBuilder: FormBuilderProvider,
               public alertProvider: AlertProvider) {
 
@@ -303,7 +301,7 @@ goNext() {
 
   /* OPENING MENU */
   openMenu(){
-    if(this.studyStatus.getStatus())
+    if(this.time.isTimerRunning)
        this.cancelStudy();
     else
       this.menuCtrl.open();
@@ -314,7 +312,6 @@ goNext() {
     this.alertProvider.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
       if(action == 'yes'){
         this.time.destroyTimer();
-        this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }
       else

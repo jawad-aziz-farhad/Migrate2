@@ -1,5 +1,5 @@
 <!-- Generated template for the TimerComponent component -->
-<ion-toolbar color="primary" class="header-divider" [hidden]="checkTime()">
+<ion-toolbar color="primary" class="header-divider" *ngIf="time.isTimerRunning">
   <ion-title>
       <ion-icon name="stopwatch"></ion-icon> 
       <span>{{(getMinutes(time.ticks)) && (getMinutes(time.ticks) <= 59) ? getMinutes(time.ticks) : '00'}}</span>m : <span>{{(getSeconds(time.ticks)) && (getSeconds(time.ticks) <= 59) ? getSeconds(time.ticks) : '00'}}</span>s

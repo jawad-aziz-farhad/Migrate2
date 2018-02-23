@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController,  NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthProvider , ToastProvider, LoaderProvider } from '../../providers/index';
+import { AuthProvider , ToastProvider, LoaderProvider, OperationsProvider } from '../../providers/index';
 import { EMAIL_REGEXP, MESSAGE, ERROR } from '../../config/config';
 import { ResetPasswordPage } from '../reset-password/reset-password';
 
@@ -28,6 +28,7 @@ export class LoginPage {
               private loader: LoaderProvider,
               private toast: ToastProvider,
               private formsBuilder: FormBuilder,
+              private operations: OperationsProvider,
               private modalCtrl: ModalController) {
 
       this.initFormBuilder();
@@ -52,12 +53,10 @@ export class LoginPage {
     this.authProvider
     .authenticate(this.loginForm.value)
     .finally(() => this.loader.hideLoader())
-    .subscribe(res => {
-      this.handleResponse(res);
-    },
-    err => {
-      this.handleError(err)
-    });
+    .subscribe(
+      res =>  this.handleResponse(res),
+      err =>  this.handleError(err) 
+     );
   }
 
   handleResponse(response: any){
@@ -90,11 +89,12 @@ export class LoginPage {
 
   /* HANDLING LOGIN ERROR */
   handleError(error){
-    if(error.success == false )
+    if(error.code)
+      this.operations.handleError(error);
+    else if(!error.success)
       this.openModal(error.msg);
     else
       this.toast.showToast(ERROR);
-    
   }
   /* OPENING MODAL */
   openModal(error) {

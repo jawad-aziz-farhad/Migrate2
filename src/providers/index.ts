@@ -10,6 +10,4 @@ export * from './search/search';
 export * from './sql-db/sql-db';
 export * from './network/network';
 export * from './form-builder/form-builder';
-export * from './study-status/study-status';
 export * from './parser/parser';
-export * from './timer-service/timer-service';

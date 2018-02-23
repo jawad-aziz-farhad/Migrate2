@@ -1,6 +1,6 @@
 import { Component , ViewChild} from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , ParserProvider, StudyStatusProvider } from '../../providers';
+import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , ParserProvider } from '../../providers';
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { StudyItemsPage } from '../study-items/study-items';
@@ -32,7 +32,6 @@ export class AddFrequencyPage {
                public operations: OperationsProvider,
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
-               public studyStatus: StudyStatusProvider,
                public toast: ToastProvider,
                public parser: ParserProvider) {
       this.frequency = ''; 
@@ -148,7 +147,6 @@ export class AddFrequencyPage {
   onCancelStudy(event){
     if(event){
       this.time.destroyTimer();
-      this.studyStatus.setStatus(false);
       this.navCtrl.popToRoot();
     }
   }

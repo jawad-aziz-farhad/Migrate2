@@ -4,7 +4,7 @@ import { Storage } from "@ionic/storage";
 import { SERVER_URL, ERROR } from '../../config/config';
 import { Observable } from 'rxjs';
 import { ProfilePage } from '../../pages/profile/profile';
-import { NetworkProvider, StudyStatusProvider, AlertProvider , Time} from '../../providers';
+import { NetworkProvider , AlertProvider , Time} from '../../providers';
 import { PopoverController } from 'ionic-angular';
 import { PopOverPage } from '../../pages/pop-over/pop-over';
 import { TermsOfServicesPage } from '../../pages/terms-of-services/terms-of-services';
@@ -36,7 +36,6 @@ export class HeaderComponent {
               public modalCtrl: ModalController,
               public navCtrl: NavController,
               public network: NetworkProvider,
-              public studyStatus: StudyStatusProvider,
               public alertProvider:AlertProvider,
               public popoverCtrl: PopoverController,
               public menuCtrl: MenuController,
@@ -117,7 +116,7 @@ export class HeaderComponent {
    }
 
   openMenu(){
-    if(this.studyStatus.getStatus())
+    if(this.time.isTimerRunning)
        this.cancelStudy();
     else
       this.menuCtrl.open();
@@ -128,9 +127,7 @@ export class HeaderComponent {
     let title: 'Efficiency Study';
     this.alertProvider.presentConfirm(title,message).then(action => {
         if(action == 'yes'){
-          //this.time.setStatus(true);
           this.time.destroyTimer();
-          this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }
         else

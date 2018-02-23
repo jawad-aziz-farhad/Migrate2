@@ -1,6 +1,6 @@
 import { Component, ViewChild , Input, Output, EventEmitter } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController, ViewController} from 'ionic-angular';
-import { AlertProvider, StudyStatusProvider} from '../../providers';
+import { AlertProvider, Time } from '../../providers';
 import { ALERT_TITLE, STUDY_CANCELING_MESSAGE, ERROR } from '../../config/config';
 import { PopoverController } from 'ionic-angular/components/popover/popover-controller';
 import { PopOverPage } from '../../pages/pop-over/pop-over';
@@ -27,10 +27,10 @@ export class InStudyHeaderComponent {
   constructor(private menuCtrl: MenuController,
               private viewCtrl: ViewController,
               private alertProvider: AlertProvider,
+              private time: Time,
               private popoverCtrl: PopoverController,
               private modalCtrl: ModalController,
-              protected navCtrl: NavController,
-              protected studyStatus: StudyStatusProvider
+              protected navCtrl: NavController
               ) {     
                 
   }
@@ -38,7 +38,7 @@ export class InStudyHeaderComponent {
 
   /* OPENING MENU */
   openMenu(){
-    if(this.studyStatus.getStatus())
+    if(this.time.isTimerRunning)
        this.cancelStudy();
     else
       this.menuCtrl.open();

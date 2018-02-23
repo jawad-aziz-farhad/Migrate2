@@ -4,7 +4,7 @@ import { SelectRolePage } from '../select-role/select-role';
 import { SelectAerPage } from '../select-aer/select-aer';
 import { Time } from '../../providers/time/time';
 import { StudyData } from '../../models';
-import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider , StudyStatusProvider } from '../../providers';
+import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider  } from '../../providers';
 import { SERVER_URL , ERROR , MESSAGE, INTERNET_ERROR } from '../../config/config';
 /**
  * Generated class for the AreaDetailPage page.
@@ -33,8 +33,7 @@ export class AreaDetailPage {
               public parseData: ParseDataProvider,
               public sql: SqlDbProvider,
               public loader: LoaderProvider,
-              public operations: OperationsProvider,
-              public studyStatus: StudyStatusProvider) {
+              public operations: OperationsProvider) {
     this.initView();          
   }
 
@@ -65,7 +64,6 @@ openModal() {
       let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project}, { cssClass: 'inset-modal create-study-modal' });
       modal.onDidDismiss(data => {
              if(data.action == 'start'){
-                this.studyStatus.setStatus(true);
                 this.time.setRoundTime(data.roundTime);
                 this.time.setTime(data.roundTime);
                 this.time.runTimer();

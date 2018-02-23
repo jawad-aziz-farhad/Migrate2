@@ -3,7 +3,6 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { StudyData , AllStudyData} from '../../models';
 import { Observable } from 'rxjs';
-import { StudyStatusProvider } from '../index';
 /*
   Generated class for the ParseDataProvider provider.
 

@@ -2,7 +2,7 @@
 import { ViewChild } from '@angular/core';
 import { NavController, MenuController } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
-        OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider, Time} from '../providers';
+        OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../config/config';
 import { DummyData , StudyData} from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
@@ -32,7 +32,6 @@ export class Data {
               public operations: OperationsProvider,
               public sql: SqlDbProvider,
               public network: NetworkProvider,
-              public studyStatus: StudyStatusProvider,
               public alert: AlertProvider,
               public formBuilder: FormBuilderProvider,
               public menuCtrl: MenuController,
@@ -208,7 +207,7 @@ export class Data {
   
   /* OPENING MENU */
   openMenu(){
-    if(this.studyStatus.getStatus())
+    if(this.time.isTimerRunning)
        this.cancelStudy();
     else
       this.menuCtrl.open();
@@ -219,7 +218,6 @@ export class Data {
     this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
           this.time.destroyTimer();
-          this.studyStatus.setStatus(false);
           this.navCtrl.popToRoot();
         }
         else

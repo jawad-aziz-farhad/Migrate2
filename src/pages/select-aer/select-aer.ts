@@ -2,8 +2,8 @@ import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
 import { SelectAreaPage } from '../select-area/select-area';
 import { CreateRolePage } from '../create-role/create-role';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../../providers';
+import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider,
+         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { Role, DummyData , StudyData } from '../../models';
 import { Observable } from "rxjs";
@@ -33,12 +33,11 @@ export class SelectAerPage extends Data {
               operations: OperationsProvider,
               sql: SqlDbProvider,
               network: NetworkProvider,
-              studyStatus: StudyStatusProvider,
               alert: AlertProvider,
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl,time,parseData,search,loader,operations,sql,network,studyStatus,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl,time,parseData,search,loader,operations,sql,network,alert,formBuilder,menuCtrl,toast);
   }
 
   ionViewDidLoad() {

@@ -2,7 +2,7 @@ import { Component , ViewChild , Input } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EnterRatingPage} from '../enter-rating/enter-rating';
 import { AddFrequencyPage} from '../add-frequency/add-frequency';
-import { Time , OperationsProvider , ParseDataProvider , StudyStatusProvider } from '../../providers';
+import { Time , OperationsProvider , ParseDataProvider } from '../../providers';
 import { StudyData , DummyData} from '../../models';
 /**
  * Generated class for the RatingsPage page.
@@ -27,8 +27,7 @@ export class RatingsPage {
     public navParams: NavParams , 
     public time: Time,
     public operations: OperationsProvider,
-    public parseData: ParseDataProvider,
-    public studyStatus: StudyStatusProvider) {     
+    public parseData: ParseDataProvider) {     
   }
 
   ionViewDidLoad() {     
@@ -87,7 +86,6 @@ export class RatingsPage {
     if(event)
       {
         this.time.destroyTimer();
-        this.studyStatus.setStatus(false);
         this.navCtrl.popToRoot();
       }
   }

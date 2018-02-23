@@ -12,7 +12,7 @@
       </button>
       <ion-title>Create Area</ion-title>
       <ion-buttons end>
-        <button ion-button icon-only margin-right [disabled]="areaForm.invalid" (click)="setUserInfo()">
+        <button ion-button icon-only margin-right [disabled]="creationForm.invalid" (click)="setUserInfo()">
           <span>Save</span>
         </button>
       </ion-buttons>
@@ -28,12 +28,12 @@
 
 <ion-content padding>
 
-  <form [formGroup]="areaForm">
+  <form [formGroup]="creationForm">
       <ion-item margin-bottom no-padding>
           <ion-label color="dark" stacked>Name</ion-label>
           <ion-input type="text" placeholder="Enter Area" name="name" formControlName="name"></ion-input>
       
-          <p *ngIf="!areaForm.controls.name.valid && (areaForm.controls.name.dirty)">
+          <p *ngIf="!creationForm.controls.name.valid && (creationForm.controls.name.dirty)">
               Please enter Area Name.
           </p>
       </ion-item>

@@ -19,7 +19,7 @@ import { SettingsPage } from '../pages/settings/settings';
 
 /* PROVIDERS  */
 import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider , OperationsProvider , LoaderProvider ,
-         FormBuilderProvider, ToastProvider, Time, StudyStatusProvider, ParserProvider, ParseDataProvider, HeadersProvider } from "../providers/index";
+         FormBuilderProvider, ToastProvider, Time, ParserProvider, ParseDataProvider, HeadersProvider } from "../providers/index";
 /* STATIC VALUES */
 import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, SERVER_URL , BACK_BTN_MESSAGE} from '../config/config';
 
@@ -53,7 +53,6 @@ export class MyApp extends SyncOfflineData {
               public toast: ToastProvider,
               public parseData: ParseDataProvider,
               public parser: ParserProvider,
-              public studyStatus: StudyStatusProvider,
               public headers: HeadersProvider,
               private screenOrientation: ScreenOrientation,
               public time: Time) {
@@ -112,7 +111,7 @@ export class MyApp extends SyncOfflineData {
     
     this.alertProvider.presentConfirm(title,message).then(action => {
         if(action == 'yes') {
-          this.studyStatus.setStatus(false);
+          this.time.destroyTimer();
           this.nav.popToRoot();
         }
         else

@@ -1,5 +1,4 @@
 import { StudyData } from "./index";
-import { StudyStatusProvider } from "../providers/index";
 
 export class Rounds {
 

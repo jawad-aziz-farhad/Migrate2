@@ -1,6 +1,6 @@
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../providers';
+import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider,
+         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../providers';
 
 export interface AER {
     navCtrl: NavController,  
@@ -12,7 +12,6 @@ export interface AER {
     operations: OperationsProvider,
     sql: SqlDbProvider,
     network: NetworkProvider,
-    studyStatus: StudyStatusProvider,
     alert: AlertProvider,
     formBuilder: FormBuilderProvider,
     menuCtrl: MenuController,

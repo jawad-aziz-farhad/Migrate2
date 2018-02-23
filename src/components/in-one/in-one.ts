@@ -4,8 +4,8 @@ import { SelectAreaPage } from '../../pages/select-area/select-area';
 import { CreateAreaPage } from '../../pages/create-area/create-area';
 import { CreateElementPage } from '../../pages/create-element/create-element';
 import { CreateRolePage } from '../../pages/create-role/create-role';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../../providers';
+import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider,
+         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../../config/config';
 import { Role, DummyData , StudyData } from '../../models';
 import { Observable } from "rxjs";

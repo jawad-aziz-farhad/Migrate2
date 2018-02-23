@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ProgressHttp } from "angular-progress-http";
 import { FormBuilder, FormGroup, FormArray ,Validators } from '@angular/forms';
-import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , StudyStatusProvider, ParserProvider} from '../../providers';
+import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , ParserProvider} from '../../providers';
 import { SERVER_URL , ERROR, OFFLINE_STUDY_DATA_MSG } from '../../config/config';
 import { ProjectsPage } from '../projects/projects';
 import { AreasPage } from '../areas/areas';
@@ -39,7 +39,6 @@ export class SubmitDataProgressPage {
               public network: NetworkProvider,
               public sql: SqlDbProvider,
               public toast: ToastProvider,
-              public studyStatus: StudyStatusProvider,
               public formProvider: FormBuilderProvider,
               public parser: ParserProvider,
               public headers: HeadersProvider,
@@ -52,14 +51,9 @@ export class SubmitDataProgressPage {
 
   initView(){
     this.show = false;
-    this.changeStudyStatus();
     this.checkInternetAvailability();
   }
 
-  changeStudyStatus(){
-    this.studyStatus.setStatus(false);
-  }
-  
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
       if(this.network.isInternetAvailable())

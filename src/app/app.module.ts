@@ -78,9 +78,7 @@ import { TimerComponent } from '../components/timer/timer';
 import { SearchProvider } from '../providers/search/search';
 import { SqlDbProvider } from '../providers/sql-db/sql-db';
 import { FormBuilderProvider } from '../providers/form-builder/form-builder';
-import { StudyStatusProvider } from '../providers/study-status/study-status';
 import { ParserProvider } from '../providers/parser/parser';
-import { TimerService } from '../providers/timer-service/timer-service';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions, storage: Storage) {
   const authConfig = new AuthConfig({
@@ -206,9 +204,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SearchProvider,
     SqlDbProvider,
     FormBuilderProvider,
-    StudyStatusProvider,
     ParserProvider,
-    TimerService
+    
   ]
 })
 export class AppModule {}

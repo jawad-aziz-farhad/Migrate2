@@ -13,17 +13,9 @@ import { Time } from '../../providers';
 })
 export class TimerComponent {
   
-  constructor(private modalCtrl: ModalController,
-              private time: Time) {
-  }
-
-  checkTime(){
-    if(this.time.ticks <= 0){
-      return true;
+    constructor(private modalCtrl: ModalController,
+                private time: Time) {
     }
-    else
-      return false;
-  }
 
     private getSeconds(ticks: number) {
       return this.pad(ticks % 60);
@@ -40,18 +32,5 @@ export class TimerComponent {
     private pad(digit: any) { 
         return digit <= 9 ? '0' + digit : digit;
     }
-
-    /* OPENING MODAL WHEN STUDY TIME IS OVER */
-  openModal() {    
-    let modal = this.modalCtrl.create('TimerExpiredPage', null, { cssClass: 'inset-modal timer-expired-modal' });
-    modal.onDidDismiss(data => {
-        console.log('TIME EXPIRED FOR ROUND.');
-    });
-     
-    modal.present();
-
-  }
-  
- 
 
 }

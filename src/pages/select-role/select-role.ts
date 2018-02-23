@@ -2,8 +2,8 @@ import { Component , ViewChild } from '@angular/core';
 import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
 import { SelectAreaPage } from '../select-area/select-area';
 import { CreateRolePage } from '../create-role/create-role';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider, TimerService,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, StudyStatusProvider } from '../../providers';
+import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider,
+         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE, NO_DATA_FOUND } from '../../config/config';
 import { Role, DummyData , StudyData } from '../../models';
 import { FormBuilder } from '@angular/forms/src/form_builder';
@@ -31,12 +31,11 @@ export class SelectRolePage {
 //               operations: OperationsProvider,
 //               sql: SqlDbProvider,
 //               network: NetworkProvider,
-//               studyStatus: StudyStatusProvider,
 //               alert: AlertProvider,
 //               formBuilder: FormBuilderProvider,
 //               menuCtrl: MenuController,
 //               toast: ToastProvider) {
-//     super(navCtrl,time,parseData,search,loader,operations,sql,network,studyStatus,alert, formBuilder,menuCtrl,toast);
+//     super(navCtrl,time,parseData,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
 //   }
 
 //   ionViewDidLoad() {
@@ -73,9 +72,7 @@ export class SelectRolePage {
               public network: NetworkProvider,
               public toast: ToastProvider,
               public alertProvider: AlertProvider,
-              public studyStatus: StudyStatusProvider,
               public formBuilder: FormBuilderProvider,
-              public timerService: TimerService,
               public platform: Platform) {
   }
 
@@ -310,7 +307,7 @@ insertData(data) {
 
   /* OPENING MENU */
    openMenu(){
-    if(this.studyStatus.getStatus())
+    if(this.time.isTimerRunning)
        this.cancelStudy();
     else
       this.menuCtrl.open();
@@ -320,8 +317,10 @@ insertData(data) {
   cancelStudy() {
     this.alertProvider.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){
-          this.time.destroyTimer();
-          this.studyStatus.setStatus(false);
+          // this.time.destroyTimer();
+          // this.studyStatus.setStatus(false);
+          console.log('Stopping Study.');
+          this.time.destroyTimer()
           this.navCtrl.popToRoot();
         }
         else

@@ -12,7 +12,7 @@
           
           <ion-title>Create Element</ion-title>
           <ion-buttons end *ngIf="show">
-            <button ion-button icon-only margin-right (click)="setUserInfo()" [disabled]="elementForm.invalid">
+            <button ion-button icon-only margin-right (click)="setUserInfo()" [disabled]="creationForm.invalid">
               <span>Save</span>
             </button>
           </ion-buttons>
@@ -32,13 +32,13 @@
 
   <ion-content padding class="white-bg">
 
-    <form [formGroup]="elementForm" *ngIf="show">
+    <form [formGroup]="creationForm" *ngIf="show">
         
       <h2>Name:</h2>
       
       <ion-input type="text" placeholder="Enter name" name="name" formControlName="name"></ion-input>
 
-      <p *ngIf="!elementForm.controls.name.valid && (elementForm.controls.name.dirty)">
+      <p *ngIf="!creationForm.controls.name.valid && (creationForm.controls.name.dirty)">
         Please enter element name(minimum 5 Characters).
       </p>
 
@@ -61,7 +61,7 @@
             <ion-radio [value]="type.id"></ion-radio>
           </ion-item>
 
-           <p *ngIf="!elementForm.controls.type.valid && (elementForm.controls.type.dirty)">
+           <p *ngIf="!creationForm.controls.type.valid && (creationForm.controls.type.dirty)">
               Please select a type.
             </p>
           
@@ -77,7 +77,7 @@
             <ion-radio [value]="rating.id"></ion-radio>
          </ion-item>
 
-         <p *ngIf="!elementForm.controls.rating.valid && (elementForm.controls.rating.dirty)">
+         <p *ngIf="!creationForm.controls.rating.valid && (creationForm.controls.rating.dirty)">
               Please select a rating.
          </p>
 
