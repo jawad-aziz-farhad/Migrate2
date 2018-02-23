@@ -50,8 +50,9 @@ export class SqlDbProvider {
     return new Promise((resolve, reject) => {
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Categories')
+            if(table == 'Locations' || table == 'Locations_IDs')
              console.log(query + '\n' +JSON.stringify(row_data));
+            
             this.database.executeSql(query, row_data).then(result => {
               console.log('RECORD ADDED: '+JSON.stringify(result));
             }, err => {
@@ -70,7 +71,7 @@ export class SqlDbProvider {
       if(table == 'Projects')
         _data = [data[index]._id, data[index].name, this.isValueAvailable(data[index].customer.image), null , data[index].customer._id , data[index].customer.name];      
       else if(table == 'Locations')
-        _data = [data[index]._id ,data[index].customerID , data[index].name, data[index].addressOne, data[index].addressTwo, data[index].addressThree, data[index].addressFour, null, data[index].contactName, data[index].telephone,
+        _data = [data[index]._id , data[index].projectID,  data[index].customerID , data[index].name, data[index].addressOne, data[index].addressTwo, data[index].addressThree, data[index].addressFour, null, data[index].contactName, data[index].telephone,
                 data[index].schedule[0].openingHour + ' - ' + data[index].schedule[0].openingMinute + ' ' + data[index].schedule[0].openingTimeFormat,
                 data[index].schedule[1].openingHour + ' - ' + data[index].schedule[1].openingMinute + ' ' + data[index].schedule[1].openingTimeFormat,
                 data[index].schedule[2].openingHour + ' - ' + data[index].schedule[2].openingMinute + ' ' + data[index].schedule[2].openingTimeFormat,
@@ -87,7 +88,7 @@ export class SqlDbProvider {
                 data[index].schedule[5].closingHour + ' - ' + data[index].schedule[5].closingMinute + ' ' + data[index].schedule[5].closingTimeFormat,
                 data[index].schedule[6].closingHour + ' - ' + data[index].schedule[6].closingMinute + ' ' + data[index].schedule[6].closingTimeFormat
               ]
-      else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')        
+      else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')        
         _data = [localStorage.getItem('projectID'), data[index]];     
       else if(table == 'Areas')
         _data = [data[index].name, data[index]._id , data[index].popularity, null , null , data[index].projectID];
@@ -143,10 +144,10 @@ export class SqlDbProvider {
       let query = '';
       if(table == 'Projects')
         query = 'CREATE TABLE IF NOT EXISTS Projects(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT , name TEXT,logo TEXT,headoffice TEXT, customer_id TEXT, customer_name TEXT)';
-      else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+      else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, projectID TEXT, _id TEXT)';
       else if(table == 'Locations')
-        query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT NOT NULL UNIQUE, customer_id TEXT , locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
+        query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT NOT NULL UNIQUE, projectID TEXT,  customer_id TEXT , locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
       else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID)'; 
       else if(table == 'Study')
@@ -173,10 +174,10 @@ export class SqlDbProvider {
     let query = '';
     if(table == 'Projects')
       query = 'INSERT INTO Projects (_id, name, logo, headoffice, customer_id, customer_name) VALUES (? , ? , ? , ?, ?, ?)';
-    else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+    else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
       query = 'INSERT INTO ' + table + '(projectID , _id) VALUES (?, ?)';
     else if(table == 'Locations')
-      query = 'INSERT INTO Locations (_id , customer_id , locationname, addresslineone, addresslinetwo, addresslinethree, addresslinefour, addresslinefive, contactname, telephone, monday_time_from, tuesday_time_from, wednesday_time_from, thursday_time_from, friday_time_from, saturday_time_from, sunday_time_from, monday_time_to, tuesday_time_to, wednesday_time_to, thursday_time_to, friday_time_to, saturday_time_to, sunday_time_to) VALUES (? , ? ,? , ? , ?, ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? , ? , ? , ? , ? , ?)';  
+      query = 'INSERT INTO Locations (_id , projectID ,customer_id , locationname, addresslineone, addresslinetwo, addresslinethree, addresslinefour, addresslinefive, contactname, telephone, monday_time_from, tuesday_time_from, wednesday_time_from, thursday_time_from, friday_time_from, saturday_time_from, sunday_time_from, monday_time_to, tuesday_time_to, wednesday_time_to, thursday_time_to, friday_time_to, saturday_time_to, sunday_time_to) VALUES (? , ? , ? ,? , ? , ?, ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? , ? , ? , ? , ? , ?)';  
     else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
       query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID) VALUES (?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
@@ -211,9 +212,7 @@ export class SqlDbProvider {
   /* GETTING IDS OF ROLES, ELEMENTS, AREAS TO FETCH DATA  */
   getIDData(table, id): Promise<any> {
     let query = '';
-    if(table == 'Locations')
-      query = "SELECT * FROM " + `${table}` + " WHERE customer_id=?"
-    else if(table == 'Areas' || table == 'Elements' || table == 'Roles')
+    if(table == 'Areas' || table == 'Elements' || table == 'Roles')
       query = "SELECT * FROM " + `${table}` + " WHERE projectID=?";
     else if(table == 'Create_Area' || table == 'Create_Element' || table == 'Create_Role')
       query = "SELECT * FROM " + `${table}` + " WHERE _id=?";
@@ -239,10 +238,10 @@ export class SqlDbProvider {
     for (let i = 0; i < result.rows.length; i++) {
           if(table == 'Projects')
             data.push(new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name ));
-          else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+          else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
             data.push({ projectID: result.rows.item(i).projectID, _id:  result.rows.item(i)._id});
           else if(table == 'Locations')
-            data.push({_id: result.rows.item(i)._id, customer_id: result.rows.item(i).customer_id,locationname: result.rows.item(i).locationname , addresslineone : result.rows.item(i).addresslineone, addresslinetwo: result.rows.item(i).addresslinetwo ,  
+            data.push({_id: result.rows.item(i)._id, projectID: result.rows.item(i).projectID, customer_id: result.rows.item(i).customer_id,locationname: result.rows.item(i).locationname , addresslineone : result.rows.item(i).addresslineone, addresslinetwo: result.rows.item(i).addresslinetwo ,  
                        addresslinethree: result.rows.item(i).addresslinethree,addresslinefour: result.rows.item(i).addresslinefour ,addresslinefive: result.rows.item(i).addresslinefive , contactname: result.rows.item(i).contactname, telephone: result.rows.item(i).telephone,
                        monday_time_from: result.rows.item(i).monday_time_from, tuesday_time_from: result.rows.item(i).tuesday_time_from, wednesday_time_from: result.rows.item(i).wednesday_time_from, thursday_time_from: result.rows.item(i).thursday_time_from,
                        friday_time_from: result.rows.item(i).friday_time_from, saturday_time_from: result.rows.item(i).saturday_time_from, sunday_time_from: result.rows.item(i).sunday_time_from,
@@ -269,7 +268,7 @@ export class SqlDbProvider {
                       type: result.rows.item(i).type, rating: result.rows.item(i).rating, category: result.rows.item(i).category, 
                       projectID: result.rows.item(i).projectID, addedby: result.rows.item(i).addedby, 
                       userId: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date, userAdded: result.rows.item(i).userAdded});
-          else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+          else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
             data.push(result.rows.item(i)._id);
           else if(table == 'Categories')
             data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name });
@@ -360,8 +359,9 @@ export class SqlDbProvider {
     const table7 = this.dropTable("Elements_IDs");
     const table8 = this.dropTable("Locations");
     const table9 = this.dropTable("Categories");
+    const table10 = this.dropTable("Locations_IDs")
 
-    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9];
+    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10];
 
     return Observable.forkJoin(observableArray);
   }

@@ -132,6 +132,20 @@ export class StudyPhotoPage {
         this.loader.hideLoader();
         this.operations.handleError(JSON.parse(error));
       });
+
+      // this.operations._uploadFile(this.photo).subscribe(result => {
+      //     let response = JSON.parse(result);
+      //     console.log("IMAGE RESPONSE: "+ JSON.stringify(response));
+      //     if(response.success){
+      //       this.toast.showToast(FILE_UPLOADED_MESSAGE);
+      //       this._parseData(response.path);
+      //       this.goNext();
+      //     }
+      //     else
+      //       this.toast.showToast(ERROR);
+      // },
+      // error => this.operations.handleError(error),
+      // () =>  this.loader.hideLoader());
   }
 
  

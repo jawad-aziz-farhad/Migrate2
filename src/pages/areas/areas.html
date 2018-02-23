@@ -36,30 +36,25 @@
         </ion-refresher-content>
     </ion-refresher>
 
-  <ion-list class="avatar-list" *ngIf="show && locations.length > 0">
+    <!-- <ion-list class="avatar-list" *ngIf="show && locations.length > 0">    
+      <ion-item *ngFor="let location of locations; let i = index;"  (click)="gotoDetail(location)">
+        <ion-avatar item-start>
+          <img [src]="getImage()" alt="avatar">
+        </ion-avatar>
+        <h2>{{ location.locationname }}</h2>
+        <p>{{ location.addresslineone }}</p>
+      </ion-item>   
+    </ion-list> -->
+
+    <ion-list class="avatar-list" *ngIf="show && data.length > 0">    
+      <ion-item *ngFor="let location of data; let i = index;"  (click)="gotoDetail(location)">
+        <ion-avatar item-start>
+          <img [src]="getImage()" alt="avatar">
+        </ion-avatar>
+        <h2>{{ location.locationname }}</h2>
+        <p>{{ location.addresslineone }}</p>
+      </ion-item>   
+    </ion-list>
+
     
-    <ion-item *ngFor="let location of locations; let i = index;"  (click)="gotoDetail(location)">
-      <ion-avatar item-start>
-        <img [src]="getImage()" alt="avatar">
-      </ion-avatar>
-      <h2>{{ location.locationname }}</h2>
-      <p>{{ location.addresslineone }}</p>
-    </ion-item>
-   
-  </ion-list>
-
-  <!--<div *ngIf="show && locations.length == 0">
-    <ion-card>
-      <ion-card-content>
-        <!-- 
-        <ion-card-title>
-         Locations
-        </ion-card-title> --
-        <p>
-          No Locations available for this Customer.
-        </p>
-      </ion-card-content>
-    </ion-card>
-</div>-->
-
 </ion-content>

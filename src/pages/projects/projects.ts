@@ -41,7 +41,8 @@ export class ProjectsPage {
   private TABLE_NAME_5:string = 'Elements';
   private TABLE_NAME_6:string = 'Roles';
   private TABLE_NAME_7: string = 'Locations';
-  private TABLE_NAME_8: string = 'Categories';
+  private TABLE_NAME_8: string = 'Locations_IDs';
+  private TABLE_NAME_9: string = 'Categories';
 
 
   private all_data: Array<any> = [];
@@ -120,8 +121,9 @@ export class ProjectsPage {
     const table7 = this.sql.createTable(this.TABLE_NAME_6);
     const table8 = this.sql.createTable(this.TABLE_NAME_7);
     const table9 = this.sql.createTable(this.TABLE_NAME_8);
+    const table10 = this.sql.createTable(this.TABLE_NAME_9);
 
-    const tables = [table1, table2, table3, table4, table5, table6, table7, table8, table9]
+    const tables = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10]
 
     const create = Observable.forkJoin(tables);
 
@@ -159,7 +161,7 @@ export class ProjectsPage {
                 if(value == 'IDs')
                  observer.next(true);   
                  else {
-                   this.sql.addData(this.TABLE_NAME_8, projects[0].categories).then(res => {
+                   this.sql.addData(this.TABLE_NAME_9, projects[0].categories).then(res => {
                       observer.next(true);
                    }).catch(error => {
                      console.error(error);
@@ -182,6 +184,7 @@ export class ProjectsPage {
       const areas = this.sql.addData(this.TABLE_NAME_1,data.areas);
       const elements = this.sql.addData(this.TABLE_NAME_2,data.elements);
       const roles = this.sql.addData(this.TABLE_NAME_3,data.roles);
+      const locations = this.sql.addData(this.TABLE_NAME_8,data.locations);
       observablesArray.push(areas,elements,roles);
     }
     else if(value == 'DATA'){

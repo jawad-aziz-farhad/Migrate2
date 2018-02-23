@@ -53,6 +53,7 @@ export class Data {
     const data = Observable.fromPromise(this.sql.getIDData(this.TABLE_NAME,this.project._id));
 
     data.subscribe((result: any) => {
+        console.log(this.TABLE_NAME + ' Result: '+ JSON.stringify(result));
         if(result.length > 0)
           this.populateData(result);
         else
@@ -139,7 +140,6 @@ export class Data {
     this.parseData.setData(study_data);
     this.goNext();
   }
-
 
   goNext() {
     this.navCtrl.push(this.nextComponent, { project: this.project});

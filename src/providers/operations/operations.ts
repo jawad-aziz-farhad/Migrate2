@@ -11,8 +11,6 @@ import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
 import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
-import { SqlDbProvider } from '../sql-db/sql-db';
-import { ParseDataProvider } from '../parse-data/parse-data';
 /*
   Generated class for the OperationsProvider provider.
 
@@ -23,13 +21,12 @@ import { ParseDataProvider } from '../parse-data/parse-data';
 export class OperationsProvider {
   
   private END_POINT: any;
+
   constructor(public http: Http ,
               private transfer: FileTransfer,
               private auth: AuthProvider,
               public headers: HeadersProvider,
-              public sql: SqlDbProvider,
-              public toast: ToastProvider,
-              public parseData: ParseDataProvider) {
+              public toast: ToastProvider) {
     console.log('Hello OperationsProvider Provider');
   }
   
@@ -44,14 +41,14 @@ export class OperationsProvider {
           res.forEach((project, index) => {
             this.forkJoin(project).subscribe((result: any) => {
                 result.forEach((item,_index) => {
-                    if(_index >= 2 && item.result.length > 0){
+                    if(_index >= 1 && item.result.length > 0){
                         item.result.forEach((subitem,subindex) => {
                           subitem.projectID = project._id;
                         });
                       }
                 });
                 res[index].customer = result[0];
-                res[index].customer_locations = result[1];
+                res[index].customer_locations = result[1].result;
                 res[index].areas_data = result[2].result;
                 res[index].elements_data = result[3].result;
                 res[index].roles_data = result[4].result;
@@ -76,7 +73,7 @@ export class OperationsProvider {
        request = this.postRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
        requests.push(request);
        
-       request = this.postRequest('locations/getByCustomerId',{customerID: this.checkRequestData(project.customer)});
+       request = this.postRequest('locations/getByIds',{ids: this.checkRequestData(project.locations)});
        requests.push(request);
        
        request = this.postRequest('areas/getByIds',{ids: this.checkRequestData(project.areas)});
@@ -106,10 +103,12 @@ export class OperationsProvider {
      return request_data;  
   }
 
+  /* CATCHING ERROR */
   catchError(error: Response) {
     return Observable.throw(error.json() || 'Server Error');
   }
 
+  /* HANDLING ERROR SENT BY THE SERVER */
   handleError(error){
     if(error.code == 11000)
         this.toast.showBottomToast(ENTRY_ALREADY_EXIST);
@@ -162,7 +161,8 @@ export class OperationsProvider {
   }
 
   _uploadFile(photo): Observable<any> {
-    let data = {endPoint:'ras_data/study_image' , key :'photo', file: photo};
+    let data = { endPoint:'ras_data/study_image' , key :'photo', file: photo};
+    console.log(JSON.stringify(data));
     let filename = data.file.substr(data.file.lastIndexOf('/') + 1);
     
     filename = filename.split("?");
@@ -180,16 +180,16 @@ export class OperationsProvider {
     // Using the FileTransfer to upload the image and returning Promise
      
      return new Observable(observer => {
-      fileTransfer.upload(data.file,  `${this.END_POINT}` , options).then(data => {
-        fileTransfer.abort();
-        observer.next(data);
-        observer.complete();
-      },
-        err => {
+        fileTransfer.upload(data.file,  `${this.END_POINT}` , options).then(data => {
           fileTransfer.abort();
-          observer.next(err);
-          observer.complete();          
-      });  
+          observer.next(data);
+          observer.complete();
+        },
+          err => {
+            fileTransfer.abort();
+            observer.next(err);
+            observer.complete();          
+        });  
      });
   }
 
