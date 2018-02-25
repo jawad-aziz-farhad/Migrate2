@@ -66,6 +66,7 @@ export class AuthProvider {
 
   logOut(){
     this.storage.remove('jwt').then(() => {
+       localStorage.removeItem('TOKEN');
        this.storage.remove('currentUser').then(() => this.authUser.next(null));
     });
   }  

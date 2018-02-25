@@ -84,14 +84,4 @@ export class StudyNotesPage {
     console.log("STUDY DATA AT ENTER NOTES PAGE: " + JSON.stringify(this.parseData.getData()));
   }
   
-  /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
-  onCancelStudy(event){
-    if(event){
-      {
-        this.time.destroyTimer();
-        this.navCtrl.popToRoot();
-      }
-    }
-  }
-
 }

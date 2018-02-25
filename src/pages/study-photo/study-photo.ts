@@ -185,16 +185,6 @@ export class StudyPhotoPage {
       this.navCtrl.popToRoot(); 
   }
 
-  /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
-  onCancelStudy(event){
-    if(event){
-      {
-        this.time.destroyTimer();
-        this.navCtrl.popToRoot();
-      }
-    }
-  }
-
   getImage(){
     if(this.isPhotoTaken)
       return this.photo;

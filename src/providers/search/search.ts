@@ -43,7 +43,6 @@ export class SearchProvider {
   }
 
   search_Item(data, searchTerm , searchFor){
-    alert(searchFor)
     return data.filter((item) => {
       if(searchFor == 'area')
         return item.areaname.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;

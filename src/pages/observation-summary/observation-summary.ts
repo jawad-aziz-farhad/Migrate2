@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { TimerComponent } from '../../components/timer/timer';
-import { Time , ParseDataProvider , OperationsProvider, LoaderProvider , ToastProvider, ParserProvider, AlertProvider } from '../../providers';
-import { Observable } from 'rxjs';
+import { ParseDataProvider , ParserProvider, AlertProvider } from '../../providers';
 import { SERVER_URL, DELETE_MSG, DELETE_TITLE } from '../../config/config';
 /**
  * Generated class for the ObservationSummaryPage page.

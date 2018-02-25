@@ -1,22 +1,18 @@
 <ion-header class="blue-header">
-    <!-- <ion-navbar color="primary">
-        <ion-title>
-          Expandable Header
-        </ion-title>
-    </ion-navbar> -->
-       <!-- <expandable-header [scrollArea]="mycontent" headerHeight="125">
-          
-           <img text-center [src]="imagePath" alt="Image"/>
-       </expandable-header> -->
     
-       <header title="Observation - Summary " button="back"></header>
+    <ion-navbar color="primary">
+      <ion-title>
+          Observation - Summary
+      </ion-title>
+    </ion-navbar>
+      
+    <!-- <header title="Observation - Summary " button="back"></header> -->
       
   </ion-header>
   
 <ion-content *ngIf="show">
 
   <ion-card no-margin class="full-card">
-    <!-- <img [src]="getImage()" alt="Study_Photo"/> -->
     <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
     <div class="card-title overlayed">
       <!-- <span>12</span> -->

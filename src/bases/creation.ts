@@ -67,9 +67,7 @@ setUserInfo() {
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(result)
         this.insertData(data)
-    }).catch(error => {
-       console.error('ERROR: ' + JSON.stringify(error));
-    });
+    }).catch(error =>  console.error('ERROR: ' + JSON.stringify(error)));
   }
 
   /* INSERTING DATA TO TABLE */
@@ -84,9 +82,8 @@ setUserInfo() {
     let _data = {projectID: this.project._id, _id: _id };
     this.sql.addRow(this.TABLE_NAME_1,_data).then(result => {
       this.goBack();
-    }).catch(error => {
-      console.error("ERROR: " + JSON.stringify(error));
-    });
+    })
+    .catch(error => console.error("ERROR: " + JSON.stringify(error)));
   }
 
   /* CREATING AREAS TABLE */

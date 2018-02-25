@@ -1,11 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform ,  ModalController, NavController, MenuController } from 'ionic-angular';
+import { Nav, Platform , ModalController, NavController, MenuController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 import { Storage } from "@ionic/storage";
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
-import { Http } from '@angular/http';
 
 /* PAGES */
 import { LoginPage } from '../pages/login/login';
@@ -18,45 +17,39 @@ import { HelpPage } from '../pages/help/help';
 import { SettingsPage } from '../pages/settings/settings';
 
 /* PROVIDERS  */
-import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider , OperationsProvider , LoaderProvider ,
-         FormBuilderProvider, ToastProvider, Time, ParserProvider, ParseDataProvider, HeadersProvider } from "../providers/index";
+import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider ,  ToastProvider, Time, } from "../providers/index";
 /* STATIC VALUES */
-import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, SERVER_URL , BACK_BTN_MESSAGE} from '../config/config';
-
-import { SyncOfflineData } from '../bases/index';
+import { SERVER_URL , BACK_BTN_MESSAGE } from '../config/config';
+/* BASE CLASSES */
+import { Stop } from '../bases';
 
 @Component({
   templateUrl: 'app.html'
 })
-export class MyApp extends SyncOfflineData {
+export class MyApp {
 
   @ViewChild(Nav) nav: Nav;
   rootPage: any = null;
 
-  pages: Array<{title: string, component: any}>;
-    
+  private pages: Array<{title: string, component: any}>;
+  private user: any;
+  private isMenuOpened: boolean;
+  private lastTimeBackPress: any = 0;
+  private timePeriodToExit: any = 3000;  
+
   constructor(public platform: Platform, 
-              public http: Http,
               public statusBar: StatusBar, 
               public splashScreen: SplashScreen,
+              public modalCtrl: ModalController,
               public storage: Storage,
               public authProvider: AuthProvider,
+              public sql: SqlDbProvider,
+              public toast: ToastProvider,
               public alertProvider: AlertProvider,
-              public modalCtrl: ModalController,
-              public menuCtrl: MenuController,
               public network: NetworkProvider,
               public _network: Network,
-              public sql: SqlDbProvider,
-              public operations: OperationsProvider,
-              public loader: LoaderProvider,
-              public formBuilder: FormBuilderProvider,
-              public toast: ToastProvider,
-              public parseData: ParseDataProvider,
-              public parser: ParserProvider,
-              public headers: HeadersProvider,
               private screenOrientation: ScreenOrientation,
               public time: Time) {
-    super(network,sql,operations,loader,formBuilder,toast,parseData,parser,headers,storage,http);            
     this.initializeApp();
   }
 
@@ -106,20 +99,8 @@ export class MyApp extends SyncOfflineData {
 
   /* CANCELING STUDY ON BACK BUTTON PRESSED */
   cancelStudy() {
-    var message = 'Are you sure that you want to cancel this Study ?'
-    var title: 'Efficiency Study';
-    
-    this.alertProvider.presentConfirm(title,message).then(action => {
-        if(action == 'yes') {
-          this.time.destroyTimer();
-          this.nav.popToRoot();
-        }
-        else
-          console.log('User dont want to cancel the Study');  
-    })
-    .catch(error => {
-      console.log("ERROR: " + error);
-    });
+    let stop = new Stop(this.nav, this.alertProvider,this.time);
+    stop.studyEndConfirmation();
   }
 
   /* CHECKING LOGIN SESSION AND ROUTING ACCORDINGLY */
@@ -180,16 +161,6 @@ export class MyApp extends SyncOfflineData {
     modal.present();
   }
 
-  /* SHOWING PROFILE INFO ON CLICKING PROFILE IMAGE */
-  showProfile(user) {
-    let modal = this.modalCtrl.create('ProfilePage',{ user : user }, { cssClass: 'inset-modal' });
-     modal.onDidDismiss(data => {
-          console.log('PROFILE PAGE MODAL DISMISSED.');  
-     });
- 
-     modal.present();
-  }
-
   /* GETTING CURRENT USER INFO FROM LOCAL STORAGE */
   _getUser(){
     this.storage.get('currentUser').then(user => {
@@ -199,8 +170,7 @@ export class MyApp extends SyncOfflineData {
   }
 
   /* GETTING PROFILE IMAGE */
-  getProfileImage(){
-    
+  getProfileImage(){    
     if(typeof this.user.userimage !== 'undefined' && this.user.userimage !== null && this.user.userimage !== ''){
         var image = this.user.userimage.split('/profile_images')[1];
         var imagePath = SERVER_URL + 'assets/profile_images/' + this.user.userimage.split('/profile_images')[1];
@@ -212,13 +182,19 @@ export class MyApp extends SyncOfflineData {
   
   /* CHECKING INTERNET CONNECTION */
   checkingInternetConnection() {
+    
     let disconnectSub = this._network.onDisconnect().subscribe(() => {
       console.log('you are offline');
     });
     
     let connectSub = this._network.onConnect().subscribe(()=> {
-      let syncdata = new SyncOfflineData(this.network, this.sql,this.operations,this.loader, this.formBuilder, this.toast,this.parseData, this.parser, this.headers, this.storage, this.http);
-      syncdata.checkOfflineCreatedAER();
+      console.log('you are online now');
+      let token = localStorage.getItem('TOKEN');
+      if(token){
+        console.log('Syncing Data');
+      }
+      else
+        console.log('User is not logged in.');
     });
   }
 

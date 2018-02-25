@@ -1,9 +1,4 @@
   <ion-toolbar color="primary">
-    <!--
-    <button *ngIf="button == 'toggle'" ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    -->
     <button *ngIf="button == 'back'" ion-button navPop clear class="absolute nav-back">
       <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
     </button>
@@ -14,7 +9,7 @@
 
     <ion-title *ngIf="title">{{ title }}</ion-title>
     <ion-buttons end>
-      <button *ngIf="!getTitle(title)" ion-button clear (click)="presentPopover($event)">
+      <button ion-button clear (click)="presentPopover($event)">
           <ion-icon ios="ios-more" md="md-more" class="ion-md-more-new"></ion-icon>
       </button>
     </ion-buttons>
@@ -22,7 +17,6 @@
   </ion-toolbar>
 
   <ion-toolbar  class="sub-header bottom-border" [hidden]="sub_title == ''">
-     <!-- <div margin-left class="sub-heading">{{ sub_title }}</div> -->
      <ion-grid>
         <ion-row>
           <ion-col col-12>

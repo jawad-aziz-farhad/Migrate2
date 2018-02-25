@@ -1,15 +1,5 @@
-import { Component , Input, Output , EventEmitter, ViewChild , OnInit , OnDestroy } from '@angular/core';
-import { IonicPage, NavController, Platform , NavParams , MenuController} from 'ionic-angular';
-import { SelectAreaPage } from '../../pages/select-area/select-area';
-import { CreateAreaPage } from '../../pages/create-area/create-area';
-import { CreateElementPage } from '../../pages/create-element/create-element';
-import { CreateRolePage } from '../../pages/create-role/create-role';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
-import { ERROR , MESSAGE, INTERNET_ERROR , STUDY_START_TOAST, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../../config/config';
-import { Role, DummyData , StudyData } from '../../models';
-import { Observable } from "rxjs";
-import { FormBuilder } from '@angular/forms/src/form_builder';
+import { Component , Input, Output , EventEmitter , OnInit } from '@angular/core';
+import { Time } from '../../providers';
 
 /**
  * Generated class for the 3InOneComponent component.
@@ -30,8 +20,6 @@ export class InOneComponent implements OnInit {
   @Output() next: any = new EventEmitter<any>();
   @Output() is_Filtering = new EventEmitter<boolean>();
   @Output() selectedItem = new EventEmitter<any>();
-  @Output() create = new EventEmitter<any>();
-  @Output() refresh = new EventEmitter<any>();
 
   private _temp: any = {};
   private filter: any;
@@ -46,10 +34,7 @@ export class InOneComponent implements OnInit {
     this.filter = 'most_popular';
     this.order  = 'ascending';
   }
-
-  ngOnDestroy(){
-  }
-
+  
   is_Filtering_(){
     this.isFiltering = !this.isFiltering;
     this.is_Filtering.emit(this.isFiltering);
@@ -67,11 +52,4 @@ export class InOneComponent implements OnInit {
       return 'disabled';  
   }
 
-  doRefresh(refresher){
-    this.refresh.emit(refresher);
-  }
-
-  createItem(){
-   this.create.emit('create');    
-  }
 }

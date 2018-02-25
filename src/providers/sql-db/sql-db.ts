@@ -238,8 +238,6 @@ export class SqlDbProvider {
     for (let i = 0; i < result.rows.length; i++) {
           if(table == 'Projects')
             data.push(new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name ));
-          else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
-            data.push({ projectID: result.rows.item(i).projectID, _id:  result.rows.item(i)._id});
           else if(table == 'Locations')
             data.push({_id: result.rows.item(i)._id, projectID: result.rows.item(i).projectID, customer_id: result.rows.item(i).customer_id,locationname: result.rows.item(i).locationname , addresslineone : result.rows.item(i).addresslineone, addresslinetwo: result.rows.item(i).addresslinetwo ,  
                        addresslinethree: result.rows.item(i).addresslinethree,addresslinefour: result.rows.item(i).addresslinefour ,addresslinefive: result.rows.item(i).addresslinefive , contactname: result.rows.item(i).contactname, telephone: result.rows.item(i).telephone,

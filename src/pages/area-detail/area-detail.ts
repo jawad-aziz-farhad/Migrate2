@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , ModalController } from 'ionic-angular';
 import { SelectRolePage } from '../select-role/select-role';
-import { SelectAerPage } from '../select-aer/select-aer';
 import { Time } from '../../providers/time/time';
 import { StudyData } from '../../models';
 import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider  } from '../../providers';
@@ -61,17 +60,17 @@ getImage(){
 
 
 openModal() {
-      let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project}, { cssClass: 'inset-modal create-study-modal' });
-      modal.onDidDismiss(data => {
-             if(data.action == 'start'){
-                this.time.setRoundTime(data.roundTime);
-                this.time.setTime(data.roundTime);
-                this.time.runTimer();
-                this.navCtrl.push(SelectRolePage, { project: this.project }); 
-             }  
-             else
-               console.log('USER DONT WANT TO START STUDY.');       
-        });
+    let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project}, { cssClass: 'inset-modal create-study-modal' });
+    modal.onDidDismiss(data => {
+      if(data.action == 'start'){
+        this.time.setRoundTime(data.roundTime);
+        this.time.setTime(data.roundTime);
+        this.time.runTimer();
+        this.navCtrl.push(SelectRolePage, { project: this.project }); 
+      }  
+      else
+        console.log('USER DONT WANT TO START STUDY.');       
+    });
     
     modal.present();
   }

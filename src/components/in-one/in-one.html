@@ -4,104 +4,51 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
-<ion-header class="blue-header role-header" no-border>
+<div>
 
-    <ion-toolbar color="primary" *ngIf="!isSearching && items?.length > 0">
-       
-       <button ion-button (click)="openMenu()" class="men_btn">
-          <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
-       </button> 
-    
-        <ion-title>Select {{ TABLE_NAME | slice:0:-1 }}</ion-title>
-        
-        <ion-buttons end *ngIf="!isSearching">
-          <button ion-button clear (click)="isSearching = !isSearching">
-              <ion-icon ios="ios-search" md="md-search" class="ion-md-new-toggle"></ion-icon>
-          </button> 
-        </ion-buttons>
-    
-      </ion-toolbar>
+  <div class="blue-header">
+    <timer></timer>
+  </div>
 
-      <ion-toolbar *ngIf="isSearching && items?.length > 0">
-          <ion-searchbar
-          [class.has-content]="!!searchInput"
-          [(ngModel)]="searchInput"
-          [showCancelButton]="true"
-          [animated]="true"
-          (ionInput)="onSearchInput($event)"
-          (ionCancel)="isSearching = !isSearching">
-        </ion-searchbar>
-      </ion-toolbar>
-
-      <div class="blue-header">
-          <timer></timer>
-      </div>
-   
-</ion-header>
-
-<ion-content>
-    
-  
-     <div *ngIf="items?.length > 0">
-
-        <ion-refresher (ionRefresh)="doRefresh($event)">
-          <ion-refresher-content
-              pullingIcon="arrow-dropdown"
-              pullingText="Pull to refresh">
-          </ion-refresher-content>
-        </ion-refresher>
-
-   <!--<div class="blue-header">
-      <timer></timer>
-   </div>-->
-   
-  
-    <ion-toolbar class="sub-header bottom-border">
-       <ion-grid>
-         <ion-row>
-           <ion-col col-6>
-             <div class="sub-heading">{{ !isFiltering ? 'Select '+ (TABLE_NAME | slice:0:-1) : 'Sort By' }}</div>
-           </ion-col>
-           <ion-col col-6 text-right (click)="is_Filtering_()">
-             <div class="sub-heading" *ngIf="!isFiltering">FILTER &nbsp; <ion-icon name="options"></ion-icon></div>
-             <div class="sub-heading" *ngIf="isFiltering"><ion-icon name="close"></ion-icon></div>
-           </ion-col>
-         </ion-row>
-       </ion-grid>
+  <ion-toolbar class="sub-header bottom-border">
+    <ion-grid>
+      <ion-row>
+        <ion-col col-6>
+          <div class="sub-heading">{{ !isFiltering ? 'Select '+ (TABLE_NAME | slice:0:-1) : 'Sort By' }}</div>
+        </ion-col>
+        <ion-col col-6 text-right (click)="is_Filtering_()">
+          <div class="sub-heading" *ngIf="!isFiltering">FILTER &nbsp; <ion-icon name="options"></ion-icon></div>
+          <div class="sub-heading" *ngIf="isFiltering"><ion-icon name="close"></ion-icon></div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
     </ion-toolbar>
 
     <ion-toolbar class="sub-header bottom-border segment_btn_css" *ngIf="isFiltering">
-       <ion-segment [(ngModel)]="filter">
-           <ion-segment-button  value="recently_added" >
-             RECENTLY ADDED
-           </ion-segment-button>
-           <ion-segment-button  value="most_popular">
-             MOST POPULAR
-           </ion-segment-button>
-         </ion-segment>
-   </ion-toolbar>
+    <ion-segment [(ngModel)]="filter">
+      <ion-segment-button  value="recently_added" >
+        RECENTLY ADDED
+      </ion-segment-button>
+      <ion-segment-button  value="most_popular">
+        MOST POPULAR
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
-   <ion-toolbar class="sub-header bottom-border segment_btn_css" *ngIf="isFiltering && (TABLE_NAME == 'Elements')">
-          <ion-segment [(ngModel)]="order" style="margin-top:0px !important;">
-              <ion-segment-button value="ascending">
-                  ASCENDING
-              </ion-segment-button>
-              <ion-segment-button value="descending">
-                  DESCENDING
-              </ion-segment-button>
-          </ion-segment>
-      </ion-toolbar>
+  <ion-toolbar class="sub-header bottom-border segment_btn_css" *ngIf="isFiltering && (TABLE_NAME == 'Elements')">
+    <ion-segment [(ngModel)]="order" style="margin-top:0px !important;">
+      <ion-segment-button value="ascending">
+          ASCENDING
+      </ion-segment-button>
+      <ion-segment-button value="descending">
+          DESCENDING
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 
-    <ion-list class="list_items" padding>
-      <ion-item *ngFor="let item of ((isFiltering && filter == 'most_popular') ? (items | sort : 'popularity' : 'numericID': order) : (items?.reverse() | reverse :  'numericID': order))" (click)="selectItem(item)" [ngClass]="getStyle(item)">
-        <p>{{ item.name }}</p>
-      </ion-item>
-    </ion-list>
-
-  </div>
-
-</ion-content>
-
-<ion-footer no-border *ngIf="items?.length > 0">
-  <button ion-button block no-margin class="theme-btn no-radius" (click)="createItem()">Create {{ TABLE_NAME | slice:0:-1 }}</button>
-</ion-footer>
+  <ion-list class="list_items" padding >
+    <ion-item *ngFor="let item of ((isFiltering && filter == 'most_popular') ? (items | sort : 'popularity' : 'numericID': order) : (items?.reverse() | reverse :  'numericID': order))" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+      <p>{{ item.name }}</p>
+    </ion-item>
+  </ion-list>
+</div>

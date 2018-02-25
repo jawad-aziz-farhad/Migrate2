@@ -58,7 +58,7 @@ export class HeaderComponent {
   /* GETTING PROFILE IMAGE */
   getProfileImage(){
     
-    if(typeof this.userProfile.userimage !== 'undefined' && this.userProfile.userimage !== null && this.userProfile.userimage !== ''){
+    if(this.userProfile.userimage){
         
         let imagePath = '';
         
@@ -107,35 +107,9 @@ export class HeaderComponent {
  
      modal.present();
    }
-
-   getTitle(title: any){
-      if(title == 'Select Area' || title == 'Select Element' || title == 'Select Role' || title == 'Enter Rating' || title == 'Add Rating' || title == 'Enter Frequency' || title == 'Study Data' || title == 'Round Summary')
-        return true;
-      else
-        return false;
-   }
-
+  
   openMenu(){
-    if(this.time.isTimerRunning)
-       this.cancelStudy();
-    else
-      this.menuCtrl.open();
-   }
-
-  cancelStudy() {
-    let message = 'Are you sure that you want to cancel this Study ?'
-    let title: 'Efficiency Study';
-    this.alertProvider.presentConfirm(title,message).then(action => {
-        if(action == 'yes'){
-          this.time.destroyTimer();
-          this.navCtrl.popToRoot();
-        }
-        else
-          console.log('User dont want to cancel the Study');  
-    })
-    .catch(error => {
-      console.log("ERROR: " + error);
-    });
+   this.menuCtrl.open();
   }
-
+  
 }

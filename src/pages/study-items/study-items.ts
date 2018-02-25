@@ -1,5 +1,4 @@
-import { Component , ViewChild, OnInit} from '@angular/core';
-import { Location } from '@angular/common';
+import { Component , OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams , ModalController} from 'ionic-angular';
 import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider } from '../../providers';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
@@ -35,8 +34,7 @@ export class StudyItemsPage implements OnInit {
               public time: Time,
               public alert: AlertProvider,
               public parser: ParserProvider,
-              public toast: ToastProvider,
-              public location: Location) {
+              public toast: ToastProvider) {
   }
 
 
@@ -146,13 +144,4 @@ export class StudyItemsPage implements OnInit {
   convertTime(time){
     return new Date(time).toLocaleTimeString();
   }
-
-  /* WHEN USER CANCEL THE STUDY , NAVIGATE USER TO ROOT PAGE */
-  onCancelStudy(event){
-    if(event){
-      this.navCtrl.popToRoot();
-    }
-  }
-
-
 }
