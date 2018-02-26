@@ -149,7 +149,7 @@ export class SqlDbProvider {
       else if(table == 'Locations')
         query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT NOT NULL UNIQUE, projectID TEXT,  customer_id TEXT , locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
       else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID)'; 
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID)'; 
       else if(table == 'Study')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT)';
       else if(table == 'Study_Data')
@@ -375,16 +375,22 @@ export class SqlDbProvider {
     const table8 = this.dropTable("Locations");
     const table9 = this.dropTable("Categories");
     const table10 = this.dropTable("Locations_IDs")
+    // const table11 = this.dropTable("Create_Area");
+    // const table12 = this.dropTable("Create_Element");
+    // const table13 = this.dropTable("Create_Role");
 
-    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10];
+    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 ];
 
     return Observable.forkJoin(observableArray);
   }
 
 
-  updateTable(table, column, data): Promise<any>{
-    let query = "UPDATE "+ `${table}` + " SET " + `${column}` + "=? WHERE "+ `${column}` +"=?"
-    return this.database.executeSql(query,[data.live, data.offline]).then(result => {
+  updateTable(table, data): Promise<any>{
+    let query = null;
+    if(table == 'Areas' || table == 'Roles' || table == 'Elements')
+      query = "UPDATE "+ `${table}` + " SET _id=? , numericID=?  WHERE _id=?"
+
+    return this.database.executeSql(query,[data.live, data.numericID, data.offline]).then(result => {
       return result;
     }).catch(error => {
       return error;

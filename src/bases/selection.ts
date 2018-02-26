@@ -142,8 +142,10 @@ export class Selection {
       study_data.setArea(item);
     else if(this.TABLE_NAME == 'Elements')
       study_data.setElement(item);
-    else if(this.TABLE_NAME == 'Roles')
+    else if(this.TABLE_NAME == 'Roles'){
       study_data.setRole(item);
+      study_data.setObservationTime(new Date().getTime());
+    }
     
     this.parseData.setData(study_data);
     this.goNext();
@@ -157,6 +159,7 @@ export class Selection {
             this.nextComponent =  RatingsPage ;
         
         else{
+          console.log("RATING OF SELECTED ELEMENT: \n" + JSON.stringify(this.temp));
           /* SETTING RATING VALUE AND SKIPPING RATINGS PAGE */
           let rating = null
           if(this._temp.rating == 1)

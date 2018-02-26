@@ -90,9 +90,9 @@ export class SyncOfflineData {
     let requests = [];
     data.forEach((element, index) => {
         let sub_requests = []; let endPoint = null;
-        element.forEach((sub_element,sub_index) => {          
-            const request = this.formBuilder.initFormForOfflineData(sub_element);
-            if(typeof sub_element.areaname !== 'undefined'){
+        element.forEach((sub_element,sub_index) => {
+             const request = this.formBuilder.initFormForOfflineData(sub_element);
+             if(typeof sub_element.areaname !== 'undefined'){
                endPoint = SERVER_URL + 'areas/add';
                sub_requests.push(this.getSingleRequest(endPoint));
             }
@@ -146,7 +146,7 @@ export class SyncOfflineData {
             column = 'role';
          queryData.live = data[index][sub_index]._id;
          queryData.offline = this.offlineAERData$[index][sub_index]._id; 
-         const update = this.sql.updateTable(this.TABLE_NAME_1, column, queryData);
+         const update = this.sql.updateTable(this.TABLE_NAME_1, queryData);
          updates.push(update);
       });
     });
@@ -155,9 +155,7 @@ export class SyncOfflineData {
     forkJoin.subscribe(result => {
       this.checkOfflineData();
     },
-    error => {
-      console.log('UPDATE ERROR: ' + JSON.stringify(error));
-    });
+    error => this.operations.handleError(error));
   }
 
 

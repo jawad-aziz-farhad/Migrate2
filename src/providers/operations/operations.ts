@@ -94,6 +94,22 @@ export class OperationsProvider {
     return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catchError);
   }
 
+  offlineRequest(endPoint,data){
+    this.END_POINT = SERVER_URL + endPoint;
+    let headers = this.headers.getHeaders();
+    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catch_Error);
+
+  }
+
+  /* CATCHING ERROR */
+  catch_Error(error: Response) {
+    let error$  = error.json();
+    if(error$.code == 11000)
+      return Observable.of(error$);
+    else  
+      return Observable.throw(error.json() || 'Server Error');
+  }
+
   checkRequestData(data){
     let request_data = null;
     if(data.length > 0)
