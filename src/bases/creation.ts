@@ -22,10 +22,7 @@ export class Creation {
                 public network: NetworkProvider,
                 public storage: Storage){
 
-    }
-
-
-
+  }
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
     this.storage.get('currentUser').then(user => {
@@ -39,14 +36,14 @@ setUserInfo() {
 
    /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
  checkInternet(){
-  if(this.network.isInternetAvailable())
-     this.createArea();
+  if(!this.network.isInternetAvailable())
+     this.createEntry();
   else
     this.createTable();  
 }  
       
   /* ADD A NEW ROLE */
-  createArea() {
+  createEntry() {
       this.loader.showLoader(MESSAGE)
       this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
           if(res.success)  
@@ -114,29 +111,34 @@ setUserInfo() {
   }
 
   getData(): Array<any> {
-
     let name     = this.creationForm.get('name').value;
     let username = this.creationForm.get('addedBy.name').value;
     let userid   = this.creationForm.get('addedBy._id').value;
     let date     = this.creationForm.get('addedBy.date').value;
     let _id = null; let rating = null; let offlineTypes = null;
     let userAdded = null; let category = null;let type  = null;
-    let position = null;
+    let position = null; let efficiency_study = 0; 
+    let activity_study = 0; let role_study = 0;
 
     if(this.TABLE_NAME == 'Areas')
         _id = date + '-area';
     else if(this.TABLE_NAME == 'Elements'){
               _id = date + '-element';
-        rating    = this.creationForm.get('rating');
+        rating    = this.creationForm.get('rating').value;
         userAdded = this.creationForm.get('userAdded').value;
         category  = this.creationForm.get('category').value;
         type      = this.creationForm.get('type').value;
-
+        
         const typesArray = <FormArray>this.creationForm.get('studyTypes').value;
         for(let i=0;i< typesArray.length;i++){
-            offlineTypes += typesArray[i];
-            if(i < (typesArray.length - 1))
-                offlineTypes += ',';
+            console.log('value at index:'+ i + ' is ' +typesArray[i]);
+            const value = typesArray[i];
+            if(value == 1)
+              efficiency_study = 1;
+            else if(value == 2)
+              activity_study = 1;
+            else if(value == 3)
+              role_study = 1;  
         }
 
     }
@@ -146,8 +148,10 @@ setUserInfo() {
     }
 
     let data = [{ _id: _id, name: name, position: position, type: type , rating: rating , category: category,  
-                   types: offlineTypes, projectID: this.project._id, addedby:username , 
-                   id_of_addedby: userid, status: 'active', date: date, userAdded : userAdded}];
+                   efficiency_study: efficiency_study, activity_study: activity_study, role_study: role_study,
+                   projectID: this.project._id, addedby:username ,id_of_addedby: userid, status: 'active', 
+                   date: date, userAdded : userAdded
+                }];
 
     return data;           
   }

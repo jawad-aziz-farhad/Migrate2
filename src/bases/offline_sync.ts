@@ -90,9 +90,9 @@ export class SyncOfflineData {
     let requests = [];
     data.forEach((element, index) => {
         let sub_requests = []; let endPoint = null;
-        element.forEach((sub_element,sub_index) => {
-             const request = this.formBuilder.initFormForOfflineData(sub_element);
-             if(typeof sub_element.areaname !== 'undefined'){
+        element.forEach((sub_element,sub_index) => {          
+            const request = this.formBuilder.initFormForOfflineData(sub_element);
+            if(typeof sub_element.areaname !== 'undefined'){
                endPoint = SERVER_URL + 'areas/add';
                sub_requests.push(this.getSingleRequest(endPoint));
             }

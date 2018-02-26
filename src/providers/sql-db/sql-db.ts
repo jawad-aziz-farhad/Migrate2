@@ -50,7 +50,7 @@ export class SqlDbProvider {
     return new Promise((resolve, reject) => {
       for(let i = 0; i < data.length; i++) {
             let row_data = this.dataforRow(table, data, i);
-            if(table == 'Locations' || table == 'Locations_IDs')
+            if(table == 'Create_Area' || table == 'Create_Element' || table == 'Create_Role')
              console.log(query + '\n' +JSON.stringify(row_data));
             
             this.database.executeSql(query, row_data).then(result => {
@@ -101,7 +101,7 @@ export class SqlDbProvider {
       else if(table == 'Create_Role')
         _data = [data[index]._id, data[index].name, data[index].position , data[index].projectID, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date];   
       else if(table == 'Create_Element')
-        _data = [data[index]._id, data[index].name, data[index].type , data[index].rating , data[index].category , data[index].popularity , data[index].types , data[index].projectID , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date , data[index].userAdded];
+        _data = [data[index]._id, data[index].name, data[index].type , data[index].rating , data[index].category ,  data[index].efficiency_study, data[index].activity_study, data[index].role_study , data[index].projectID , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date , data[index].userAdded];
       else if(table == 'Study')
         _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime()];
       else if(table == 'Study_Data')
@@ -159,7 +159,7 @@ export class SqlDbProvider {
       else if(table == 'Create_Area')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT)';
       else if(table == 'Create_Element')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, type TEXT, rating TEXT, category TEXT,  types TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT, userAdded boolean)';  
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, type TEXT, rating TEXT, category TEXT,  efficiency_study NUMBER, activity_study NUMBER, role_study NUMBER, types TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT, userAdded boolean)';  
       else if(table == 'Categories')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT)';
         return this.database.executeSql(query, {}).then(() => {
@@ -189,7 +189,7 @@ export class SqlDbProvider {
     else if(table == 'Create_Area')
       query = 'INSERT INTO ' + table + '(_id ,name , projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Element')  
-      query = 'INSERT INTO ' + table + '(_id ,name , type , rating , category , popularity , types , projectID , addedby, id_of_addedby, status, date, userAdded )  VALUES (? , ? , ?  , ? , ?, ?, ?, ?, ? , ? , ? , ? , ?)';
+      query = 'INSERT INTO ' + table + '(_id ,name , type , rating , category  , efficiency_study , activity_study , role_study , projectID , addedby, id_of_addedby, status, date, userAdded )  VALUES (? , ? , ?  , ? , ?, ?, ?, ?, ? , ? , ? , ? , ?, ? )';
     else if(table == 'Categories')  
       query = 'INSERT INTO ' + table + '(_id , name) VALUES (? , ? )';
     return query;  
@@ -232,6 +232,22 @@ export class SqlDbProvider {
    }); 
  }
 
+ getLikeData(table){
+    let query = "SELECT * FROM " + `${table}`  + " WHERE _id LIKE ?";
+    console.log(query);
+    return new Promise((resolve, reject) => {
+      this.database.executeSql(query, ['%-%']).then((result) => {
+      let data = [];
+      if (result.rows.length > 0) 
+          data = this.putDatainArray(table, result);
+      resolve(data);
+    }, err => {
+      console.log('Error AT TABLE: '+ table + ' ' + JSON.stringify(err));
+      reject(err);
+    });
+   }); 
+ }
+
 
   putDatainArray(table, result){
     let data = [];
@@ -252,17 +268,14 @@ export class SqlDbProvider {
              data.push({_id: result.rows.item(i)._id, name: result.rows.item(i).name, popularity: result.rows.item(i).popularity, projectID: result.rows.item(i).projectID}); 
           else if(table == 'Elements')
              data.push({_id: result.rows.item(i)._id ,name: result.rows.item(i).name , popularity: result.rows.item(i).popularity, rating: result.rows.item(i).rating,numericID: result.rows.item(i).numericID, projectID: result.rows.item(i).projectID});
-          else if(table == 'Study')
-              data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime});
-          else if(table == 'Study_Data')
-            data.push({roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area ,element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
-          else if(table == 'Create_Role')
+           else if(table == 'Create_Role')
             data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, position: result.rows.item(i).position , projectID: result.rows.item(i).projectID, addedby: result.rows.item(i).addedby, id_of_addedby: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date});
           else if(table == 'Create_Area') 
             data.push({_id: result.rows.item(i)._id ,name: result.rows.item(i).name,  projectID: result.rows.item(i).projectID, 
                        addedby: result.rows.item(i).addedby, id_of_addedby: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date});  
            else if(table == 'Create_Element')
-           data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, types: result.rows.item(i).types,
+           data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, efficiency_study: result.rows.item(i).efficiency_study,
+                      activity_study: result.rows.item(i).activity_study ,role_study: result.rows.item(i).role_study,
                       type: result.rows.item(i).type, rating: result.rows.item(i).rating, category: result.rows.item(i).category, 
                       projectID: result.rows.item(i).projectID, addedby: result.rows.item(i).addedby, 
                       userId: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date, userAdded: result.rows.item(i).userAdded});
@@ -270,11 +283,15 @@ export class SqlDbProvider {
             data.push(result.rows.item(i)._id);
           else if(table == 'Categories')
             data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name });
+          else if(table == 'Study')
+            data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime});
+          else if(table == 'Study_Data')
+            data.push({roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
+         
         }
       
       return data;
   }
-
  
   /* CHECKING DATA EXISTS IN THE TABLE OR NOT */
   isDataAvailable(table: string): Promise<boolean> {

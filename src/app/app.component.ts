@@ -16,7 +16,7 @@ import { HelpPage } from '../pages/help/help';
 import { SettingsPage } from '../pages/settings/settings';
 
 /* PROVIDERS  */
-import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider ,  ToastProvider, Time, } from "../providers/index";
+import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider ,  ToastProvider, Time, Sync } from "../providers/index";
 /* STATIC VALUES */
 import { SERVER_URL , BACK_BTN_MESSAGE } from '../config/config';
 /* BASE CLASSES */
@@ -37,18 +37,19 @@ export class MyApp {
   private timePeriodToExit: any = 3000;  
 
   constructor(public platform: Platform, 
+              public modalCtrl: ModalController,          
               public statusBar: StatusBar, 
               public splashScreen: SplashScreen,
-              public modalCtrl: ModalController,
               public storage: Storage,
+              public _network: Network,
+              private screenOrientation: ScreenOrientation,
               public authProvider: AuthProvider,
               public sql: SqlDbProvider,
               public toast: ToastProvider,
               public alertProvider: AlertProvider,
               public network: NetworkProvider,
-              public _network: Network,
-              private screenOrientation: ScreenOrientation,
-              public time: Time) {
+              public time: Time,
+              public sync: Sync) {
     this.initializeApp();
   }
 
@@ -149,14 +150,16 @@ export class MyApp {
 
   /*GETTING CONFIRMATION AND DOING LOGOUT IF USER SAYS YES */
   openModal() {
-    let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal logOut-modal' });
-        modal.onDidDismiss(data => {
-          if(data.action == 'yes')
-              this.authProvider.logOut();
-          else
-              console.log('User dont want to Logout');
-        });
-    modal.present();
+    this.sync.checkOfflineCreatedAER();
+    
+    // let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal logOut-modal' });
+    //     modal.onDidDismiss(data => {
+    //       if(data.action == 'yes')
+    //           this.authProvider.logOut();
+    //       else
+    //           console.log('User dont want to Logout');
+    //     });
+    // modal.present();
   }
 
   /* GETTING CURRENT USER INFO FROM LOCAL STORAGE */
@@ -190,6 +193,7 @@ export class MyApp {
       let token = localStorage.getItem('TOKEN');
       if(token){
         console.log('Syncing Data');
+        
       }
       else
         console.log('User is not logged in.');

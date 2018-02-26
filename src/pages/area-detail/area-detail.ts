@@ -60,7 +60,7 @@ getImage(){
 
 
 openModal() {
-    let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project}, { cssClass: 'inset-modal create-study-modal' });
+    let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project , location: this.location }, { cssClass: 'inset-modal create-study-modal' });
     modal.onDidDismiss(data => {
       if(data.action == 'start'){
         this.time.setRoundTime(data.roundTime);

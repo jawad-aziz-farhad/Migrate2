@@ -25,6 +25,7 @@ export class FormBuilderProvider {
       studyEndTime:[data.studyEndTime],
       customerID: [data.customer.customer_id],
       projectID: [data.customer._id],
+      locationID: [data.locationID],
       userID: [user._id],
       rounds: this.formBuilder.array([ ])
     });
@@ -81,44 +82,61 @@ addData(data) {
   }
 
   initFormForOfflineData(data){
-   let formData=null;
-   if(typeof data.areaname != 'undefined')
-   formData= {
-      areaname: [data.areaname],
-      areatype: [data.areatype],
-      addedby:  [data.addedby],
-      id_of_addedby:  [data.id_of_addedby],
-      id_of_project: [data.id_of_project],
-      status:  [data.status],
-      dateadded:  [data.dateadded]
-    };
 
-   else if(typeof data.rolename != 'undefined')
-    formData= {
-      rolename: [data.rolename],
-      position: [data.position],
-      addedby:  [data.addedby],
-      id_of_addedby:  [data.id_of_addedby],
-      id_of_project: [data.id_of_project],
-      status:  [data.status],
-      dateadded:  [data.dateadded]
-    };
+      let formData=null;
+      /* FORM DATA FOR ROLES DOCUMENT */
+      if(data.position)
+        formData = {
+          name: data.name,
+          position: data.position,
+          addedBy:  this.formBuilder.group({
+            _id: data.id_of_addedby,
+            name :data.addedby,
+            date : data.dateadded
+          }),
+          status: data.status,
+          projectID: data.projectID
+        }
+      
+      /* FORM DATA FOR ELEMENTS DOCUMENT */
+      else if(data.types){
+        let studyTypes = [];
+        if(data.efficiency_study == 1)
+          studyTypes.push[1];
+        if(data.activity_study)
+          studyTypes.push[2];
+        if(data.role_study)
+          studyTypes.push(3);
 
-   else if(typeof data.description !== 'undefined')
-    formData= {
-        id: [new Date().valueOf()],
-        description: [data.description],
-        types: [data.types],
-        element_type: [data.element_type],
-        rating: [data.rating],
-        category: [data.category],
-        userId: [data.userId],
-        addedby: [data.addedby],
-        id_of_project: [data.id_of_project],
-        popularity_number: [0],
-        dateadded: [data.dateadded],
-        status:[data.status]
-    };  
+        formData = {
+          name: data.name ,
+          studyTypes: studyTypes,
+          type: data.type,
+          rating: data.rating,
+          category: data.category,
+          addedBy:  this.formBuilder.group({
+                                  _id: data.id_of_addedby,
+                                  name :data.addedby,
+                                  date : data.dateadded
+                                }),
+          projectID: data.projectID,
+          status: data.status,
+          userAdded: data.userAdded
+        }
+      }
+      /* FORM DATA FOR AREAS DOCUMENT */
+      else
+      formData = 
+      { name: data.name,
+        addedBy:  this.formBuilder.group({
+                      _id: data.id_of_addedby,
+                      name :data.addedby,
+                      date : data.dateadded
+                    }),
+        projectID: data.projectID,
+        status:  data.status
+      }
+
     this.dataForm = this.formBuilder.group(formData);
   }
 

@@ -21,6 +21,7 @@ export class CreateStudyPage {
   public round_data: any;
   public studyTitle: any;
   public customer: any;
+  public location: any;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,
@@ -33,7 +34,8 @@ export class CreateStudyPage {
     this.studyTitle = '';
     this.roundTime = 3; 
     this.customer = this.navParams.get('customer');
-    console.log('ionViewDidLoad CreateStudyPage');
+    this.location = this.navParams.get('location');
+    console.log('ionViewDidLoad CreateStudyPage\n' + this.location._id);
   }
 
   /* DISMISSING ALERT */
@@ -43,6 +45,7 @@ export class CreateStudyPage {
     this.all_data.setTitle(this.studyTitle);
     this.all_data.setCustomer(this.customer);
     this.all_data.setStudyStartTime(new Date().getTime());
+    this.all_data.setLocationID(this.location._id);
     this.all_data.setStudyEndTime(null);
 
     /* SETTING ROUNDS OBJECT */

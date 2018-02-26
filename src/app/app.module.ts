@@ -78,6 +78,7 @@ import { SearchProvider } from '../providers/search/search';
 import { SqlDbProvider } from '../providers/sql-db/sql-db';
 import { FormBuilderProvider } from '../providers/form-builder/form-builder';
 import { ParserProvider } from '../providers/parser/parser';
+import { Sync } from '../providers/sync/sync';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions, storage: Storage) {
   const authConfig = new AuthConfig({
@@ -201,7 +202,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SqlDbProvider,
     FormBuilderProvider,
     ParserProvider,
-    
+    Sync
   ]
 })
 export class AppModule {}

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { DummyData } from '../../models';
-
 /*
   Generated class for the SearchProvider provider.
 
