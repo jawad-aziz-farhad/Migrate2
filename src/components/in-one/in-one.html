@@ -26,11 +26,11 @@
 
     <ion-toolbar class="sub-header bottom-border segment_btn_css" *ngIf="isFiltering">
     <ion-segment [(ngModel)]="filter">
-      <ion-segment-button  value="recently_added" >
-        RECENTLY ADDED
-      </ion-segment-button>
       <ion-segment-button  value="most_popular">
         MOST POPULAR
+      </ion-segment-button>
+      <ion-segment-button  value="recently_added" >
+        RECENTLY ADDED
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
@@ -46,9 +46,29 @@
     </ion-segment>
   </ion-toolbar>
 
-  <ion-list class="list_items" padding >
-    <ion-item *ngFor="let item of ((isFiltering && filter == 'most_popular') ? (items | sort : 'popularity' : 'numericID': order) : (items?.reverse() | reverse :  'numericID': order))" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+
+  <ion-list class="list_items" *ngIf="!isFiltering" padding>
+    <ion-item *ngFor="let item of items; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
       <p>{{ item.name }}</p>
     </ion-item>
   </ion-list>
+
+  <div [ngSwitch]="filter" *ngIf="isFiltering">
+      <ion-list class="list_items" *ngSwitchCase="'most_popular'" padding>
+          <ion-row class="sub-header bottom-border" padding>
+              <ion-col>
+                <div class="sub-heading">Position</div>
+              </ion-col>              
+          </ion-row>
+          <ion-item *ngFor="let item of items | sort : 'popularity_number': 'numericID' : order; let i=index;" [ngClass]="getStyle(item)" (click)="selectItem(item)">
+            <p>{{ item.name }}</p>
+          </ion-item>
+      </ion-list>
+    
+      <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
+          <ion-item *ngFor="let item of items?.reverse() | reverse: 'numericID' : order; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+            <p>{{ item.name }}</p>
+          </ion-item>
+      </ion-list>
+  </div>
 </div>

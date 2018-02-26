@@ -29,7 +29,7 @@
         [(ngModel)]="searchInput"
         [showCancelButton]="true"
         [animated]="true"
-        (ionInput)="onSearchInput($event)"
+        (ionInput)="onSearchInput()"
         (ionCancel)="isSearching = !isSearching">
       </ion-searchbar>
     </ion-toolbar>

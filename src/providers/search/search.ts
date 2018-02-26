@@ -16,41 +16,9 @@ export class SearchProvider {
     console.log('Hello SearchProvider Provider');
   }
 
-  searchItem(searchTerm, from){
-    let data = new DummyData();
-    /* SEARCHING AREA */
-    if(from == 'area'){
-      console.log('SEARCHING IN AREA: ' + searchTerm);
-      return data.getAreas().filter((item) => {
-        return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-      });    
-    }
-    /* SEARCHING ROLE */
-    else if(from == 'role'){
-      console.log('SEARCHING IN ROLE');
-      return data.getRoles().filter((item) => {
-        return item.rolename.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-      });    
-    }
-    /* SEARCHING ELEMENT */
-    else if(from == 'element'){
-      console.log('SEARCHING IN ELEMENT');
-      return data.getElements().filter((item) => {
-        return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-      });    
-    }
-
-  }
-
-  search_Item(data, searchTerm , searchFor){
+  search_Item(data, searchTerm){
     return data.filter((item) => {
-      if(searchFor == 'area')
-        return item.areaname.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-      else if(searchFor == 'element')
-        return item.description.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
-      else if(searchFor == 'role')
-        return item.rolename.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;  
-     
+        return item.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1;
     }); 
   }
 

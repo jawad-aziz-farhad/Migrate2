@@ -32,7 +32,10 @@ export class InOneComponent implements OnInit {
   /* STARTING TIMER ON GETTING BACK TO THIS VIEW */
   ngOnInit() {
     this.filter = 'most_popular';
-    this.order  = 'ascending';
+    if(this.TABLE_NAME == 'Elements')
+      this.order  = 'ascending';
+    else  
+      this.order = null;
   }
   
   is_Filtering_(){

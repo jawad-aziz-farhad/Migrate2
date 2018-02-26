@@ -23,7 +23,7 @@ export class SortPipe implements PipeTransform {
       }
     });
 
-    if(typeof order !== 'undefined'){
+    if(order){
         array.sort((a: any, b: any) => {
           if(order == 'ascending'){
             if (a[element_id] < b[element_id]) {

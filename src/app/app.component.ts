@@ -5,7 +5,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 import { Storage } from "@ionic/storage";
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
-
 /* PAGES */
 import { LoginPage } from '../pages/login/login';
 import { ProjectsPage } from '../pages/projects/projects';
@@ -64,7 +63,6 @@ export class MyApp {
         this.registerBackButton();
         this.checkSession();
         this.checkingInternetConnection();
-      
     });
     
   }
@@ -109,18 +107,18 @@ export class MyApp {
         this.authProvider.authUser.subscribe(jwt => {
             if(jwt) {  
 
-                this.checkandGo();
-               
-                // used for an example of ngFor and navigation
-                this.pages = [
-                  { title: 'Projects',component: ProjectsPage },
-                  { title: 'Sync Data' , component: OfflineStudyDataPage },
-                  { title: 'Help', component: HelpPage },
-                  { title: 'Settings', component: SettingsPage },
-                  { title: 'Report a Problem', component: ReportProblemPage }
+              this.checkandGo();
+              
+              // used for an example of ngFor and navigation
+              this.pages = [
+                { title: 'Projects',component: ProjectsPage },
+                { title: 'Sync Data' , component: OfflineStudyDataPage },
+                { title: 'Help', component: HelpPage },
+                { title: 'Settings', component: SettingsPage },
+                { title: 'Report a Problem', component: ReportProblemPage }
 
-                ];
-                this._getUser();  
+              ];
+              this._getUser();  
             }
             else
               this.rootPage = LoginPage;

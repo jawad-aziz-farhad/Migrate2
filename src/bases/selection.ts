@@ -22,6 +22,7 @@ export class Selection {
   protected show: boolean;
   protected data: Array<any>;
   protected nextComponent: any;
+  protected searchInput: any;
 
   private stop: Stop;
 
@@ -185,25 +186,16 @@ export class Selection {
   }
 
  /* WHEN USER TYPES TO SEARCH */ 
- onSearchInput(searchInput): any{
-    if(typeof searchInput !== 'undefined' && searchInput.length > 3){
-      let searchResult = this.search.search_Item(this.data, searchInput , this.TABLE_NAME.toLowerCase());
-      if(searchResult.length > 0)
-      this.data = this.search.search_Item(this.data, searchInput , this.TABLE_NAME.toLowerCase().slice(0,-1));
-    }
-         
-    else{
-      console.log(JSON.stringify(this.temp));        
+ onSearchInput(): any{
+   if(this.searchInput)
+      this.data = this.search.search_Item(this.data, this.searchInput);
+    else
       this.data = this.temp;
-    }
-
-     return this.data; 
-      
   }
 
-  onSearchCancel(data) : any {
-    this.data = data;
-    return this.data;
+  /* ON SEARCH CANCEL, SETTING THE ORIGINAL DATA BACK TO ARRAY  */
+  onSearchCancel() : any {
+    this.data = this.temp;
   }
 
   /* REFRESHING DATA ON SWIPE DOWN */
@@ -219,7 +211,7 @@ export class Selection {
     
   }
 
-    /* DROPPING TABLE FROM DATA BASE */
+  /* DROPPING TABLE FROM DATA BASE */
   dropTable(refresher){
     this.data = [];
     this.loader.showLoader(MESSAGE);
