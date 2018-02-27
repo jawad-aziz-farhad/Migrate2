@@ -18,7 +18,7 @@
 
 
 <ion-content>
-
+<!-- 
     <table class="table" *ngIf="show && items.length > 0">
         <thead>
           <tr>
@@ -58,14 +58,14 @@
               </p>
             </ion-card-content>
           </ion-card>
-      </div>
+      </div> -->
 
 </ion-content>
 
 <ion-footer>
     <ion-grid no-padding>
         <ion-row>
-            <button ion-button block no-margin class="theme-btn no-radius" (click)="checkConnection()" [disabled]="items.length == 0">Sync Data</button>
+            <button ion-button block no-margin class="theme-btn no-radius" (click)="updateOfflineData()">Sync Data</button>
         </ion-row>
     </ion-grid>
 </ion-footer>

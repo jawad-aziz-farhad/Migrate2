@@ -374,23 +374,33 @@ export class SqlDbProvider {
     const table7 = this.dropTable("Elements_IDs");
     const table8 = this.dropTable("Locations");
     const table9 = this.dropTable("Categories");
-    const table10 = this.dropTable("Locations_IDs")
+    const table10 = this.dropTable("Locations_IDs");
+
     // const table11 = this.dropTable("Create_Area");
     // const table12 = this.dropTable("Create_Element");
     // const table13 = this.dropTable("Create_Role");
+    // const table14 = this.dropTable("Study");
+    // const table15 = this.dropTable("Study_Data");
+
+    // const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15 ];
 
     const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 ];
-
     return Observable.forkJoin(observableArray);
   }
 
 
-  updateTable(table, data): Promise<any>{
-    let query = null;
-    if(table == 'Areas' || table == 'Roles' || table == 'Elements')
+  updateTable(table, column , data): Promise<any>{
+    let query = null; let query_data = null;
+    if(table == 'Areas' || table == 'Roles' || table == 'Elements'){
       query = "UPDATE "+ `${table}` + " SET _id=? , numericID=?  WHERE _id=?"
-
-    return this.database.executeSql(query,[data.live, data.numericID, data.offline]).then(result => {
+      query_data = [data.live, data.numericID, data.offline];
+    }
+    else if(table == 'Study_Data'){
+      query = "UPDATE "+ `${table}` + " SET "+`${column}`+"=?   WHERE "+`${column}`+"=?"
+      query_data = [data.live , data.offline];
+      console.log(column + '\n' + JSON.stringify(query_data));
+    }
+    return this.database.executeSql(query, query_data).then(result => {
       return result;
     }).catch(error => {
       return error;

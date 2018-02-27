@@ -26,11 +26,11 @@ export class Creation {
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
     this.storage.get('currentUser').then(user => {
-        let name = user.firstname + ' ' + user.lastname;
-        let id = user._id;
-        this.creationForm.get('addedBy.name').setValue(name);
-        this.creationForm.get('addedBy._id').setValue(id);
-        this.checkInternet();
+      let name = user.firstname + ' ' + user.lastname;
+      let id = user._id;
+      this.creationForm.get('addedBy.name').setValue(name);
+      this.creationForm.get('addedBy._id').setValue(id);
+      this.checkInternet();
     });
   }
 
@@ -44,20 +44,20 @@ setUserInfo() {
       
   /* ADD A NEW ROLE */
   createEntry() {
-      this.loader.showLoader(MESSAGE)
-      this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
-          if(res.success)  
-            this.dropTable(res);              
-          else{
-            this.loader.hideLoader();
-            this.toast.showToast(ERROR);
-          }
-      },
-      error => {
+    this.loader.showLoader(MESSAGE)
+    this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
+      if(res.success)  
+        this.dropTable(res);              
+      else{
         this.loader.hideLoader();
-        this.operations.handleError(error);
-      });
-    }
+        this.toast.showToast(ERROR);
+      }
+    },
+    error => {
+      this.loader.hideLoader();
+      this.operations.handleError(error);
+    });
+  }
 
   /* DROPPING TABLE FROM DATA BASE */
   dropTable(data){

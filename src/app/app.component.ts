@@ -150,16 +150,14 @@ export class MyApp {
 
   /*GETTING CONFIRMATION AND DOING LOGOUT IF USER SAYS YES */
   openModal() {
-    this.sync.checkOfflineCreatedAER();
-    
-    // let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal logOut-modal' });
-    //     modal.onDidDismiss(data => {
-    //       if(data.action == 'yes')
-    //           this.authProvider.logOut();
-    //       else
-    //           console.log('User dont want to Logout');
-    //     });
-    // modal.present();
+    let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal logOut-modal' });
+        modal.onDidDismiss(data => {
+          if(data.action == 'yes')
+              this.authProvider.logOut();
+          else
+              console.log('User dont want to Logout');
+        });
+    modal.present();
   }
 
   /* GETTING CURRENT USER INFO FROM LOCAL STORAGE */

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ModalController } from 'ionic-angular';
 import { SqlDbProvider , FormBuilderProvider , OperationsProvider } from '../index';
 import { SERVER_URL } from '../../config/config';
 import { Observable } from 'rxjs';
@@ -20,148 +21,193 @@ export class Sync {
   private TABLE_NAME_4: string = 'Create_Role';
 
   private offlineAERData$: Array<any> = [];
+  private onlineAERData$: Array<any> = [];
+  private table: string = null;
 
-  constructor(public sql: SqlDbProvider, 
+  constructor(public modalCtrl: ModalController,
+              public sql: SqlDbProvider, 
               public formBuilder: FormBuilderProvider,
               public operations: OperationsProvider ) {
     console.log('Hello SyncProvider Provider');
   }
 
-  checkOfflineCreatedAER() {
+  /* CHECKING OFFLINE DATA  */
+  checkingOfflineData(table){
 
-    const table1 = this.sql.getAllData(this.TABLE_NAME_2);
-    const table2 = this.sql.getAllData(this.TABLE_NAME_3);
-    const table3 = this.sql.getAllData(this.TABLE_NAME_4);
+    this.table = table;
+    const data = this.sql.getAllData(table);
+    
+    data.then(result => {
 
-    const observbeAbleArray = [table1, table2,table3];
+      if(result.length > 0 ){
+        this.offlineAERData$.push(result);
+        let endPoint = null; let requests = [];
+        
+        result.forEach((element,index) => {
 
-    const forkJoin = Observable.forkJoin(observbeAbleArray);
+          const request = this.formBuilder.initFormForOfflineData(element);
+          const data = this.formBuilder.getFormForOfflineData().value;
+          
+          if(element.position)
+            endPoint = 'roles/add';
+          else if(element.type)
+            endPoint = 'elements/add';
+          else 
+            endPoint = 'areas/add';
 
-    forkJoin.subscribe(result => {
-      this.offlineAERData$ = result;
-      this.makingAER_Request(result);
-    },
-    error => {
-      console.log('OFFLINE LIKE DATA ERROR: ' + JSON.stringify(error));
-    });
+          requests.push(this.operations.offlineRequest(endPoint,data));
+       
+      });
+
+    this.saveAERData(requests);
+   }
+   else
+     this.checkTable();
+
+  }).catch(error => console.error(JSON.stringify(error)));
+    
   }
 
-  makingAER_Request(data){
+  saveAERData(requests){
 
-    let requests = [];
+    const forkJoin = Observable.forkJoin(requests);
+    
+    forkJoin.subscribe(result => {   
+      this.onlineAERData$.push(result);
+      this.checkingResult(result);
+    
+    },
+    error => this.operations.handleError(error));
+  }
+
+  checkingResult(data){
+
+    let errors = [];
     
     data.forEach((element, index) => {
-
-        let sub_requests = []; let endPoint = null;
-        
-        element.forEach((sub_element,sub_index) => {          
-            const request = this.formBuilder.initFormForOfflineData(sub_element);
-            const data = this.formBuilder.getFormForOfflineData().value;
-            if(sub_element.position)
-               endPoint = 'roles/add';
-            else if(sub_element.type)
-              endPoint = 'elements/add';
-            else 
-              endPoint = 'areas/add';
-            
-            sub_requests.push(this.operations.offlineRequest(endPoint,data));
-        });
-        
-        requests.push(sub_requests);
+      if(!element.success){
+        if(element.code == 11000)
+          errors.push(index);
+        else
+          this.operations.handleError(element);
+      }
     });
-
-    this.savingAERData(requests);
+    console.log("ERRORS: "+JSON.stringify(errors) + " ERRORS LENGTH: "+ errors.length);
+    
+      
+    if(errors.length == 0)
+      this.checkTable();
+   else
+    this.askForUpdateNames(errors, errors[0] , data);
+   
   }
 
-  savingAERData(requests){
-    let results = [];
-    requests.forEach((element,index) => {
-      const forkJoin = Observable.forkJoin(element);
-      forkJoin.subscribe(result => {
-        results.push(result);
-        if(index == (requests.length -1)){
-          console.log("OFFLINE SYNC DATA RESULT: " + JSON.stringify(results));
-          this.checkResult(results);
-        }
+  checkTable(){
+    if(this.table == this.TABLE_NAME_2)
+      this.checkingOfflineData(this.TABLE_NAME_3);
+    else if(this.table == this.TABLE_NAME_3)
+      this.checkingOfflineData(this.TABLE_NAME_4)  
+    else
+      this.getOfflineData();
+  }
+
+  askForUpdateNames(errors,index,result){
+
+    let lastIndex = this.offlineAERData$.length - 1;
+    let data = this.offlineAERData$[lastIndex][index];
+    
+    this.updateName(data).subscribe(result => {
+    
+      lastIndex = this.onlineAERData$.length - 1;
+      this.onlineAERData$[lastIndex][index] = result;
+      errors.splice(0,1);
+      if(errors.length == 0)
+        this.checkTable();
+      else
+        this.askForUpdateNames(errors,errors[0],result);
+      
+    },
+    error => {
+      console.error("CODE 11000 ENTRY ERROR: "+ JSON.stringify(error));
+    });
+  }
+  
+  updateName(data){
+    return new Observable(observer => {
+
+      let updatedName = this.openModal(data);
+      updatedName.subscribe(result => {
+        observer.next(result);
+        observer.complete();
       },
-      error => this.operations.handleError(error));
-    }); 
-  }
-
-  checkResult(data){
-    let errors = [];
-    data.forEach((element,index) => {
-      element.forEach((sub_element,sub_index) => {
-        let code = sub_element.code;
-        if(code){
-          if(code == 11000)
-            errors.push({index: index, sub_index: sub_index });
-          else
-            this.operations.handleError(sub_element);
-        }
-      });
+      error => console.log("MODAL CLOSED ERROR: " + JSON.stringify(error)));
     });
-
-     if(errors.length == 0)
-        this.updateStudyData(data);
-     else
-        this.askForUpdateNames(errors,data);
   }
 
-  askForUpdateNames(errors,data){
-      errors.forEach((element,index) => {
-        console.log(element.index + '\n' + element.sub_index)
+  /* CONFIRMATION FOR SUBMITTING ALL THE STUDY DATA  */
+  openModal(data) {
+
+    return new Observable(observer => {
+
+      let _data = {data: data};
+      let modal = this.modalCtrl.create('EditTitlePage', _data, { cssClass: 'inset-modal items-page-modal' });
+      
+      modal.onDidDismiss(data => {
+        setTimeout(() => {
+          observer.next(data);
+          observer.complete();
+        });
       });
+  
+      modal.present();
+    });
   }
 
-  updateStudyData(data){
-    let updates = [];
-    let errors = [];
+  getOfflineData(){
+
+    const data = Observable.fromPromise(this.sql.getAllData("Study_Data"));
+
+    data.subscribe(result => {
+      console.log("Study Data RESULT: "+ JSON.stringify(result));
+      this.updateStudyData();
+    },
+    error => console.error("ERROR: " + JSON.stringify(error)));
+  }
+
+  updateStudyData(){
+    const updates = [];
     this.offlineAERData$.forEach((element,index) => {
       element.forEach((sub_element,sub_index) => {
-        
-          let columns = []; let success = false;
-          let queryData = {live: null, offline: null , numericID: null};
-          columns[0] = '_id';
-          columns[1] = 'numericID';
-
-          success = data[index][sub_index].success;
-
-         
-          if(sub_element.type){
-            queryData.live = data[index][sub_index].elementID;
-            queryData.numericID = data[index][sub_index].numericID;
-          }
-
-          else if(sub_element.position)
-            queryData.live = data[index][sub_index].roleID;
-          
-          else 
-            queryData.live = data[index][sub_index].areaID;
-            
-          queryData.offline = this.offlineAERData$[index][sub_index]._id; 
-
-          console.log("Offline Entry at index: "+ sub_index + " IS " + queryData.offline + 
-                        "\n ONLINE ENTRY AT INDEX IS: " + queryData.live);  
-          
-          const update = this.sql.updateTable(this.TABLE_NAME_1, queryData);
-          updates.push(update);
-        
-        
+        let data = {live: null, offline: null , numericID: null, };
+        let column = null; let table = null;
+        data.offline = sub_element._id;
+        data.live = this.onlineAERData$[index][sub_index]._id;
+        data.numericID = this.onlineAERData$[index][sub_index].numericID;
+        table = this.getTable(sub_element);
+        column = table.toLowerCase().slice(0, -1);
+        let update = this.sql.updateTable(table ,null,data);
+        updates.push(update);
+        update = this.sql.updateTable("Study_Data",column,data);
+        updates.push(update);
       });
     });
 
-    if(errors.length > 0)
-      alert('THERE ARE SOME ELEMENTS WHICH WERE NOT CREATED IN A RIGHT WAY.');
+    const update = Observable.forkJoin(updates);
+    update.subscribe(result => {
+      console.log("UPDATED TABLES RESULT: "+ JSON.stringify(result));
+    },
+    error => console.error("UPDATE ERROR: "+ JSON.stringify(error)));
+  }
 
-    // const forkJoin = Observable.forkJoin(updates);
-    // forkJoin.subscribe(result => {
-    //   this.getUpdatedData();
-    // },
-    // error => {
-    //   console.log('UPDATE ERROR: ' + JSON.stringify(error));
-    // });
-  
+  getTable(data){
+    let table = null;
+    if(data.position)
+      table = 'Roles';
+    else if(data.type)
+       table = 'Elements';
+    else
+      table = 'Areas';
+    return table;  
   }
 
   getUpdatedData(){
@@ -169,8 +215,9 @@ export class Sync {
     const table1 = this.sql.getAllData("Areas");
     const table2 = this.sql.getAllData("Elements");
     const table3 = this.sql.getAllData("Roles");
+    const table4 = this.sql.getAllData("Study_Data");
 
-    const observbeAbleArray = [table1, table2,table3];
+    const observbeAbleArray = [table1, table2, table3, table4];
 
     const forkJoin = Observable.forkJoin(observbeAbleArray);
 
@@ -182,6 +229,5 @@ export class Sync {
     });
   }
 
-  
 
 }

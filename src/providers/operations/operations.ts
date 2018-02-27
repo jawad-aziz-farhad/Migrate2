@@ -128,7 +128,7 @@ export class OperationsProvider {
   handleError(error){
     if(error.code == 11000)
         this.toast.showBottomToast(ENTRY_ALREADY_EXIST);
-    else if([990, 991, 992, 993, 'TokenExpiredError'].indexOf(error.code) !== -1){
+    else if([990, 991, 992, 993, 'TokenExpiredError'].indexOf(error.code) !== -1 || !error.auth){
       if(error.msg)
         this.toast.showBottomToast(error.msg);
       else

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { NetworkProvider , SqlDbProvider , OperationsProvider , LoaderProvider , FormBuilderProvider, ToastProvider, ParserProvider} from "../../providers/index";
+import { NetworkProvider , SqlDbProvider , OperationsProvider , LoaderProvider , FormBuilderProvider, ToastProvider, ParserProvider, Sync } from "../../providers/index";
 import { Storage } from "@ionic/storage";
 import { StudyData, AllStudyData,  } from '../../models';
 import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, INTERNET_ERROR } from '../../config/config';
@@ -48,8 +48,13 @@ export class OfflineStudyDataPage {
               private toast: ToastProvider,
               public network: NetworkProvider,
               private storage: Storage,
-              public operations: OperationsProvider) {
+              public operations: OperationsProvider,
+              public sync: Sync) {
     this.show = true;
+  }
+
+  updateOfflineData(){
+    this.sync.checkingOfflineData('Create_Area');
   }
 
 
@@ -58,9 +63,9 @@ export class OfflineStudyDataPage {
   }
 
   initView(){
-    this.show = false;  
-    this.items = [];        
-    this.getOfflineData(this.TABLE_NAME); 
+    // this.show = false;  
+    // this.items = [];        
+    // this.getOfflineData(this.TABLE_NAME); 
   }
 
   /* GETTING CURRENT USER INFO FROM LOCAL STORAGE */

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , ViewController} from 'ionic-angular';
-import { ParserProvider } from '../../providers';
+import { ParserProvider, OperationsProvider , FormBuilderProvider } from '../../providers';
 /**
  * Generated class for the EditTitlePage page.
  *
@@ -16,19 +16,38 @@ import { ParserProvider } from '../../providers';
 export class EditTitlePage {
 
   public studyTitle: string;
+  private data: any;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public viewCtrl: ViewController,
-              public parser: ParserProvider) {
+              public parser: ParserProvider,
+              public operations: OperationsProvider,
+              public formBuilder: FormBuilderProvider) {
+    this.init();
+  }
+
+  init(){
+    this.data = this.navParams.get('data');
+    console.log("Data is: "+ JSON.stringify(this.data))
+    this.studyTitle = this.navParams.get('title');
+    if(this.data)
+      this.studyTitle = this.data.name;
   }
 
   ionViewDidLoad() {
-      console.log('ionViewDidLoad EditTitlePage');
+    console.log('ionViewDidLoad EditTitlePage');
   }
 
   ionViewWillEnter(){
-    this.studyTitle = this.navParams.get('title');
+  }
+
+  checking(value: string){
+    let data = null;
+    if(!this.data.name)
+      this.dismiss(value);
+    else
+      this.updateName();
   }
 
   dismiss(value: string){
@@ -36,5 +55,31 @@ export class EditTitlePage {
     parser.setTitle(this.studyTitle);
     this.viewCtrl.dismiss();
   }
+
+  updateName(){
+    this.data.name = this.studyTitle;
+    const request  = this.formBuilder.initFormForOfflineData(this.data);
+    const data     = this.formBuilder.getFormForOfflineData().value;
+    this.operations.offlineRequest(this.getEndPoint(), data).subscribe(result => {
+      console.log("UPDATED RESULT: "+ JSON.stringify(result));
+      if(result.success)
+        this.viewCtrl.dismiss({ data: result });
+      else
+        this.operations.handleError(result);  
+    },
+    error => console.log("ERROR: " + JSON.stringify(error)));
+  }
+
+  getEndPoint(){
+    let endPoint = null;
+    if(this.data.position)
+        endPoint = 'roles/add';
+    else if(this.data.type)
+       endPoint = 'elements/add';
+    else
+      endPoint = 'areas/add';
+    return endPoint;  
+  }
+
 
 }

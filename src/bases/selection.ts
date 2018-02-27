@@ -82,15 +82,18 @@ export class Selection {
     
     data.subscribe(data => {   
       console.log("SERVER DATA:"+ JSON.stringify(data));   
-      if(data.result.lenght == 0){
-        this.loader.hideLoader();
-        return;
+      if(data.result.lenght > 0){
+        data.result.forEach((element,index) => {
+          element.projectID = this.project._id;  
+        });
+        
+        this.createTable(data.result) 
       }
-      data.result.forEach((element,index) => {
-        element.projectID = this.project._id;  
-      });
-      
-      this.createTable(data.result)
+      else{
+        this.loader.hideLoader();
+        console.log("NO DATA FOUND.");
+      }
+        
     },
     error => {
       this.handleError(error);
