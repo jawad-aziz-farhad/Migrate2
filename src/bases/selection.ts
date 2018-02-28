@@ -55,7 +55,6 @@ export class Selection {
     const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
 
     data.then((result: any) => {
-      console.log("SQL DATA: "+ JSON.stringify(result));
        if(result.length > 0)
           this.populateData(result);
         else
@@ -81,7 +80,6 @@ export class Selection {
     const data = this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
     
     data.subscribe(data => {   
-      console.log("SERVER DATA:"+ JSON.stringify(data));   
       if(data.result.lenght > 0){
         data.result.forEach((element,index) => {
           element.projectID = this.project._id;  
@@ -91,7 +89,7 @@ export class Selection {
       }
       else{
         this.loader.hideLoader();
-        console.log("NO DATA FOUND.");
+        console.error("NO DATA FOUND.");
       }
         
     },

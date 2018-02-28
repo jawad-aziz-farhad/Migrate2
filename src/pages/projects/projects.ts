@@ -209,7 +209,6 @@ export class ProjectsPage {
         this.loader.hideLoader();
         this.populateData(data);
       }).catch(error => {
-          console.error("ERROR: " + JSON.stringify(error));
           this.loader.hideLoader();
           this.toast.showBottomToast(NO_DATA_FOUND);
       });

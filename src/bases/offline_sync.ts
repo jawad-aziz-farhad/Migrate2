@@ -146,7 +146,7 @@ export class SyncOfflineData {
             column = 'role';
          queryData.live = data[index][sub_index]._id;
          queryData.offline = this.offlineAERData$[index][sub_index]._id; 
-         const update = this.sql.updateTable(this.TABLE_NAME_1, queryData);
+         const update = this.sql.updateTable(this.TABLE_NAME_1, null , queryData);
          updates.push(update);
       });
     });
@@ -157,7 +157,6 @@ export class SyncOfflineData {
     },
     error => this.operations.handleError(error));
   }
-
 
   /* CHECKING OFFLINE STUDY DATA WHEN INTERNET CONNECTION IS AVAILABLE */ 
   checkOfflineData(){
@@ -174,10 +173,10 @@ export class SyncOfflineData {
   /* GETTING OFFLINE DATA AND SYNCING IT TO THE SERVER */
   getOfflineData(table){
     this.sql.getAllData(table).then(result => {
-        if(result && result.length > 0)
-          this.handleStudies(result); 
-        else
-          console.log('NO DATA AVAILABLE.');
+      if(result && result.length > 0)
+        this.handleStudies(result); 
+      else
+        console.log('NO DATA AVAILABLE.');
     }).catch(error => {
       this.handleError();
     })

@@ -42,7 +42,6 @@ export class AreaDetailPage {
 
   initView(){
     this.location = this.navParams.get('location');
-    console.log(JSON.stringify(this.location))
     this.project  = this.navParams.get('project');
     this.selectOptions = {
       title: 'Opening Timings',

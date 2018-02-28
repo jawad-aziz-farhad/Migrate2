@@ -61,9 +61,10 @@ export class EditTitlePage {
     const request  = this.formBuilder.initFormForOfflineData(this.data);
     const data     = this.formBuilder.getFormForOfflineData().value;
     this.operations.offlineRequest(this.getEndPoint(), data).subscribe(result => {
-      console.log("UPDATED RESULT: "+ JSON.stringify(result));
-      if(result.success)
+      if(result.success){
+        result.updatedName = this.studyTitle;
         this.viewCtrl.dismiss({ data: result });
+      }
       else
         this.operations.handleError(result);  
     },

@@ -56,10 +56,10 @@ export class SubmitDataProgressPage {
 
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
-      if(!this.network.isInternetAvailable())
-        this.getUser();
-      else
-        this.createTable(this.TABLE_NAME);  
+    if(!this.network.isInternetAvailable())
+      this.getUser();
+    else
+      this.createTable(this.TABLE_NAME);  
   } 
 
   /* GETTING USER's INFO */
@@ -110,11 +110,10 @@ dropTable(table){
 /* CREATING TABLE TO SAVE TO LOCAL DATA BASE */
 createTable(table) {
   this.sql.createTable(table).then(res => {
-      console.log('INSERTING: ' + JSON.stringify(this.parseData.getFinalData()));
-      if(table == this.TABLE_NAME)
-        this.createTable(this.TABLE_NAME_1);
-      else
-        this.insertStudy();
+    if(table == this.TABLE_NAME)
+      this.createTable(this.TABLE_NAME_1);
+    else
+      this.insertStudy();
   });
 }
 
@@ -122,8 +121,8 @@ createTable(table) {
 insertStudy() {
   let data = [1];
   this.sql.addData(this.TABLE_NAME,data).then(result => {
-      console.log("INSERT STUDY RESPONSE: \n" + JSON.stringify(result));
-      this.getStudy();
+    console.log("INSERT STUDY RESPONSE: \n" + JSON.stringify(result));
+    this.getStudy();
   }).catch(error => {
       console.error("ERROR: " + JSON.stringify(error));
   });

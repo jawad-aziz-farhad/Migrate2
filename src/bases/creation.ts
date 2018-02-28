@@ -149,7 +149,7 @@ setUserInfo() {
 
     let data = [{ _id: _id, name: name, position: position, type: type , rating: rating , category: category,  
                    efficiency_study: efficiency_study, activity_study: activity_study, role_study: role_study,
-                   projectID: this.project._id, addedby:username ,id_of_addedby: userid, status: 'active', 
+                   projectID: this.project._id, addedby:username ,id_of_addedby: userid, status: 'active', popularity: 0,
                    date: date, userAdded : userAdded
                 }];
 
