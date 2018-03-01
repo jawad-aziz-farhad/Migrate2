@@ -26,9 +26,20 @@ export class Sync {
 
   private offlineStudyImages$: Array<any> = [];
   private onlineStudyImages$: Array<any> = [];
-
+  private offlineData$: Array<any> = [];
   private table: string = null;
   private user: any;
+
+  private offlinedataObj = {
+    name: null,
+    studyStartTime: null,
+    studyEndTime: null,
+    customerID: null,
+    projectID: null,
+    locationID: null,
+    userID: null,
+    rounds: []
+  };
 
   constructor(public modalCtrl: ModalController,
               public sql: SqlDbProvider, 
@@ -232,14 +243,11 @@ export class Sync {
 
 
   getImagesData(){
-    console.log("GETTING IMAGES\n" + this.offlineStudyImages$.length + '\n' + this.onlineStudyImages$.length);
     let updates = [];
     this.offlineStudyImages$.forEach((element,index) => {
-      console.log("OFFLINE IMAGE DATA "+ JSON.stringify(element));
       let data = { path: null, photo : null };
       data.path = this.onlineStudyImages$[index].path;
       data.photo = this.offlineStudyImages$[index].photo;
-      console.log("LIVE PATH IS: "+ data.photo);
       let update = this.sql.updateTable(this.TABLE_NAME_1,'photo',data);
       updates.push(update);
     });
@@ -261,7 +269,6 @@ export class Sync {
   getofflineStudyImages(){
     this.offlineStudyImages$ = [];
     this.sql.getLikeData(this.TABLE_NAME_1).then((result: any) => {
-      console.log("OFFLINE IMAGES RESULT: "+ JSON.stringify(result));
       if(result.length > 0){
         this.offlineStudyImages$ = result.slice();
         this.uploadImages(result);
@@ -323,78 +330,116 @@ export class Sync {
 
     const getData = Observable.forkJoin(array);
     getData.subscribe(result => {
-      console.log("ALL STUDY DATA SUCCESS: "+ JSON.stringify(result));
-      this.collectStudyData(data, result);
+      console.log("OFFLINE STUDIES DATA: "+ JSON.stringify(result) + "\n\n\n");  
+      this.uploadStudyData(data, result);
     },
     error => {
         console.log("ALL STUD DATA ERROR: "+ JSON.stringify(error));
     });
   }
 
-  collectStudyData(studies, study_data){
+  uploadStudyData(studies, study_data){
+
     const uploads = [];
+    
     studies.forEach((element,index) => {
+
       let study = element;
-      let studydata = study_data[index][0];
-      console.log("STUDY :"+ JSON.stringify(study) + " STUDY DATA: "+ JSON.stringify(studydata));
-      let data = this.parser.setAllData(this.getAllStudyData(study,studydata));
-      this.formBuilder.initFormBuilder(data, this.user);
-      let formData = this.formBuilder.getFormBuilder().value;
-      const upload = this.operations.postRequest('ras_data/add' , formData);
+      let studydata = study_data[index];
+      console.log("\n\nSTUDY: "+ JSON.stringify(study) + "\n\nSTUDY DATA: "+ JSON.stringify(studydata));
+      this.buildStudyData(study,studydata);
+      const lastIndex = this.offlineData$.length - 1;
+      console.log("PARSER DATA: "+ JSON.stringify(this.offlineData$[lastIndex]));
+      
+      const upload = this.operations.postRequest('ras_data/add' , this.offlineData$[lastIndex]);
       uploads.push(upload);
+    
     });
 
     const upload = Observable.forkJoin(uploads);
     upload.subscribe(result => {
-        console.log("ALL STUDY UPLOADS RESULT: " + JSON.stringify(result));
+      console.log("ALL STUDY UPLOADS RESULT: " + JSON.stringify(result));
     },
     error => {
-        console.error("ALL STUDY ERROR: "+ JSON.stringify(error));
+      console.error("ALL STUDY ERROR: "+ JSON.stringify(error));
     });
 
   }
 
-  getAllStudyData(study, study_data){
-    console.log("STudy is: "+ JSON.stringify(study) + " TITLE IS: "+ study.title);
-    let allStudy = new AllStudyData();
-    allStudy.setCustomer(study.customerID);
-    allStudy.setLocationID(study.locationID);
-    allStudy.setStudyEndTime(study.studyStartTime);
-    allStudy.setTitle(study.title);
-    allStudy.setRoundData(this.getRoundData(study_data));
-    return allStudy;
-  }
-
   getStudyData(data){
-    let roundData: Array<StudyData> = [];
 
-    for(let i=0;i<data.length;i++){
-      let studyData = new StudyData();
-      studyData.setArea(data.area);
-      studyData.setElement(data.element);
-      studyData.setRole(data.role);
-      studyData.setFrequency(data.frequency);
-      studyData.setNotes(data.notes);
-      studyData.setObservationTime(data.observationTime);
-      studyData.setPhoto(data.photo);
-      studyData.setRating(data.rating);
+    let studyData = new StudyData();
+    studyData.setArea(data.area);
+    studyData.setElement(data.element);
+    studyData.setRole(data.role);
+    studyData.setFrequency(data.frequency);
+    studyData.setNotes(data.notes);
+    studyData.setObservationTime(data.observationTime);
+    studyData.setPhoto(data.photo);
+    studyData.setRating(data.rating);
 
-      roundData.push(studyData);
-    }
-
-    return roundData;
+    return studyData;
   
   }
 
-  getRoundData(data){
-    let round = new Rounds();
-    round.setRoundStartTime(data.roundStartTime);
-    round.setRoundEndTime(data.roundEndTime);
-    round.setRoundData(this.getStudyData(data));
-    return round;
+   /* SETTING VALUES OF STUDY TO OBJECT AND PUSHGING IN ARRAY */
+   buildStudyData(study, study_data){
+
+    var element = study;
+    console.log("STUDY DETAIL: "+ JSON.stringify(element));
+    this.offlinedataObj.name = element.title; 
+    this.offlinedataObj.studyStartTime = element.studyStartTime;
+    this.offlinedataObj.studyEndTime = element.studyEndTime;
+    this.offlinedataObj.customerID = element.customerID;
+    this.offlinedataObj.projectID = element.projectID;
+    this.offlinedataObj.userID = this.user._id;
+    this.offlinedataObj.locationID = element.locationID;
+    this.offlineData$.push(this.offlinedataObj);
+
+    this.buildRoundsData(study_data);
+
   }
 
- 
+  /* BUILDING ROUNDs DATA AND PUSHING IT IN ROUNDS ARRAY */
+  buildRoundsData(data) {
+
+    var s_Time = ''; var e_Time = '';
+    let rounds = [];
+    let lastIndex = this.offlineData$.length - 1;
+
+    data.forEach((element , index) => {
+      /* IF TIME IS SAME, THAT MEANS THIS OBSERVATION IS OCCURED IN THE SAME ROUND */
+      if(s_Time == element.roundStartTime && e_Time == element.roundEndTime){
+        rounds.push(this.getStudyData(element));
+        if((index + 1) == data.length){
+          this.parser.getRounds().setRoundStartTime(element.roundStartTime)
+          this.parser.getRounds().setRoundEndTime(element.roundEndTime);
+          this.parser.getRounds().setRoundData(rounds);
+          this.offlineData$[lastIndex].rounds.push(this.parser.getRounds());
+          this.parser.clearRounds();
+          rounds = [];
+        }
+      }
+
+      else{
+        if(rounds.length > 0){
+          this.parser.getRounds().setRoundData(rounds);
+          this.offlineData$[lastIndex].rounds.push(this.parser.getRounds());
+        }
+        
+        this.parser.clearRounds();
+        rounds = [];
+        this.parser.getRounds().setRoundStartTime(element.roundStartTime)
+        this.parser.getRounds().setRoundEndTime(element.roundEndTime);
+        rounds.push(this.getStudyData(element));
+      } 
+      
+      s_Time = element.roundStartTime;
+      e_Time = element.roundEndTime;
+     
+    }); 
+    
+  }
 
   /* DROPPING THE FOLLOWING SO NEXT TIME WE ONLY UPDATE THE NEWLY INSERTED DATA */
   dropTables(){
@@ -419,3 +464,6 @@ export class Sync {
 
 
 }
+
+
+

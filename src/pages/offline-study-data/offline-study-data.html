@@ -18,8 +18,8 @@
 
 
 <ion-content>
-<!-- 
-    <table class="table" *ngIf="show && items.length > 0">
+
+    <table class="table" *ngIf="show && items?.length > 0">
         <thead>
           <tr>
             <th>Element</th>
@@ -47,7 +47,7 @@
       
       </table>
 
-      <div *ngIf="show && items.length == 0">
+      <div *ngIf="show && items?.length == 0">
           <ion-card>
             <ion-card-content>
               <ion-card-title>
@@ -58,14 +58,14 @@
               </p>
             </ion-card-content>
           </ion-card>
-      </div> -->
+      </div>
 
 </ion-content>
 
 <ion-footer>
     <ion-grid no-padding>
         <ion-row>
-            <button ion-button block no-margin class="theme-btn no-radius" (click)="updateOfflineData()">Sync Data</button>
+            <button ion-button block no-margin class="theme-btn no-radius" [disabled]="items?.lenght == 0" (click)="updateOfflineData()">Sync Data</button>
         </ion-row>
     </ion-grid>
 </ion-footer>

@@ -65,8 +65,8 @@ export class SubmitDataProgressPage {
   /* GETTING USER's INFO */
   getUser(){
     this.storage.get('currentUser').then(user => {
-        this.user = user;
-        this.saveData();
+      this.user = user;
+      this.saveData();
     });
   }
 
@@ -124,7 +124,7 @@ insertStudy() {
     console.log("INSERT STUDY RESPONSE: \n" + JSON.stringify(result));
     this.getStudy();
   }).catch(error => {
-      console.error("ERROR: " + JSON.stringify(error));
+    console.error("ERROR: " + JSON.stringify(error));
   });
 }
 /* GETTING SAVE STUDY */
