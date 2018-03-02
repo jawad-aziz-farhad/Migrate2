@@ -32,7 +32,7 @@
         <tbody>
             <tr *ngFor="let item of items; let i=index;">
               <td>
-                <div class="number-icon">{{ i + 1 }}</div>
+                <div class="number-icon">{{ item.numericID ? item.numericID : '--' }}</div>
                   {{ item.element }}
               </td>
               <td>{{ item.rating }}</td>
@@ -65,7 +65,7 @@
 <ion-footer>
     <ion-grid no-padding>
         <ion-row>
-            <button ion-button block no-margin class="theme-btn no-radius" [disabled]="items?.lenght == 0" (click)="updateOfflineData()">Sync Data</button>
+            <button ion-button block no-margin class="theme-btn no-radius" [disabled]="items?.length == 0" (click)="updateOfflineData()">Sync Data</button>
         </ion-row>
     </ion-grid>
 </ion-footer>

@@ -23,12 +23,16 @@ export class LoaderProvider {
       content: content
     });
 
-    this.loading.present();
+    this.loading.present().then(() => {
+      console.log("Loader is showing");
+    });
   }
 
   /* HIDING LAOADER */
   hideLoader(){
-    this.loading.dismiss();
+    this.loading.dismiss().then(() => {
+      console.log("LOADER HIDE");
+    });
   }
 
 }

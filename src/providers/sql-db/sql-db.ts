@@ -50,7 +50,9 @@ export class SqlDbProvider {
     let query = this.insertQuery(table);
     return new Promise((resolve, reject) => {
       for(let i = 0; i < data.length; i++) {
+
             let row_data = this.dataforRow(table, data, i);
+        
             if(table == 'Study')
              console.log(query + '\n' +JSON.stringify(row_data));
             
@@ -218,10 +220,14 @@ export class SqlDbProvider {
     else if(table == 'Create_Area' || table == 'Create_Element' || table == 'Create_Role')
       query = "SELECT * FROM " + `${table}` + " WHERE _id=?";
    else if(table == 'Study_Data')
-      query = "SELECT * FROM " + `${table}` + " WHERE Study_Id=?";   
+      query = "SELECT * FROM " + `${table}` + " WHERE Study_Id=?";
+    else if(table == 'OfflineData'){
+      table = 'Elements';
+      query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
+    }     
    else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
-     
+    
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, [id]).then((result) => {
       let data = [];
@@ -235,8 +241,10 @@ export class SqlDbProvider {
    }); 
  }
 
- getLikeData(table){
+ getLikeData(table) {
+
     let query = "SELECT * FROM " + `${table}`  + " WHERE photo LIKE ?";
+   
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, ['%file%']).then((result) => {
       let data = [];
@@ -327,7 +335,9 @@ export class SqlDbProvider {
 
   /* GETTING OFFLINE DATA FOR SPECIFIC ID */  
   getOfflineStudyData(studyId) {
+
     let query = "SELECT * FROM Study join Study_Data on Study.id=Study_Data.Study_Id join Projects on Projects._id=Study.projectID Where Study.id=" +`${studyId}`;
+    
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, []).then((result) => {
         let data = [];
@@ -384,7 +394,7 @@ export class SqlDbProvider {
     // const table14 = this.dropTable("Study");
     // const table15 = this.dropTable("Study_Data");
     
-    //const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15 ];
+    // const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15 ];
     const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 ];
     return Observable.forkJoin(observableArray);
   }

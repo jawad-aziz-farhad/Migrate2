@@ -56,7 +56,7 @@ export class SubmitDataProgressPage {
 
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
-    if(!this.network.isInternetAvailable())
+    if(this.network.isInternetAvailable())
       this.getUser();
     else
       this.createTable(this.TABLE_NAME);  
@@ -122,7 +122,8 @@ insertStudy() {
   let data = [1];
   this.sql.addData(this.TABLE_NAME,data).then(result => {
     console.log("INSERT STUDY RESPONSE: \n" + JSON.stringify(result));
-    this.getStudy();
+    if(result)
+      this.getStudy();
   }).catch(error => {
     console.error("ERROR: " + JSON.stringify(error));
   });
@@ -139,7 +140,8 @@ getStudy(){
 
 /* INSERTING STUDY DATA */
 insertStudyData(data) {
-  this.sql.studyData(this.TABLE_NAME_1, data[0].id).then(result => {
+  const lastIndex = data.length - 1;
+  this.sql.studyData(this.TABLE_NAME_1, data[lastIndex].id).then(result => {
     console.log("INSERT STUDY DATA RESPONSE: \n" +JSON.stringify(result));
     this.getAllData();
 }).catch(error => {

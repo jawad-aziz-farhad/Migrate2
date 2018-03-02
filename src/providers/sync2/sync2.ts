@@ -5,12 +5,9 @@ import { SERVER_URL, ERROR, MESSAGE } from '../../config/config';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/takeWhile';
-import { merge } from 'rxjs/operator/merge';
-import { combineLatest } from 'rxjs/observable/combineLatest';
 import { Storage } from '@ionic/storage';
 import { StudyData, Rounds, AllStudyData } from '../../models';
 import { TimerObservable } from 'rxjs/observable/TimerObservable';
-import { interval } from 'rxjs/observable/interval';
 /*
   Generated class for the SyncProvider provider.
 
@@ -18,7 +15,7 @@ import { interval } from 'rxjs/observable/interval';
   and Angular DI.
 */
 @Injectable()
-export class Sync {
+export class Sync2Provider {
 
   private TABLE_NAME: string   = 'Study';
   private TABLE_NAME_1: string = 'Study_Data';
@@ -48,28 +45,16 @@ export class Sync {
     console.log('Hello SyncProvider Provider');
   }
 
-  syncOfflinedata() {    
-   return new Observable(observer => {
-     this.checkingOfflineData(this.TABLE_NAME_2);
-     this.checkSycning(observer);
+  syncOfflinedata(): Observable<any> {
+    this.isDatSynced = true;
+    return new Observable(observer => {
+
     });
-  }
-
-  checkSycning(observer){
-    setTimeout(() => {
-      if(this.isDatSynced){
-       observer.next(this.result);
-        observer.complete();
-     }
-     else
-        this.checkSycning(observer);
-   }, 1000);
-    
-
   }
 
   /* CHECKING OFFLINE DATA  */
   checkingOfflineData(table){
+
     this.table = table;
     const data = this.sql.getAllData(table);
     
@@ -102,10 +87,6 @@ export class Sync {
 
   }).catch(error => this.handleError(error));
     
-  }
-
-  catchError(error){
-    return Observable.throw(error.json());
   }
 
   /* SAVING Area, Element, Role INFORMATION */
@@ -471,7 +452,7 @@ export class Sync {
   clearSQLiteData(){
     this.dropTables().subscribe(
     result => {
-      this.isDatSynced = true;
+      this.isDatSynced = false;
       console.log(this.isDatSynced);
     },
     error => this.handleError(error));
@@ -491,7 +472,7 @@ export class Sync {
 
   handleError(error){
     
-    this.isDatSynced = true;
+    this.isDatSynced = false;
     console.error("ERROR: "+ JSON.stringify(error));
 
     if(error.code){

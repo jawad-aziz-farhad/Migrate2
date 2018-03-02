@@ -1,12 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { NetworkProvider , SqlDbProvider , OperationsProvider , LoaderProvider , FormBuilderProvider, ToastProvider, ParserProvider, Sync } from "../../providers/index";
-import { Storage } from "@ionic/storage";
-import { StudyData, AllStudyData,  } from '../../models';
+import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NetworkProvider , SqlDbProvider  , LoaderProvider ,  ToastProvider, Sync } from "../../providers/index";
 import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, INTERNET_ERROR } from '../../config/config';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
-import { Observable } from 'rxjs';
-import * as $ from 'jQuery';
 /**
  * Generated class for the OfflineStudyDataPage page.
  *
@@ -29,12 +25,10 @@ export class OfflineStudyDataPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public sql: SqlDbProvider,
-              public parser: ParserProvider,
               public loader: LoaderProvider,
               private toast: ToastProvider,
               public network: NetworkProvider,
-              private storage: Storage,
-              public operations: OperationsProvider,
+              public loading: LoadingController,
               public sync: Sync) {
     this.initView();
   }
@@ -46,30 +40,31 @@ export class OfflineStudyDataPage {
   initView(){
     this.show = false;  
     this.items = [];        
-    this.getOfflineData(this.TABLE_NAME_1); 
+    this.getOfflineData(); 
   }
-
   
   /* GETTING OFFLINE DATA AND SYNCING IT TO THE SERVER */
-  getOfflineData(table){
-    this.loader.showLoader(MESSAGE);
-    this.sql.getAllData(table).then(result => {
-      this.loader.hideLoader();
-          
-      if(result && result.length > 0)
-        this.items = result; 
+  getOfflineData(){
+    this.sql.getAllData(this.TABLE_NAME).then(result => {
+      if(result && result.length > 0){
+        this.items = result;
+        this.getNames();
+      }
+      else   
         this.show = true;
+      
     }).catch(error => {
-      this.loader.hideLoader();
     });
   }
 
+  /* GETTING ELEMENT NAME AND NUMERIC ID  */
   getNames(){
     this.items.forEach((element, index) => {
-      this.sql.getIDData('Elements',element.getElement()).then(result => {
-          
+      this.sql.getIDData('OfflineData', element.element).then(result => {
+        if(result.length > 0){
           element.element = result[0].name;
           element.numericID  = result[0].numericID;
+        }
       }).catch(error => {
         console.error("ERROR IN GETTING DETAILS: " + JSON.stringify(error));
       });
@@ -78,25 +73,20 @@ export class OfflineStudyDataPage {
     this.show = true;
   }
 
-
-  /* DROPPING SQL TABLE AFTER SYNCING DATA */
-  dropTable(){
-    this.sql.dropTable(this.TABLE_NAME_1).then(res => {
-     
-    }).catch(error => {
-      console.error('ERROR: '+ JSON.stringify(error));
-    })
+  /* SHOWING SUMMARY OF SINGLE ITEM */
+  showSummary(item){
+    this.navCtrl.push(ObservationSummaryPage, {item: item});
   }
 
-    /* SHOWING SUMMARY OF SINGLE ITEM */
-    showSummary(item){
-      this.navCtrl.push(ObservationSummaryPage, {item: item});
-    }
+  updateOfflineData(){
+   this.loader.showLoader(MESSAGE);
+   this.sync.syncOfflinedata().subscribe((result: any) => {
+      console.log("SYNCING DONE: "+ JSON.stringify(result));
+      this.getOfflineData();
+   },
+   error => console.error("SYNCING ERROR: "+ JSON.stringify(error)),
+   () => this.loader.hideLoader());
 
-    updateOfflineData(){
-      this.sync.checkingOfflineData('Create_Area');
-    }
-
-
+  }
 
 }

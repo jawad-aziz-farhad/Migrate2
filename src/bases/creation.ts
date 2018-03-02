@@ -36,7 +36,7 @@ setUserInfo() {
 
    /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
  checkInternet(){
-  if(!this.network.isInternetAvailable())
+  if(this.network.isInternetAvailable())
      this.createEntry();
   else
     this.createTable();  
