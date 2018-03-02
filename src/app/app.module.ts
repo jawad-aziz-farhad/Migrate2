@@ -79,7 +79,6 @@ import { SqlDbProvider } from '../providers/sql-db/sql-db';
 import { FormBuilderProvider } from '../providers/form-builder/form-builder';
 import { ParserProvider } from '../providers/parser/parser';
 import { Sync } from '../providers/sync/sync';
-import { Sync2Provider } from '../providers/sync2/sync2';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions, storage: Storage) {
   const authConfig = new AuthConfig({
@@ -203,8 +202,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SqlDbProvider,
     FormBuilderProvider,
     ParserProvider,
-    Sync,
-    Sync2Provider
+    Sync
   ]
 })
 export class AppModule {}
