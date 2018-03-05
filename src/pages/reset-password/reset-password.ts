@@ -30,7 +30,6 @@ export class ResetPasswordPage {
               public authProvider: AuthProvider ,
               public toast: ToastProvider,
               public loader: LoaderProvider) {
-
       this.initFormBuilder();
   }
 

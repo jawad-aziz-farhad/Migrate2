@@ -16,14 +16,14 @@
     <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
     <div class="card-title overlayed">
       <!-- <span>12</span> -->
-      {{ parser.geAllData().title }}</div>
+      {{ navParams.get('round_index') ? parser.geAllData().title : data.title }}</div>
   </ion-card>
 
   <ion-list>
       
     <ion-item>
       <ion-label stacked>Area</ion-label>
-      <ion-input type="text" value="{{ data.area.name }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data.area.name ? data.area.name : data.area }}" disabled readonly></ion-input>
     </ion-item>
   
     <ion-item>
@@ -38,7 +38,7 @@
 
     <ion-item>
         <ion-label stacked>Study Time:</ion-label>
-        <ion-input value="{{ convertTime(parser.geAllData().studyStartTime) }}" disabled readonly></ion-input>
+        <ion-input value="{{ convertTime(navParams.get('round_index') ? parser.getAllData().studyStartTime : data.studyStartTime) }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>

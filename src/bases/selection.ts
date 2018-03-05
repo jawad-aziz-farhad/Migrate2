@@ -53,12 +53,11 @@ export class Selection {
   pullSQLData(){
 
     const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
-
     data.then((result: any) => {
-       if(result.length > 0)
-          this.populateData(result);
-        else
-          this.pullIDs();  
+      if(result.length > 0)
+        this.populateData(result);
+      else
+        this.pullIDs();  
     }).catch(error => this.handleError(error));
      
   }           
@@ -75,22 +74,24 @@ export class Selection {
   }
   /* PULLING DATA FROM SERVER */
   pullServerData(result){
+    //this.loader.showLoader(MESSAGE);
     this.formBuilder.initIDForm(result);
     let formData = this.formBuilder.getIDForm().value;
-    const data = this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
+    const request = this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
     
-    data.subscribe(data => {   
-      if(data.result.lenght > 0){
+    request.subscribe(data => {   
+      console.log("SERVER DATA:  "+ JSON.stringify(data));
+      //this.loader.hideLoader();
+      if(data.result.length > 0){
         data.result.forEach((element,index) => {
           element.projectID = this.project._id;  
         });
         
         this.createTable(data.result) 
       }
-      else{
-        this.loader.hideLoader();
+      else
         console.error("NO DATA FOUND.");
-      }
+      
         
     },
     error => {
@@ -116,13 +117,11 @@ export class Selection {
 
  /* POPULATING DATA */
   populateData(data){
-    this.loader.hideLoader();
     this.data = [];
     this._temp = {};
     this.data = data;
     this.temp = data;
     this.show = true;
-    
   }
 
   /* SELECTED ELEMENT FOR STUDY */
@@ -185,7 +184,9 @@ export class Selection {
   }
 
   handleError(error){
-    this.loader.hideLoader();
+    //this.loader.hideLoader();
+    if(error.code && error.code == 5)
+      this.pullIDs();
     console.error('ERROR: ' + error);
   }
 
@@ -218,7 +219,6 @@ export class Selection {
   /* DROPPING TABLE FROM DATA BASE */
   dropTable(refresher){
     this.data = [];
-    this.loader.showLoader(MESSAGE);
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(refresher != '')
         refresher.complete();

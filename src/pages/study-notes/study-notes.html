@@ -13,9 +13,9 @@
     <div class="blue-header">
       <timer></timer>
     </div>
-    <ion-textarea class="white-bg" placeholder="Add Notes Here..."  [(ngModel)]="notes" no-padding class="h200"></ion-textarea>
+    <ion-textarea class="white-bg" placeholder="Add Notes Here..." [(ngModel)]="notes" no-padding class="h200"></ion-textarea>
 </ion-content>
 
 <ion-footer>
-    <button ion-button block no-margin class="theme-btn no-radius" (click)="addNotes()" [disabled]="notes == '' || notes.length < 6 ">Add Notes</button>
+    <button ion-button block no-margin class="theme-btn no-radius" (click)="addNotes()" [disabled]="notes == '' || notes.length < 1 ">Add Notes</button>
 </ion-footer>

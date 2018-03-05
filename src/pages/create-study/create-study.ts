@@ -35,7 +35,6 @@ export class CreateStudyPage {
     this.roundTime = 3; 
     this.customer = this.navParams.get('customer');
     this.location = this.navParams.get('location');
-    console.log('ionViewDidLoad CreateStudyPage\n' + this.location._id);
   }
 
   /* DISMISSING ALERT */

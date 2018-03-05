@@ -19,6 +19,7 @@ export class FormBuilderProvider {
 
   /* INITIALIZING FORMBUILDER OBJECT */
   initFormBuilder(data, user){ 
+    console.log("FORM BUILDER DATA: "+ JSON.stringify(data));
     this.dataForm = this.formBuilder.group({
       name: [data.title],
       studyStartTime: [data.studyStartTime],

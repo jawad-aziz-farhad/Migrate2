@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-an
 import { NetworkProvider , SqlDbProvider  , LoaderProvider ,  ToastProvider, Sync } from "../../providers/index";
 import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, INTERNET_ERROR } from '../../config/config';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
+import { Observable } from 'rxjs';
+
 /**
  * Generated class for the OfflineStudyDataPage page.
  *
@@ -30,25 +32,28 @@ export class OfflineStudyDataPage {
               public network: NetworkProvider,
               public loading: LoadingController,
               public sync: Sync) {
-    this.initView();
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad OfflineStudyDataPage');
   }
 
+  ionViewWillEnter(){
+    this.initView();
+  }
+
   initView(){
     this.show = false;  
     this.items = [];        
-    this.getOfflineData(); 
+    this.getStudies(); 
   }
   
   /* GETTING OFFLINE DATA AND SYNCING IT TO THE SERVER */
-  getOfflineData(){
+  getStudies(){
     this.sql.getAllData(this.TABLE_NAME).then(result => {
+      console.log("STUDIES: "+JSON.stringify(result));
       if(result && result.length > 0){
-        this.items = result;
-        this.getNames();
+        this.getStudyData(result);
       }
       else   
         this.show = true;
@@ -57,20 +62,74 @@ export class OfflineStudyDataPage {
     });
   }
 
-  /* GETTING ELEMENT NAME AND NUMERIC ID  */
-  getNames(){
-    this.items.forEach((element, index) => {
-      this.sql.getIDData('OfflineData', element.element).then(result => {
-        if(result.length > 0){
-          element.element = result[0].name;
-          element.numericID  = result[0].numericID;
-        }
-      }).catch(error => {
-        console.error("ERROR IN GETTING DETAILS: " + JSON.stringify(error));
-      });
+  getStudyData(data){
+    let studies = [];
+    data.forEach((element,index) => {
+      let study = this.sql.getIDData(this.TABLE_NAME_1, element.id);
+      studies.push(study);
     });
 
-    this.show = true;
+    const fetch = Observable.forkJoin(studies);
+    fetch.subscribe((result: any) => {
+    
+      result.forEach((element, index) => {
+          if(element.length > 0){
+            element.forEach((sub_element, sub_index) => {
+              sub_element.studyStartTime = data[index].studyStartTime;
+              sub_element.title = data[index].title;
+              this.items.push(sub_element);
+            });
+          }
+          if(index == (result.length - 1))
+            this.getElements();
+        });
+    });
+  }
+
+  /* GETTING ELEMENT NAME AND NUMERIC ID  */
+  getElements(){
+    let elements = [];
+
+    this.items.forEach((element, index) => {
+      const data = this.sql.getIDData('OfflineElement', element.element);
+      elements.push(data)
+    });
+
+    const request = Observable.forkJoin(elements);
+
+    request.subscribe((result: any) => {
+      result.forEach((element, index) => {
+        if(element.length > 0){
+          this.items[index].element = element[0].name;
+        }
+        if(index == (result.length - 1))
+          this.getAreas();
+      });
+  });
+
+  }
+
+  getAreas(){
+
+    let elements = [];
+
+    this.items.forEach((element, index) => {
+      const data = this.sql.getIDData('OfflineArea', element.area);
+      elements.push(data)
+    });
+
+    const request = Observable.forkJoin(elements);
+
+    request.subscribe((result: any) => {
+      result.forEach((element, index) => {
+        if(element.length > 0){
+          this.items[index].area = element[0].name;
+        }
+        if(index == (result.length - 1))
+          this.show = true;
+      });
+    });
+    
   }
 
   /* SHOWING SUMMARY OF SINGLE ITEM */
@@ -81,12 +140,14 @@ export class OfflineStudyDataPage {
   updateOfflineData(){
    this.loader.showLoader(MESSAGE);
    this.sync.syncOfflinedata().subscribe((result: any) => {
-      console.log("SYNCING DONE: "+ JSON.stringify(result));
-      this.getOfflineData();
+      if(result[0].success){
+        this.toast.showBottomToast(SYNC_DONE);
+        this.items = [];
+      }
    },
    error => console.error("SYNCING ERROR: "+ JSON.stringify(error)),
    () => this.loader.hideLoader());
-
   }
+
 
 }

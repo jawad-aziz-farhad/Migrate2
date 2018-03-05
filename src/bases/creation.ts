@@ -46,12 +46,12 @@ setUserInfo() {
   createEntry() {
     this.loader.showLoader(MESSAGE)
     this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
+      this.loader.hideLoader();
       if(res.success)  
         this.dropTable(res);              
-      else{
-        this.loader.hideLoader();
+      else
         this.toast.showToast(ERROR);
-      }
+      
     },
     error => {
       this.loader.hideLoader();
@@ -161,7 +161,6 @@ setUserInfo() {
   goBack(){
     let message = this.TABLE_NAME.slice(0,-1) + 'added succesfully.';  
     this.toast.showToast(message);                
-    this.loader.hideLoader();
     this.creationForm.reset();  
     this.navCtrl.pop();
   }

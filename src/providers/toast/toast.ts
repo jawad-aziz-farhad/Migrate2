@@ -19,7 +19,7 @@ export class ToastProvider {
   showToast(message: string) {
       this.toast = this.toastCtrl.create({
         message,
-        duration: 1000,
+        duration: 3000,
         position: 'middle'
       });
   
@@ -29,7 +29,7 @@ export class ToastProvider {
   showBottomToast(message){
     this.toast = this.toastCtrl.create({
       message,
-      duration: 1000,
+      duration: 3000,
       position: 'bottom'
     });
 

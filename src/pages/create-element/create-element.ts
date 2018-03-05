@@ -53,7 +53,6 @@ export class CreateElementPage extends Creation {
     this.TABLE_NAME_1 = 'Elements_IDs';
     this.TABLE_NAME_2 = 'Create_Element';
     this.END_POINT    = "elements/add";
-    this.loader.showLoader(MESSAGE);
     this.ratings = this.types = this.study_types = [];
     this.ratings = [{ id: 1, name: 'Not Rated' },
                     { id: 2, name: '100' },
@@ -63,12 +62,18 @@ export class CreateElementPage extends Creation {
                          { id: 2, name: 'Activity Study' },
                          { id: 3, name: 'Role Study' }];
     this.types = [{id: 1, name: 'Fixed'}, { id: 2, name: 'Variable'}];
-    this.project = this.navParams.get('project')
-    this.getCategories();
+    this.project = this.navParams.get('project');
+    /* IF INTERNET IS AVAILABLE , PULLING CATEGORIES FROM SERVER */
+    if(this.network.isInternetAvailable())
+      this.getCategories();
+    /* PULLING CATEGORIES FROM SQLite Table */
+    else
+      this.getOfflineCategories();
   }
 
   /* GETTING CATEGORIES FOR CREATING NEW ELEMENT*/
-  getCategories(){    
+  getCategories(){   
+    this.loader.showLoader(MESSAGE); 
     this.operations.postRequest('categories/get',null).subscribe(result => {
       this.loader.hideLoader();
       this.categories = result;

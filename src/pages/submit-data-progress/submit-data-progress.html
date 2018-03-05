@@ -39,12 +39,12 @@
           <!-- IF NETWORK IS AVAILABLE AND DATA IS SAVED ON REMOTE SERVER-->
           <div *ngIf="network.isInternetAvailable()">
             <h4 text-center class="mt-3 sub-heading">Your data has been sent.</h4>
-            <p text-center ion-text color="text-grey" class="mb-3">Well done! Your Study data has been successfully transferred. <br>Choose from one of the options below to continue.</p>
+            <p text-center ion-text color="text-grey" class="mb-3">Your Study data has been successfully transferred. <br>Choose from one of the options below to continue.</p>
           </div>
           <!-- IF NETWORK IS NOT AVAILABLE AND DATA IS SAVED ON DEVICE STORAGE --> 
           <div *ngIf="!network.isInternetAvailable()">
             <h4 text-center class="mt-3 sub-heading">Your data has been saved.</h4>
-            <p text-center ion-text color="text-grey" class="mb-3">Well done! Your Study data has been successfully saved Locally and will be synced when Internet will be available. <br>Choose from one of the options below to continue.</p>
+            <p text-center ion-text color="text-grey" class="mb-3">Your Study data has been successfully saved Locally and will be synced when Internet will be available. <br>Choose from one of the options below to continue.</p>
           </div>
           
           <button ion-button block class="theme-btn footer-btn" margin-bottom (click)="go('areas')">Return to Location</button>

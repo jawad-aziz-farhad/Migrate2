@@ -102,7 +102,7 @@ export class StudyPhotoPage {
   
   /* CHECKING INTERNET CONNECTION BEFORE UPLOADING IMAGE TO THE SERVER */
   checkInternetConnection() {
-    if(this.network.isInternetAvailable()){
+    if(!this.network.isInternetAvailable()){
         this._parseData(this.photo);
         this.toast.showToast(FILE_SAVED_LOCALLY);
         this.goNext();

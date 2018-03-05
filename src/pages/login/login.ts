@@ -96,6 +96,7 @@ export class LoginPage {
     else
       this.toast.showToast(ERROR);
   }
+  
   /* OPENING MODAL */
   openModal(error) {
     let modal = this.modalCtrl.create('AlertModalPage', {error: error, email: this.loginForm.value.email}, { cssClass: 'inset-modal login-error-modal' });
@@ -103,7 +104,7 @@ export class LoginPage {
       if(data.action == 'reset_password')
         this.navCtrl.push(ResetPasswordPage);
       else
-         console.log('User would like to TRY AGAIN.');  
+        console.log('User would like to TRY AGAIN.');  
 
     });
 

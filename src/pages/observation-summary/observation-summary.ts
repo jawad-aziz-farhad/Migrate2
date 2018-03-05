@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ParseDataProvider , ParserProvider, AlertProvider } from '../../providers';
+import { ParseDataProvider , ParserProvider, AlertProvider, SqlDbProvider } from '../../providers';
 import { SERVER_URL, DELETE_MSG, DELETE_TITLE } from '../../config/config';
 /**
  * Generated class for the ObservationSummaryPage page.
@@ -25,7 +25,8 @@ export class ObservationSummaryPage {
               public navParams: NavParams ,
               public parseData: ParseDataProvider,
               public parser: ParserProvider,
-              public alert: AlertProvider) {
+              public alert: AlertProvider,
+              public sql: SqlDbProvider) {
     this.show = false;
   }
 
@@ -37,17 +38,18 @@ export class ObservationSummaryPage {
   showObservationSummary(){
     this.data = null;
     this.data = this.navParams.get('item');
+    console.log("DATA IS: "+ JSON.stringify(this.data));
     this.show = true;
   }
   /* GETTING IMAGE PATH */
   getImage() {
-    if(typeof this.data.getPhoto() !== 'undefined' && this.data.getPhoto() !== null && this.data.getPhoto() !== ''){
+    if(typeof this.data.photo !== 'undefined' && this.data.photo !== null && this.data.photo !== ''){
       /* IF FILE IS NOT UPLOADED YET AND WE HAVE THE LOCAL FILE PATH */
-      if(this.data.getPhoto().indexOf('file://') == -1)
-        this.imagePath = SERVER_URL + this.data.getPhoto();
+      if(this.data.photo.indexOf('file://') == -1)
+        this.imagePath = SERVER_URL + this.data.photo;
       /* IF FILE IS UPLOADED */  
       else
-        this.imagePath = this.data.getPhoto();   
+        this.imagePath = this.data.photo;   
     }
     else
       this.imagePath = this.DEFAULT_IMG;
@@ -72,8 +74,23 @@ export class ObservationSummaryPage {
   deleteItem(){
     const round_index = this.navParams.get('round_index');
     const data_index  = this.navParams.get('data_index');
-    this.parser.geAllData().getRoundData()[round_index].data.splice(data_index,1);
-    this.navCtrl.pop();
+    if(round_index && data_index){
+      this.parser.geAllData().getRoundData()[round_index].data.splice(data_index,1);
+      this.navCtrl.pop();
+    }
+
+    else
+      this.deleteFromSQLite();
+  }
+
+  deleteFromSQLite(){
+    this.sql.deleteRecord('Study_Data', {id: this.data.id}).then(result => {
+      console.log("DELETE RESULT: "+ JSON.stringify(result));
+      if(result)
+        this.navCtrl.pop();
+    }).catch(error => {
+      console.error("DELETE ERROR: ")+ JSON.stringify(error);
+    });
   }
 
 }

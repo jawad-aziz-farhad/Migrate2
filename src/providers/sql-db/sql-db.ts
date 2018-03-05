@@ -221,10 +221,14 @@ export class SqlDbProvider {
       query = "SELECT * FROM " + `${table}` + " WHERE _id=?";
    else if(table == 'Study_Data')
       query = "SELECT * FROM " + `${table}` + " WHERE Study_Id=?";
-    else if(table == 'OfflineData'){
+    else if(table == 'OfflineElement'){
       table = 'Elements';
       query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
     }     
+    else if(table == 'OfflineArea'){
+      table = 'Areas';
+      query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
+    }      
    else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
     
@@ -296,7 +300,7 @@ export class SqlDbProvider {
           else if(table == 'Study')
             data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID});
           else if(table == 'Study_Data')
-            data.push({roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
+            data.push({id: result.rows.item(i).id , roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
          
         }
       
@@ -316,6 +320,7 @@ export class SqlDbProvider {
         });
     });
   }
+
   /* REMOVING ALL DATA FROM TABLE */
   dropTable(table: string): Promise<any> {
     let query = "DROP TABLE IF EXISTS "+ table;
@@ -419,5 +424,18 @@ export class SqlDbProvider {
     }).catch(error => {
       return error;
     });
+  }
+
+  deleteRecord(table,data){
+    let query = '';
+    if(table == 'Study_Data')
+      query = "DELETE FROM " + `${table}` + " WHERE id=?";
+    
+    return this.database.executeSql(query, [data.id]).then(result => {
+      return result;
+    }).catch(error => {
+      return error;
+    }); 
+      
   }
 }

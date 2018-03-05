@@ -43,11 +43,11 @@ export class EditTitlePage {
   }
 
   checking(value: string){
-    let data = null;
-    if(!this.data.name)
-      this.dismiss(value);
-    else
+    if(this.data)
       this.updateName();
+    else
+      this.dismiss(value)
+      
   }
 
   dismiss(value: string){
