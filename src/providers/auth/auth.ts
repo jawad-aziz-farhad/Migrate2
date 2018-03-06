@@ -72,7 +72,7 @@ export class AuthProvider {
   }  
 
   resetPassword(email){
-    this.END_POINT = SERVER_URL + 'users/resetPassword';
+    this.END_POINT = SERVER_URL + 'users/requestPasswordReset';
     return this.http.post(this.END_POINT, email, { headers: this.headersProvider.getHeaders()}).map(res => res.json());
   }
 

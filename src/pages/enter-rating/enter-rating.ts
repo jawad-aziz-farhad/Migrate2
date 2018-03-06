@@ -3,6 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AddFrequencyPage} from '../add-frequency/add-frequency';
 import { Time , OperationsProvider , ParseDataProvider} from '../../providers';
 import { StudyData } from '../../models';
+import { FREQUENCY_INPUT_ERROR } from '../../config/config';
 /**
  * Generated class for the EnterRatingPage page.
  *
@@ -41,6 +42,9 @@ export class EnterRatingPage {
 
   /* CONCATINATING RATING WITH THE PREVIOUS ONE*/
   concatRatings(num){
+    if(this.rating.length == 0 && num == 0)
+      console.log(FREQUENCY_INPUT_ERROR);
+    else  
       this.rating = this.rating + num;
   } 
 
@@ -52,7 +56,6 @@ export class EnterRatingPage {
 
   /* ADDING RATING TO THE ROUND DATA AND MOVING TO NEXT PAGE */
   addRatings(){
-    console.log('RATING IS: ' + this.rating);
     this._parseData(parseInt(this.rating));
     this.navCtrl.push(AddFrequencyPage);
   }
@@ -61,9 +64,14 @@ export class EnterRatingPage {
   _parseData(rating: number) {
     this.parseData.getData().setRating(rating);
     this.parseData.setData(this.parseData.getData());
-    console.log("STUDY DATA AT ENTER RATING PAGE: " + JSON.stringify(this.parseData.getData()));
   }
 
-  
+  /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
+  onCancelStudy(event){
+    if(event){
+      this.time.destroyTimer();
+      this.navCtrl.popToRoot();
+    }
+  }
 
 }

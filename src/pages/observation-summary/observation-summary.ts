@@ -38,7 +38,6 @@ export class ObservationSummaryPage {
   showObservationSummary(){
     this.data = null;
     this.data = this.navParams.get('item');
-    console.log("DATA IS: "+ JSON.stringify(this.data));
     this.show = true;
   }
   /* GETTING IMAGE PATH */
@@ -58,8 +57,16 @@ export class ObservationSummaryPage {
   }
 
   /* CONVERTING MILLISECONDS TO LOCALE TIME */
-  convertTime(time){
-    return new Date(time).toLocaleString();
+  convertTime(){
+    // console.log("TIME: "+ time + " \n CONVERTED: "+ new Date(time).toLocaleString())
+    // return new Date(time).toLocaleString();
+    let time = null;
+    if(typeof this.navParams.get('round_index') !== 'undefined' && this.navParams.get('round_index') !== null)
+      time = this.parser.geAllData().getSutdyStartTime();
+    else
+      time = this.data.studyStartTime;
+      
+    return new Date(time).toLocaleString(); 
   }
 
   /* ASKING FOR CONFIRMATION FROM USER */

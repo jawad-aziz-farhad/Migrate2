@@ -37,13 +37,14 @@
     </ion-item>
 
     <ion-item>
-        <ion-label stacked>Study Time:</ion-label>
-        <ion-input value="{{ convertTime(navParams.get('round_index') ? parser.getAllData().studyStartTime : data.studyStartTime) }}" disabled readonly></ion-input>
+      <ion-label stacked>Study Time:</ion-label>
+      <!-- <ion-input value="{{ navParams.get('round_index') ? convertTime(parser.getAllData().studyStartTime) : convertTime(data.studyStartTime) }}" disabled readonly></ion-input> -->
+      <ion-input value="{{ convertTime() }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>
-        <ion-label stacked>Observation Time:</ion-label>
-        <ion-input value="{{ data.observationTime }}" disabled readonly></ion-input>
+      <ion-label stacked>Observation Time:</ion-label>
+      <ion-input value="{{ data.observationTime }}" disabled readonly></ion-input>
     </ion-item>
   
     <ion-item *ngIf="data.notes">

@@ -77,7 +77,7 @@ export class Selection {
     //this.loader.showLoader(MESSAGE);
     this.formBuilder.initIDForm(result);
     let formData = this.formBuilder.getIDForm().value;
-    const request = this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIds', formData)
+    const request = this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIDs', formData)
     
     request.subscribe(data => {   
       console.log("SERVER DATA:  "+ JSON.stringify(data));

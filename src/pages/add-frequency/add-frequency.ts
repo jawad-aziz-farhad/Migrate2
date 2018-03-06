@@ -48,9 +48,9 @@ export class AddFrequencyPage {
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){
      if(this.frequency.length == 0 && num == 0)
-      this.toast.showBottomToast(FREQUENCY_INPUT_ERROR);
+      console.log(FREQUENCY_INPUT_ERROR);
     else  
-    this.frequency = this.frequency + num;
+      this.frequency = this.frequency + num;
   } 
 
   /* REMOVING ENTERED FREQUENCY */ 

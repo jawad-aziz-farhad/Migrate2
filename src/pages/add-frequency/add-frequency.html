@@ -21,9 +21,9 @@
     <ion-grid class="grid-border-col-3" no-padding>
       <ion-row justify-content-center>
           <ion-col *ngFor="let num of numbers?.reverse()" col-4>
-              <div (click)="concatFrequency(num)">
-                {{ num }}
-              </div>
+            <div (click)="concatFrequency(num)">
+              {{ num }}
+            </div>
           </ion-col>
         
         <ion-col col-4 (click)="removeFrequency()"> 

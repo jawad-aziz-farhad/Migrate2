@@ -5,7 +5,8 @@
   Ionic pages and navigation.
 -->
   <ion-header class="blue-header" no-border> 
-    <header title="Enter Rating" button="menu"></header>
+    <!-- <header title="Enter Rating" button="menu"></header> -->
+    <in-study-header title="Enter Rating" (cancel)="onCancelStudy($event)"></in-study-header>
   </ion-header>
   
   
@@ -15,26 +16,12 @@
       </div>
 
       <ion-item no-padding>
-          <ion-input class="big-input" placeholder="Enter Rating" text-right type="text" [value]="rating" [(ngModel)]="rating"></ion-input>
+        <ion-input class="big-input" placeholder="Enter Rating" text-right type="text" [value]="rating" [(ngModel)]="rating"></ion-input>
       </ion-item>
-      <!-- <ion-grid class="grid-border-col-3" no-padding>
-        <ion-row justify-content-center>
-              <ion-col *ngFor="let num of numbers | reverse" col-4>
-                  <div (click)="concatRatings(num)">
-                     {{ num }}
-                  </div>
-              </ion-col>
-            <ion-col col-4 (click)="removeRatings()">
-              <div >
-                <ion-icon name="backspace"></ion-icon>
-              </div>
-            </ion-col>
-        </ion-row>
-      </ion-grid> -->
-
+     
       <ion-grid class="grid-border-col-3" no-padding>
         <ion-row justify-content-center>
-            <ion-col *ngFor="let num of numbers | reverse" col-4>
+            <ion-col *ngFor="let num of numbers?.reverse()" col-4>
                 <div (click)="concatRatings(num)">
                   {{ num }}
                 </div>

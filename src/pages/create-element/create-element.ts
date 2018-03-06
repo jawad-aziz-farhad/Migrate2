@@ -96,7 +96,7 @@ export class CreateElementPage extends Creation {
   /* INITIALIZING FORM BUILDER */
   initFormBuilder(){
       this.creationForm = this.formBuilder.group({
-        name: ['', [Validators.required, Validators.minLength(5)]],
+        name: ['', [Validators.required, Validators.minLength(1)]],
         studyTypes: this.formBuilder.array([], Validators.required),
         type: ['', Validators.required],
         rating: ['', Validators.required],
