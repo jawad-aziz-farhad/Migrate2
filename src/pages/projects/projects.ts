@@ -74,23 +74,25 @@ export class ProjectsPage {
 
   /* CHECKING LOCAL DATA BASE IF PROJECTS ARE ALREADY THERE OR NOT */
   checkDB(){
-      this.sql.getDatabaseState().subscribe(ready  => {        
-        if(ready)
-          this.sql.getAllData(this.TABLE_NAME).then(result => {
-              if(result.length == 0 || typeof result == 'undefined' || result == null){
-                if(!this.network.isInternetAvailable())
-                  this.toast.showToast(INTERNET_ERROR);
-                else
-                  this.getData();
-              }
-              else
-                this.populateData(result);
+    this.sql.getDatabaseState().subscribe(ready  => {        
+      if(ready)
+        this.sql.getAllData(this.TABLE_NAME).then(result => {
+          
+          if(result.length == 0 || typeof result == 'undefined' || result == null){
+            if(!this.network.isInternetAvailable())
+              this.toast.showToast(INTERNET_ERROR);
+            else
+              this.getData();
+          }
+          else
+            this.populateData(result);
 
-          }).catch(error => {
-              console.error('ERROR: ' + JSON.stringify(error));
-          });
-      });
+        }).catch(error => {
+            console.error('ERROR: ' + JSON.stringify(error));
+        });
+    });
   }
+
 
   /* GETTING DATA FROM SERVER */
   getData() {
@@ -146,7 +148,7 @@ export class ProjectsPage {
   /* INSERTING DATA TO TABLES */
   insertData(projects) {
     this.inserting(projects,'DATA').subscribe(result => {
-       this.getAllData();
+      this.getAllData();
     },
     error =>  this.loader.hideLoader(),
     () => console.log('DONE'));;
@@ -168,7 +170,6 @@ export class ProjectsPage {
                      this.loader.hideLoader();
                    });
                  }
-                  
               }
           });
       });

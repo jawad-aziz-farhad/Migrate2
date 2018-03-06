@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import { BehaviorSubject } from 'rxjs/Rx';
 import * as $ from 'jQuery';
 import { Observable } from 'rxjs/Observable';
+import { NO_DATA_FOUND } from '../../config/config';
 /*
   Generated class for the SqlDbProvider provider.
 
@@ -49,11 +50,13 @@ export class SqlDbProvider {
   addData(table , data): Promise<any> {
     let query = this.insertQuery(table);
     return new Promise((resolve, reject) => {
+      if(!data)
+        resolve(NO_DATA_FOUND);
       for(let i = 0; i < data.length; i++) {
 
             let row_data = this.dataforRow(table, data, i);
         
-            if(table == 'Study')
+            if(table == 'Locations')
              console.log(query + '\n' +JSON.stringify(row_data));
             
             this.database.executeSql(query, row_data).then(result => {
@@ -63,7 +66,7 @@ export class SqlDbProvider {
               reject(err);
             });
         }
-        resolve(true);
+      resolve(true);
     });
     
   }

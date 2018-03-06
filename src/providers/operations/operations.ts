@@ -37,26 +37,33 @@ export class OperationsProvider {
     return this.http.post(`${URL}`, null ,{ headers: headers }).catch(this.catchError)
                     .flatMap(response => {      
       let res = response.json();
+      
       return new Observable(observer => {
           res.forEach((project, index) => {
             this.forkJoin(project).subscribe((result: any) => {
-                result.forEach((item,_index) => {
-                    if(_index >= 1 && item.result.length > 0){
-                        item.result.forEach((subitem,subindex) => {
-                          subitem.projectID = project._id;
-                        });
-                      }
-                });
+
+              result.forEach((item,_index) => {
+
+                  if(_index == 1 && item.result)
+                    item = item.result;
+                
+                  if(item && _index >= 1 && item.length > 0){
+                    item.forEach((subitem,subindex) => {
+                      subitem.projectID = project._id;
+                    });
+                  }
+              });
+
                 res[index].customer = result[0];
                 res[index].customer_locations = result[1].result;
-                res[index].areas_data = result[2].result;
-                res[index].elements_data = result[3].result;
-                res[index].roles_data = result[4].result;
+                res[index].areas_data = result[2];
+                res[index].elements_data = result[3];
+                res[index].roles_data = result[4];
 
                 if(index == (res.length - 1)){
                   this.postRequest('categories/get',null).subscribe(result => {
-                      res[0].categories = result;
-                      observer.next(res);
+                    res[0].categories = result;
+                    observer.next(res);
                   },
                   error => this.handleError(error));
                 }
@@ -178,7 +185,6 @@ export class OperationsProvider {
 
   _uploadFile(photo): Observable<any> {
     let data = { endPoint:'ras_data/study_image' , key :'photo', file: photo};
-    console.log(JSON.stringify(data));
     let filename = data.file.substr(data.file.lastIndexOf('/') + 1);
     
     filename = filename.split("?");

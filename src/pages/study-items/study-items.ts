@@ -22,6 +22,7 @@ export class StudyItemsPage implements OnInit {
   
   public study_data: any;
   public isStudyEnded: boolean;
+  public showAll: boolean;
   public temp: any;
   public itemsSelected: any;
   public totalItemsSelected: number;
@@ -50,7 +51,7 @@ export class StudyItemsPage implements OnInit {
   getData(){
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
-    this.isStudyEnded = false;
+    this.isStudyEnded = this.showAll = false;
     this.study_data = this.parser.geAllData();
     this.toast.showBottomToast(ROUND_ENDED);
   }
@@ -91,8 +92,7 @@ export class StudyItemsPage implements OnInit {
   }
 
   /* SHOWING SELECTED ITEMS  */
-  showSelectedItems(item) {
-    
+  showSelectedItems(item) {    
     const index = this.itemsSelected.indexOf(item);
     if(index > -1){
        this.totalItemsSelected--;
@@ -143,5 +143,9 @@ export class StudyItemsPage implements OnInit {
   /* CONVERTING MILLISECONDS TO TIME STRING */
   convertTime(time){
     return new Date(time).toLocaleTimeString();
+  }
+
+  show(){
+    this.showAll = !this.showAll;
   }
 }

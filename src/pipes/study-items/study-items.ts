@@ -12,9 +12,9 @@ export class StudyItemsPipe implements PipeTransform {
   /**
    * Takes a value and makes it lowercase.
    */
-  transform(array: Array<any>, isStudyEnded: boolean): any {
+  transform(array: Array<any>, isStudyEnded: boolean, showAll: boolean): any {
     let data = [];
-    if(!isStudyEnded)
+    if(!isStudyEnded && !showAll)
       data.push(array[array.length -1])
     else
       data = array;
