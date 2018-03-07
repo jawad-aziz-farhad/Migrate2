@@ -82,10 +82,10 @@ export class AuthProvider {
     this.currentUser.firstname = decodedUser.name;
     this.currentUser.lastname = decodedUser.lastName;
     this.currentUser.email = decodedUser.email;
-    if(typeof decodedUser.userimage !== 'undefined' && decodedUser.userimage !== null && decodedUser.userimage !== '')
+    if(decodedUser.userimage)
       this.currentUser.userimage = decodedUser.userimage;
     else
-    this.currentUser.userimage = null;
+      this.currentUser.userimage = null;
     this.currentUser.status = decodedUser.status;
     return this.currentUser;
   }

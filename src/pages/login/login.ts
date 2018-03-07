@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, ModalController,  NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthProvider , ToastProvider, LoaderProvider, OperationsProvider } from '../../providers/index';
-import { EMAIL_REGEXP, MESSAGE, ERROR } from '../../config/config';
+import { AuthProvider , ToastProvider, LoaderProvider, OperationsProvider , NetworkProvider } from '../../providers/index';
+import { EMAIL_REGEXP, MESSAGE, ERROR, INTERNET_ERROR } from '../../config/config';
 import { ResetPasswordPage } from '../reset-password/reset-password';
 
 /**
@@ -29,6 +29,7 @@ export class LoginPage {
               private toast: ToastProvider,
               private formsBuilder: FormBuilder,
               private operations: OperationsProvider,
+              private network: NetworkProvider,
               private modalCtrl: ModalController) {
 
       this.initFormBuilder();
@@ -48,7 +49,12 @@ export class LoginPage {
   }
 
   /* LOGGIN IN USER */
-  Login(value: any) {
+  Login() {
+    if(!this.network.isInternetAvailable()){
+      this.toast.showBottomToast(INTERNET_ERROR);
+      return;
+    }
+
     this.loader.showLoader(MESSAGE);
     this.authProvider
     .authenticate(this.loginForm.value)

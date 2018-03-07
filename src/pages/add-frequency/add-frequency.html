@@ -15,7 +15,7 @@
     </div>
 
     <ion-item no-padding>
-        <ion-input class="big-input" placeholder="Enter Frequency" text-right type="text" [value]="frequency"></ion-input>
+      <ion-input class="big-input" placeholder="Enter Frequency" text-right type="text" [value]="frequency"></ion-input>
     </ion-item>
     
     <ion-grid class="grid-border-col-3" no-padding>
@@ -38,4 +38,15 @@
 
 <ion-footer no-border>
   <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="addFrequency()">Add Frequency</button>
+  <!-- <ion-row>
+    <ion-col col-4>
+        <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || parseData.getData().getFrequency()" (click)="addFrequency()">End</button> 
+    </ion-col>
+    <ion-col col-4>
+        <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || parseData.getData().getNotes()" (click)="addFrequency()">Add Notes</button> 
+    </ion-col>
+    <ion-col col-4>
+        <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="addFrequency()">Add Photo</button> 
+    </ion-col>
+  </ion-row> -->
 </ion-footer>

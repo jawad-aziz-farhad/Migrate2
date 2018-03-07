@@ -63,7 +63,8 @@ setUserInfo() {
   dropTable(data){
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(result)
-        this.insertData(data)
+        this.createTable();
+        //this.insertData(data)
     }).catch(error =>  console.error('ERROR: ' + JSON.stringify(error)));
   }
 
@@ -159,7 +160,7 @@ setUserInfo() {
 
   /* GOING BACK TO PREVIOUS PAGE */
   goBack(){
-    let message = this.TABLE_NAME.slice(0,-1) + 'added succesfully.';  
+    let message = this.TABLE_NAME.slice(0,-1) + ' added succesfully.';  
     this.toast.showToast(message);                
     this.creationForm.reset();  
     this.navCtrl.pop();

@@ -56,7 +56,7 @@ export class SqlDbProvider {
 
             let row_data = this.dataforRow(table, data, i);
         
-            if(table == 'Locations')
+            if(table == 'Areas')
              console.log(query + '\n' +JSON.stringify(row_data));
             
             this.database.executeSql(query, row_data).then(result => {

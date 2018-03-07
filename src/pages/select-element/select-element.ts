@@ -38,7 +38,7 @@ export class SelectElementPage extends Selection  {
   }
 
   ionViewWillEnter(){
-    this.init('Elements','Elements_IDs',this.navParams.get('project'), RatingsPage);
+    this.init('Elements',this.navParams.get('project'), RatingsPage);
  }
 
 }

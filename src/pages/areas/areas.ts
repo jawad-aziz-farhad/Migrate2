@@ -42,7 +42,7 @@ export class AreasPage extends Selection {
   }
 
   initView(){
-    this.init('Locations','Locations_IDs',this.navParams.get('project'), AreaDetailPage);
+    this.init('Locations',this.navParams.get('project'), AreaDetailPage);
   }
 
   /*  */

@@ -39,7 +39,7 @@ export class SelectRolePage extends Selection {
   }
 
   ionViewWillEnter(){
-    this.init('Roles','Roles_IDs',this.navParams.get('project'), SelectAreaPage);
+    this.init('Roles',this.navParams.get('project'), SelectAreaPage);
   }
   
 }

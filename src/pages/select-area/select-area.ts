@@ -40,7 +40,7 @@ import { Selection } from '../../bases';
   }
 
   ionViewWillEnter(){
-    this.init('Areas','Areas_IDs',this.navParams.get('project'), SelectElementPage);
+    this.init('Areas', this.navParams.get('project'), SelectElementPage);
  }
 
 }

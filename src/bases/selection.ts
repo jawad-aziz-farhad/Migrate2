@@ -14,7 +14,7 @@ import { Stop } from './stop-study';
 export class Selection {
   
   protected TABLE_NAME: string = '';
-  protected TABLE_NAME_1: string = '';
+  //protected TABLE_NAME_1: string = '';
   protected project: any;
   protected temp: any;
   protected _temp: any;
@@ -40,48 +40,51 @@ export class Selection {
               public toast: ToastProvider){
   }
 
-  init(TABLE_NAME: string, TABLE_NAME_1: string, project: any, nextComponent: any){
+  init(TABLE_NAME: string, project: any, nextComponent: any){
       this.show = false;
       this.nextComponent = nextComponent;
       this.TABLE_NAME = TABLE_NAME;
-      this.TABLE_NAME_1 = TABLE_NAME_1;
+      //this.TABLE_NAME_1 = TABLE_NAME_1;
       this.project = project;
       this.pullSQLData();
   }
 
   /* PULLING SQLite DATA */
   pullSQLData(){
-
     const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
     data.then((result: any) => {
       if(result.length > 0)
         this.populateData(result);
       else
-        this.pullIDs();  
+        this.pullServerData();  
     }).catch(error => this.handleError(error));
      
   }           
  
   /* PULLING IDs FROM SQLite */
   pullIDs(){
-    const ids = this.sql.getIDData(this.TABLE_NAME_1, this.project._id);
-    ids.then(result => {
-      console.log('IDs: '+ JSON.stringify(result));
-      this.pullServerData(result);
-    }).catch(error => this.handleError(error) );
+    // const ids = this.sql.getIDData(this.TABLE_NAME_1, this.project._id);
+    // ids.then(result => {
+    //   console.log('IDs: '+ JSON.stringify(result));
+    //   this.pullServerData(result);
+    // }).catch(error => this.handleError(error) );
     
 
   }
   /* PULLING DATA FROM SERVER */
-  pullServerData(result){
-    //this.loader.showLoader(MESSAGE);
-    this.formBuilder.initIDForm(result);
-    let formData = this.formBuilder.getIDForm().value;
-    const request = this.operations.postRequest(this.TABLE_NAME.toLowerCase()+ '/getByIDs', formData)
+  pullServerData(){
+    this.loader.showLoader(MESSAGE);
+    //this.formBuilder.initIDForm(result);
+    //let formData = this.formBuilder.getIDForm().value;
+    //let endPoint = this.TABLE_NAME.toLowerCase()+ '/getByIDs';
+    
+    let endPoint = this.TABLE_NAME.toLowerCase() + '/getByProjectID';
+    let data = { projectID: this.project._id};
+    const request = this.operations.postRequest( endPoint , data)
     
     request.subscribe(data => {   
       console.log("SERVER DATA:  "+ JSON.stringify(data));
-      //this.loader.hideLoader();
+      this.loader.hideLoader();
       
       if(data.result)
         data = data.result;
@@ -101,7 +104,7 @@ export class Selection {
         
     },
     error => {
-      this.handleError(error);
+      this.loader.hideLoader();
       this.operations.handleError(error);
     });
   }
@@ -192,7 +195,7 @@ export class Selection {
   handleError(error){
     //this.loader.hideLoader();
     if(error.code && error.code == 5)
-      this.pullIDs();
+      this.pullServerData();
     console.error('ERROR: ' + error);
   }
 
@@ -228,7 +231,7 @@ export class Selection {
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(refresher != '')
         refresher.complete();
-      this.pullIDs();
+      this.pullServerData();
     }).catch(error => this.handleError(error));
   }
   

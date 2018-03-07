@@ -33,9 +33,9 @@ export class ProjectsPage {
   public dataArray: Array<Projects>;
 
   public  TABLE_NAME: string   = 'Projects';
-  private TABLE_NAME_1: string = 'Areas_IDs';
-  private TABLE_NAME_2: string = 'Elements_IDs';
-  private TABLE_NAME_3: string = 'Roles_IDs';
+  // private TABLE_NAME_1: string = 'Areas_IDs';
+  // private TABLE_NAME_2: string = 'Elements_IDs';
+  // private TABLE_NAME_3: string = 'Roles_IDs';
 
   private TABLE_NAME_4:string = 'Areas';
   private TABLE_NAME_5:string = 'Elements';
@@ -115,9 +115,9 @@ export class ProjectsPage {
   /* CREATING TABLE TO SAVE TO LOCAL DATA BASE */
   createTable(data, table) {
     const table1 = this.sql.createTable(this.TABLE_NAME);
-    const table2 = this.sql.createTable(this.TABLE_NAME_1);
-    const table3 = this.sql.createTable(this.TABLE_NAME_2);
-    const table4 = this.sql.createTable(this.TABLE_NAME_3);
+    // const table2 = this.sql.createTable(this.TABLE_NAME_1);
+    // const table3 = this.sql.createTable(this.TABLE_NAME_2);
+    // const table4 = this.sql.createTable(this.TABLE_NAME_3);
     const table5 = this.sql.createTable(this.TABLE_NAME_4);
     const table6 = this.sql.createTable(this.TABLE_NAME_5);
     const table7 = this.sql.createTable(this.TABLE_NAME_6);
@@ -125,12 +125,12 @@ export class ProjectsPage {
     const table9 = this.sql.createTable(this.TABLE_NAME_8);
     const table10 = this.sql.createTable(this.TABLE_NAME_9);
 
-    const tables = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10]
+    const tables = [table1, table5, table6, table7, table8, table9, table10]
 
     const create = Observable.forkJoin(tables);
 
     create.subscribe(result => {
-      this.insertIDs(data);
+      this.insertData(data);
     },
     error =>  this.loader.hideLoader(),
     () => console.log('DONE'));
@@ -181,12 +181,12 @@ export class ProjectsPage {
   forkJoin(data,value): Observable<any> {
     let observablesArray = [];
     if(value == 'IDs'){
-      localStorage.setItem('projectID',data._id);
-      const areas = this.sql.addData(this.TABLE_NAME_1,data.areas);
-      const elements = this.sql.addData(this.TABLE_NAME_2,data.elements);
-      const roles = this.sql.addData(this.TABLE_NAME_3,data.roles);
-      const locations = this.sql.addData(this.TABLE_NAME_8,data.locations);
-      observablesArray.push(areas,elements,roles);
+      //localStorage.setItem('projectID',data._id);
+      // const areas = this.sql.addData(this.TABLE_NAME_1,data.areas);
+      // const elements = this.sql.addData(this.TABLE_NAME_2,data.elements);
+      // const roles = this.sql.addData(this.TABLE_NAME_3,data.roles);
+      //const locations = this.sql.addData(this.TABLE_NAME_8,data.locations);
+      //observablesArray.push(areas,elements,roles);
     }
     else if(value == 'DATA'){
       let _data = [];
@@ -261,15 +261,15 @@ export class ProjectsPage {
   dropTable(refresher){
 
     const table1 = this.sql.dropTable(this.TABLE_NAME);
-    const table2 = this.sql.dropTable(this.TABLE_NAME_1);
-    const table3 = this.sql.dropTable(this.TABLE_NAME_2);
-    const table4 = this.sql.dropTable(this.TABLE_NAME_3);
+    // const table2 = this.sql.dropTable(this.TABLE_NAME_1);
+    // const table3 = this.sql.dropTable(this.TABLE_NAME_2);
+    // const table4 = this.sql.dropTable(this.TABLE_NAME_3);
     const table5 = this.sql.dropTable(this.TABLE_NAME_4);
     const table6 = this.sql.dropTable(this.TABLE_NAME_5);
     const table7 = this.sql.dropTable(this.TABLE_NAME_6);
     const table8 = this.sql.dropTable(this.TABLE_NAME_7);
 
-    const tables = [table1, table2, table3, table4, table5, table6, table7, table8]
+    const tables = [table1, table5, table6, table7, table8]
 
     const drop = Observable.forkJoin(tables);
 

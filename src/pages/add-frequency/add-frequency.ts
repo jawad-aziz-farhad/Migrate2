@@ -65,13 +65,16 @@ export class AddFrequencyPage {
     this.openModal();
   }
 
+  endStudy(){
+    this._parseData(this.frequency);
+  }
+
   /* PARSING DATA */
   _parseData(frequency: number) {
 
     let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
     let observation_Time = this.millisToMinutesAndSeconds(observationTime);
     this.parseData.getData().setObservationTime(observation_Time);
-
     this.parseData.getData().setNotes(null);
     this.parseData.getData().setPhoto(null);
     this.parseData.getData().setFrequency(frequency);

@@ -83,13 +83,13 @@ export class OperationsProvider {
        request = this.postRequest('locations/getByIDs',{ids: this.checkRequestData(project.locations)});
        requests.push(request);
        
-       request = this.postRequest('areas/getByIDs',{ids: this.checkRequestData(project.areas)});
+       request = this.postRequest('areas/getByProjectID',{projectID: this.checkRequestData(project._id)});
        requests.push(request);
       
-       request = this.postRequest('elements/getByIDs',{ids: this.checkRequestData(project.elements)});
+       request = this.postRequest('elements/getByProjectID',{projectID: this.checkRequestData(project._id)});
        requests.push(request);
 
-       request = this.postRequest('roles/getByIDs',{ids: this.checkRequestData(project.roles)});
+       request = this.postRequest('roles/getByProjectID',{projectID: this.checkRequestData(project._id)});
        requests.push(request);
       
        return Observable.forkJoin(requests);
