@@ -34,15 +34,19 @@ export class AddFrequencyPage {
                public parseData: ParseDataProvider,
                public toast: ToastProvider,
                public parser: ParserProvider) {
-      this.frequency = ''; 
+    this.init();
    }
    
    ionViewDidLoad() {     
-     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
      console.log('SelectElementPage');
    }
 
   ionViewWillEnter() {
+  }
+
+  init(){
+    this.frequency = '';
+    this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
   }
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
@@ -63,10 +67,6 @@ export class AddFrequencyPage {
   addFrequency(){
     console.log('FREQUENCY IS: ' + this.frequency);
     this.openModal();
-  }
-
-  endStudy(){
-    this._parseData(this.frequency);
   }
 
   /* PARSING DATA */
@@ -153,5 +153,58 @@ export class AddFrequencyPage {
       this.navCtrl.popToRoot();
     }
   }
+
+
+  endStudy(){
+    
+    let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
+    let observation_Time = this.millisToMinutesAndSeconds(observationTime);
+    this.parseData.getData().setObservationTime(observation_Time);
+    let notes = this.parseData.getData().getNotes();
+    let photo = this.parseData.getData().getPhoto();
+
+    if(!notes)
+      this.parseData.getData().setNotes(null);
+    if(!
+      photo)  
+      this.parseData.getData().setPhoto(null);
+
+    this.parseData.getData().setFrequency(this.frequency);
+    this.parseData.setData(this.parseData.getData());
+
+    if(this.time.ticks <= 0){
+      this.parseData.setDataArray(this.parseData.getData()); 
+      this.parser.getRounds().setRoundData(this.parseData.getDataArray());
+      this.parser.getRounds().setRoundEndTime(new Date().getTime())
+      this.parser.setRounds(this.parser.getRounds());
+      this.parser.geAllData().setRoundData(this.parser.getRounds());
+      this.parser.geAllData().setStudyEndTime(new Date().getTime());
+      /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
+      this.parseData.clearDataArray();
+      this.parseData.clearData();
+      this.parser.clearRounds();
+      this.goNext(StudyItemsPage , 'studyItemsPage' );
+    }
+      
+    else{
+
+      if(this.navCtrl.length() <= 12){
+        this.parseData.setDataArray(this.parseData.getData()); 
+        this.parseData.clearData();
+        this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 3)));
+      }  
+      else
+        this.navCtrl.popToRoot(); 
+    }
+  }
+
+  addNotes(){
+    this.navCtrl.push(StudyNotesPage);
+  }
+
+  addPhoto(){
+    this.navCtrl.push(StudyPhotoPage);
+  }
+
 }
 

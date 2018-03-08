@@ -122,8 +122,9 @@ export class StudyPhotoPage {
         console.log("IMAGE RESPONSE: "+ JSON.stringify(response));
         if(response.success){
           this.toast.showToast(FILE_UPLOADED_MESSAGE);
-          this._parseData(response.path);
-          this.goNext();
+          // this._parseData(response.path);
+          // this.goNext();
+          this.goBack(response.path);
         }
         else
           this.toast.showToast(ERROR);
@@ -156,9 +157,17 @@ export class StudyPhotoPage {
     this.parseData.setDataArray(this.parseData.getData());
     console.log("STUDY DATA AT STUDY PHOTO PAGE: \n" + JSON.stringify(this.parseData.getData()));
   }
+
+
+  goBack(imagPath: any){
+    this.parseData.getData().setPhoto(imagPath);
+    this.parseData.setData(this.parseData.getData());
+    this.navCtrl.pop();
+  }
   
   /* GOING TO THE NEXT PAGE */
   goNext() {
+
     this.parseData.clearData();
 
     /* IF TIMER IS FINISHED, WE ARE ENDING THE STUDY AND GOING TO THE PAGE WHERE ALL DATA FOR STUDY ITEMS WILL BE SHOWN */

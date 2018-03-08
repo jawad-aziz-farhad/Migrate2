@@ -83,5 +83,11 @@ export class StudyNotesPage {
     this.parseData.setData(this.parseData.getData());
     console.log("STUDY DATA AT ENTER NOTES PAGE: " + JSON.stringify(this.parseData.getData()));
   }
+
+  add_Notes(){
+    this.parseData.getData().setNotes(this.notes);
+    this.parseData.setData(this.parseData.getData());
+    this.navCtrl.pop();
+  }
   
 }

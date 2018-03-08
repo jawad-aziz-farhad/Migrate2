@@ -37,16 +37,16 @@
 </ion-content>
 
 <ion-footer no-border>
-  <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="addFrequency()">Add Frequency</button>
-  <!-- <ion-row>
+  <!-- <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="addFrequency()">Add Frequency</button> -->
+  <ion-row>
     <ion-col col-4>
-        <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || parseData.getData().getFrequency()" (click)="addFrequency()">End</button> 
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="endStudy()">End</button> 
     </ion-col>
     <ion-col col-4>
-        <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || parseData.getData().getNotes()" (click)="addFrequency()">Add Notes</button> 
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || (parseData.getData() && parseData.getData().getNotes())" (click)="addNotes()">Add Notes</button> 
     </ion-col>
     <ion-col col-4>
-        <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="addFrequency()">Add Photo</button> 
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || (parseData.getData() && parseData.getData().getPhoto())" (click)="addPhoto()">Add Photo</button> 
     </ion-col>
-  </ion-row> -->
+  </ion-row>
 </ion-footer>
