@@ -32,7 +32,7 @@ export class CreateRolePage extends Creation {
               public sql: SqlDbProvider,
               public network: NetworkProvider,
               public formBuilder: FormBuilder) {
-    super(navCtrl, operations,loader,toast,sql,network,storage);              
+    super(navCtrl, navParams, operations,loader,toast,sql,network,storage);              
     this.initView();
   }
 

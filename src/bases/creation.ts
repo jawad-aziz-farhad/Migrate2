@@ -1,8 +1,8 @@
-import { NavController } from 'ionic-angular';
+import { NavController , NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
 import { FormBuilder, FormGroup, FormArray , Validators } from '@angular/forms';
 import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider , SqlDbProvider , Time, NetworkProvider } from '../providers';
-import { MESSAGE, ERROR } from '../config/config';
+import { MESSAGE, ERROR, ENTRY_ALREADY_EXIST } from '../config/config';
 
 export class Creation {
 
@@ -13,8 +13,10 @@ export class Creation {
     protected creationForm: FormGroup;
     protected project: any;
     protected show: boolean;
+    private data: Array<any> = [];
 
     constructor(public navCtrl: NavController,
+                public navParams: NavParams,
                 public operations: OperationsProvider,
                 public loader: LoaderProvider,
                 public toast: ToastProvider,
@@ -25,22 +27,46 @@ export class Creation {
   }
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
-    this.storage.get('currentUser').then(user => {
-      let name = user.firstname + ' ' + user.lastname;
-      let id = user._id;
-      this.creationForm.get('addedBy.name').setValue(name);
-      this.creationForm.get('addedBy._id').setValue(id);
-      this.checkInternet();
-    });
-  }
+  this.storage.get('currentUser').then(user => {
+    let name = user.firstname + ' ' + user.lastname;
+    let id = user._id;
+    this.creationForm.get('addedBy.name').setValue(name);
+    this.creationForm.get('addedBy._id').setValue(id);
+    this.data = this.navParams.get('data');
+    this.checkInternet();
+  });
+}
 
-   /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
+  /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
  checkInternet(){
   if(this.network.isInternetAvailable())
-     this.createEntry();
-  else
-    this.createTable();  
-}  
+    this.createEntry();
+  else{
+    this.checkValue().then(result => {
+      if(result)
+        this.toast.showBottomToast(ENTRY_ALREADY_EXIST);
+      else
+        this.createTable();  ;  
+    }).catch(error => console.error(ERROR));
+   }
+  }
+  /* CHECKING NEW CREATED VALUE IN OFFLINE MODE, IF IT EXISTS, RETURNING TRUE*/  
+  checkValue(){
+    return new Promise((resolve, reject) => {
+      let result = false;
+      this.data.forEach((element,index) => {
+        let _name = this.creationForm.get('name').value;
+        if(this.entryName(element.name) == this.entryName(_name))
+          result = true;
+      });
+      resolve(result);
+    });
+    
+  }
+  
+  entryName(name) {
+    return name.toLowerCase().trim().replace(/ /g, '_');
+  }
       
   /* ADD A NEW ROLE */
   createEntry() {
@@ -50,8 +76,7 @@ setUserInfo() {
       if(res.success)  
         this.dropTable(res);              
       else
-        this.toast.showToast(ERROR);
-      
+        this.toast.showToast(ERROR);      
     },
     error => {
       this.loader.hideLoader();

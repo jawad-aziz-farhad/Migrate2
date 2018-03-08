@@ -18,7 +18,7 @@ import { Selection } from '../../bases';
 export class SelectElementPage extends Selection  {
   
   constructor(navCtrl: NavController,  
-              protected navParams: NavParams,
+              navParams: NavParams,
               time: Time ,
               parseData: ParseDataProvider,
               search: SearchProvider,
@@ -30,7 +30,7 @@ export class SelectElementPage extends Selection  {
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl,time,parseData,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl,navParams,time,parseData,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
   }
 
   ionViewDidLoad() {

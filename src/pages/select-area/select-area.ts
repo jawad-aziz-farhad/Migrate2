@@ -20,7 +20,7 @@ import { Selection } from '../../bases';
  export class SelectAreaPage extends Selection {
   
   constructor(navCtrl: NavController,  
-              public navParams: NavParams,
+              navParams: NavParams,
               time: Time ,
               parseData: ParseDataProvider,
               search: SearchProvider,
@@ -32,7 +32,7 @@ import { Selection } from '../../bases';
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl,time,parseData,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl,navParams, time,parseData,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
   }
 
   ionViewDidLoad() {

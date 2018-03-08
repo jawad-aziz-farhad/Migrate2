@@ -205,6 +205,5 @@ export class AddFrequencyPage {
   addPhoto(){
     this.navCtrl.push(StudyPhotoPage);
   }
-
 }
 

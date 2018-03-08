@@ -1,5 +1,5 @@
 
-import { NavController, MenuController } from 'ionic-angular';
+import { NavController, MenuController, NavParams } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
          OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
 import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../config/config';
@@ -27,6 +27,7 @@ export class Selection {
   private stop: Stop;
 
   constructor(public navCtrl: NavController,
+              public navParams: NavParams,
               public time: Time ,
               public parseData: ParseDataProvider,
               public search: SearchProvider,
@@ -201,7 +202,7 @@ export class Selection {
 
  /* WHEN USER TYPES TO SEARCH */ 
  onSearchInput(): any{
-   if(this.searchInput)
+    if(this.searchInput)
       this.data = this.search.search_Item(this.data, this.searchInput);
     else
       this.data = this.temp;
@@ -251,7 +252,7 @@ export class Selection {
     else if(this.TABLE_NAME == 'Roles')
       component = CreateRolePage;
     
-    this.navCtrl.push(component, {project: this.project});
+    this.navCtrl.push(component, {project: this.project, data: this.temp });
   }
 
   is_Filtering(){

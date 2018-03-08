@@ -35,7 +35,7 @@ export class CreateElementPage extends Creation {
               public network: NetworkProvider,
               public storage: Storage,
               public formBuilder: FormBuilder) {
-    super(navCtrl, operations,loader,toast,sql,network,storage);            
+    super(navCtrl, navParams, operations,loader,toast,sql,network,storage);            
     this.initView();        
   }
 
