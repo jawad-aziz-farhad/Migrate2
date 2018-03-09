@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, ModalController,  NavParams } from 'ionic-angular';
+import { IonicPage, NavController, ModalController } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthProvider , ToastProvider, LoaderProvider, OperationsProvider , NetworkProvider } from '../../providers/index';
 import { EMAIL_REGEXP, MESSAGE, ERROR, INTERNET_ERROR } from '../../config/config';

@@ -3,8 +3,7 @@ import { IonicPage, NavController, NavParams , ModalController} from 'ionic-angu
 import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider } from '../../providers';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { SubmitDataProgressPage } from  '../submit-data-progress/submit-data-progress';
-import { ALERT_TITLE , REMOVING_STUDY_ITEMS_MSG, ROUND_ENDED, STUDY_ENDED } from '../../config/config'
-import { SelectRolePage } from '../select-role/select-role';
+import { ROUND_ENDED, STUDY_ENDED } from '../../config/config'
 /**
  * 
  * Generated class for the StudyItemsPage page.
@@ -26,8 +25,7 @@ export class StudyItemsPage implements OnInit {
   public temp: any;
   public itemsSelected: any;
   public totalItemsSelected: number;
-  private totalItems: number = 0;
-
+  
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public parseData: ParseDataProvider,

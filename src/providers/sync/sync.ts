@@ -1,16 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ModalController } from 'ionic-angular';
 import { SqlDbProvider , FormBuilderProvider , OperationsProvider, ParseDataProvider, ParserProvider, LoaderProvider } from '../index';
-import { SERVER_URL, ERROR, MESSAGE } from '../../config/config';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeWhile';
-import { merge } from 'rxjs/operator/merge';
-import { combineLatest } from 'rxjs/observable/combineLatest';
-import { Storage } from '@ionic/storage';
-import { StudyData, Rounds, AllStudyData } from '../../models';
-import { TimerObservable } from 'rxjs/observable/TimerObservable';
-import { interval } from 'rxjs/observable/interval';
+import { StudyData } from '../../models';
 /*
   Generated class for the SyncProvider provider.
 
@@ -81,7 +74,7 @@ export class Sync {
         
         result.forEach((element,index) => {
 
-          const request = this.formBuilder.initFormForOfflineData(element);
+          this.formBuilder.initFormForOfflineData(element);
           const data = this.formBuilder.getFormForOfflineData().value;
           
           if(element.position)
@@ -403,7 +396,7 @@ export class Sync {
     offlinedataObj.locationID = element.locationID;
     this.offlineData$.push(offlinedataObj);
 
-    let rounds = this.buildRoundsData(study_data);
+    this.buildRoundsData(study_data);
 
   }
 

@@ -1,4 +1,4 @@
-import { StudyData, Rounds } from "./index";
+import { Rounds } from "./index";
 
 export class AllStudyData {
 

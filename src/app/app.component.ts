@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform , ModalController, NavController, MenuController } from 'ionic-angular';
+import { Nav, Platform , ModalController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
@@ -8,9 +8,7 @@ import { ScreenOrientation } from '@ionic-native/screen-orientation';
 /* PAGES */
 import { LoginPage } from '../pages/login/login';
 import { ProjectsPage } from '../pages/projects/projects';
-import { ProfilePage } from '../pages/profile/profile';
 import { OfflineStudyDataPage } from '../pages/offline-study-data/offline-study-data';
-import { AboutPage } from '../pages/about/about';
 import { ReportProblemPage } from '../pages/report-problem/report-problem';
 import { HelpPage } from '../pages/help/help';
 import { SettingsPage } from '../pages/settings/settings';
@@ -70,8 +68,8 @@ export class MyApp {
 
   /* REGISTERING BACK BUTTON TO HANDLE HARDWARE BUTTON CLICKED */
   registerBackButton(){
-    let backButton = this.platform.registerBackButtonAction(() => {
-      var stackSize = this.nav.length();
+    this.platform.registerBackButtonAction(() => {
+      const stackSize = this.nav.length();
       if(stackSize <= 1)
         this.askForPressAgain();
       if(stackSize < 4)
@@ -171,8 +169,7 @@ export class MyApp {
   /* GETTING PROFILE IMAGE */
   getProfileImage(){    
     if(typeof this.user.userimage !== 'undefined' && this.user.userimage !== null && this.user.userimage !== ''){
-        var image = this.user.userimage.split('/profile_images')[1];
-        var imagePath = SERVER_URL + 'assets/profile_images/' + this.user.userimage.split('/profile_images')[1];
+        let imagePath = SERVER_URL + 'assets/profile_images/' + this.user.userimage.split('/profile_images')[1];
         return imagePath;
     }
     else
@@ -182,11 +179,11 @@ export class MyApp {
   /* CHECKING INTERNET CONNECTION */
   checkingInternetConnection() {
     
-    let disconnectSub = this._network.onDisconnect().subscribe(() => {
+    this._network.onDisconnect().subscribe(() => {
       console.log('you are offline');
     });
     
-    let connectSub = this._network.onConnect().subscribe(()=> {
+    this._network.onConnect().subscribe(()=> {
       console.log('you are online now');
       let token = localStorage.getItem('TOKEN');
       if(token){
@@ -197,6 +194,5 @@ export class MyApp {
         console.log('User is not logged in.');
     });
   }
-
 }
 

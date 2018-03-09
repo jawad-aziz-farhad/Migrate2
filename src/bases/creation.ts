@@ -1,7 +1,7 @@
 import { NavController , NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
-import { FormBuilder, FormGroup, FormArray , Validators } from '@angular/forms';
-import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider , SqlDbProvider , Time, NetworkProvider } from '../providers';
+import { FormGroup, FormArray } from '@angular/forms';
+import { OperationsProvider , LoaderProvider , ToastProvider , SqlDbProvider , NetworkProvider } from '../providers';
 import { MESSAGE, ERROR, ENTRY_ALREADY_EXIST } from '../config/config';
 
 export class Creation {
@@ -141,7 +141,7 @@ setUserInfo() {
     let username = this.creationForm.get('addedBy.name').value;
     let userid   = this.creationForm.get('addedBy._id').value;
     let date     = this.creationForm.get('addedBy.date').value;
-    let _id = null; let rating = null; let offlineTypes = null;
+    let _id = null; let rating = null; 
     let userAdded = null; let category = null;let type  = null;
     let position = null; let efficiency_study = 0; 
     let activity_study = 0; let role_study = 0;

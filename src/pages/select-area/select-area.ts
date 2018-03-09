@@ -1,9 +1,8 @@
-import { Component , ViewChild } from '@angular/core';
+import { Component  } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { SelectElementPage } from '../select-element/select-element';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
         OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider} from '../../providers';
-import { CreateAreaPage } from '../create-area/create-area';
 import { Selection } from '../../bases';
 /**
  * Generated class for the SelectAreaPage page.

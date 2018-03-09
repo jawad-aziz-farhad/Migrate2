@@ -18,11 +18,9 @@ import { ResetsuccessPage } from '../pages/resetsuccess/resetsuccess';
 import { CreateElementPage } from '../pages/create-element/create-element';
 import { CreateRolePage } from '../pages/create-role/create-role';
 import { CreateAreaPage } from '../pages/create-area/create-area';
-import { DatasubmitPage } from '../pages/datasubmit/datasubmit';
 import { AreasPage } from '../pages/areas/areas';
 import { AreaDetailPage } from '../pages/area-detail/area-detail';
 import { ProjectsPage } from '../pages/projects/projects';
-import { ProfilePage } from '../pages/profile/profile';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { SelectAreaPage } from '../pages/select-area/select-area';
 import { SelectElementPage } from '../pages/select-element/select-element';
@@ -30,7 +28,6 @@ import { SelectRolePage } from '../pages/select-role/select-role';
 import { RatingsPage } from '../pages/ratings/ratings';
 import { EnterRatingPage } from '../pages/enter-rating/enter-rating';
 import { StudyNotesPage } from '../pages/study-notes/study-notes';
-import { StudyOptionsPage } from '../pages/study-options/study-options';
 import { StudyPhotoPage } from '../pages/study-photo/study-photo';
 import { AddFrequencyPage} from '../pages/add-frequency/add-frequency';
 import { ObservationSummaryPage } from '../pages/observation-summary/observation-summary';
@@ -55,6 +52,11 @@ import { OperationsProvider } from '../providers/operations/operations';
 import { ParseDataProvider } from '../providers/parse-data/parse-data';
 import { NetworkProvider } from '../providers/network/network';
 import { Time } from '../providers/time/time';
+import { SearchProvider } from '../providers/search/search';
+import { SqlDbProvider } from '../providers/sql-db/sql-db';
+import { FormBuilderProvider } from '../providers/form-builder/form-builder';
+import { ParserProvider } from '../providers/parser/parser';
+import { Sync } from '../providers/sync/sync';
 
 import { JwtHelper, AuthConfig, AuthHttp } from "angular2-jwt";
 import { CustomFormsModule } from 'ng2-validation'
@@ -67,18 +69,11 @@ import { Deeplinks } from '@ionic-native/deeplinks';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { FilePath } from '@ionic-native/file-path';
-import { FileTransfer, FileUploadOptions, FileTransferObject, } from '@ionic-native/file-transfer';
-import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { FileTransfer, FileTransferObject, } from '@ionic-native/file-transfer';
+import { SQLite } from '@ionic-native/sqlite';
 import { Network } from '@ionic-native/network';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
-/*COMPONENTS */
-import { TimerComponent } from '../components/timer/timer';
-import { SearchProvider } from '../providers/search/search';
-import { SqlDbProvider } from '../providers/sql-db/sql-db';
-import { FormBuilderProvider } from '../providers/form-builder/form-builder';
-import { ParserProvider } from '../providers/parser/parser';
-import { Sync } from '../providers/sync/sync';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions, storage: Storage) {
   const authConfig = new AuthConfig({
@@ -92,8 +87,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     MyApp,
     LoginPage,
     ResetpassPage,
-    ResetsuccessPage,
-    DatasubmitPage,    
+    ResetsuccessPage,  
     CreateAreaPage,
     CreateElementPage,
     CreateRolePage,
@@ -142,7 +136,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     LoginPage,
     ResetpassPage,
     ResetsuccessPage,
-    DatasubmitPage,
     CreateAreaPage,
     CreateElementPage,
     CreateRolePage,

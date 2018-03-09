@@ -1,5 +1,5 @@
 import { Component , Input } from '@angular/core';
-import { NavController, MenuController} from 'ionic-angular';
+import { NavController} from 'ionic-angular';
 import { AlertProvider, Time } from '../../providers';
 import { Stop } from '../../bases';
 /**

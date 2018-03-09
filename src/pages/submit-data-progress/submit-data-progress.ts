@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ProgressHttp } from "angular-progress-http";
-import { FormBuilder, FormGroup, FormArray ,Validators } from '@angular/forms';
+import { FormBuilder, FormGroup  } from '@angular/forms';
 import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , ParserProvider} from '../../providers';
-import { SERVER_URL , ERROR, OFFLINE_STUDY_DATA_MSG } from '../../config/config';
-import { ProjectsPage } from '../projects/projects';
-import { AreasPage } from '../areas/areas';
+import { SERVER_URL , ERROR } from '../../config/config';
 import { Storage } from '@ionic/storage';
 
 /**
@@ -163,7 +161,6 @@ getAllData(){
 go(value: string) {
     this.parseData.clearDataArray();
     this.parseData.clearData();
-    const index = this.viewCtrl.index;
     if(value == 'projects')
         this.navCtrl.popToRoot();
     else

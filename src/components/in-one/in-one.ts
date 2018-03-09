@@ -1,5 +1,4 @@
 import { Component , Input, Output , EventEmitter , OnInit } from '@angular/core';
-import { Time } from '../../providers';
 
 /**
  * Generated class for the 3InOneComponent component.
@@ -25,7 +24,7 @@ export class InOneComponent implements OnInit {
   private filter: any;
   private order: any;
   
-  constructor(private time: Time) {
+  constructor() {
     this._temp = {};
   }
 

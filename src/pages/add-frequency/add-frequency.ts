@@ -1,12 +1,9 @@
-import { Component , ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
 import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , ParserProvider } from '../../providers';
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { StudyItemsPage } from '../study-items/study-items';
-import { importExpr } from '@angular/compiler/src/output/output_ast';
-import { SelectRolePage } from '../select-role/select-role';
-import { Rounds } from '../../models/index';
 import { FREQUENCY_INPUT_ERROR } from '../../config/config';
 /**
  * Generated class for the AddFrequencyPage page.
@@ -59,7 +56,6 @@ export class AddFrequencyPage {
 
   /* REMOVING ENTERED FREQUENCY */ 
   removeFrequency(){
-    const length = this.frequency.length - 1;
     this.frequency = this.frequency.slice(0, this.frequency.length -1 );
   }
 

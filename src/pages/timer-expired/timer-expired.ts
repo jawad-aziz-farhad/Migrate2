@@ -1,6 +1,6 @@
-import { Component, ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, ViewController} from 'ionic-angular';
-import { Time , ParserProvider  } from '../../providers';
+import {  ParserProvider  } from '../../providers';
 /**
  * Generated class for the TimerExpiredPage page.
  *

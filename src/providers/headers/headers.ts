@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Headers, RequestOptions } from '@angular/http';
-import { Storage } from "@ionic/storage";
 
 /*
   Generated class for the HeadersProvider provider.
@@ -11,7 +10,7 @@ import { Storage } from "@ionic/storage";
 @Injectable()
 export class HeadersProvider {
 
-  constructor(private storage: Storage) {
+  constructor() {
     console.log('Hello HeadersProvider Provider');
   }
 

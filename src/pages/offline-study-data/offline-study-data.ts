@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { NetworkProvider , SqlDbProvider  , LoaderProvider ,  ToastProvider, Sync } from "../../providers/index";
-import { SYNC_DONE , MESSAGE , SYNC_DATA_MSG, ERROR, INTERNET_ERROR } from '../../config/config';
+import { SYNC_DONE , MESSAGE } from '../../config/config';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { Observable } from 'rxjs';
 

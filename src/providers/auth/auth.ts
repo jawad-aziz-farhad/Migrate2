@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Http , Headers, RequestOptions, Response } from '@angular/http';
+import { Http , Response } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { ReplaySubject, Observable } from "rxjs";
 import { Storage } from "@ionic/storage";
-import { JwtHelper, AuthHttp } from "angular2-jwt";
+import { JwtHelper } from "angular2-jwt";
 import { SERVER_URL } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 /*
@@ -20,7 +20,6 @@ export class AuthProvider {
   public authUser = new ReplaySubject<any>(1);
   
   constructor(private readonly http: Http, 
-              private readonly authHttp: AuthHttp,
               private readonly storage: Storage,
               private readonly jwtHelper: JwtHelper,
               private readonly headersProvider: HeadersProvider) {

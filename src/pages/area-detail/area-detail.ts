@@ -4,7 +4,7 @@ import { SelectRolePage } from '../select-role/select-role';
 import { Time } from '../../providers/time/time';
 import { StudyData } from '../../models';
 import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider  } from '../../providers';
-import { SERVER_URL , ERROR , MESSAGE, INTERNET_ERROR } from '../../config/config';
+import { SERVER_URL  } from '../../config/config';
 /**
  * Generated class for the AreaDetailPage page.
  *

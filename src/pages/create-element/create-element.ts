@@ -1,6 +1,6 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { FormBuilder, FormGroup, Validators , FormControl, FormArray } from '@angular/forms';
+import { FormBuilder,  Validators , FormControl, FormArray } from '@angular/forms';
 import { Storage } from "@ionic/storage";
 import { OperationsProvider , LoaderProvider , AuthProvider, ToastProvider, SqlDbProvider , NetworkProvider} from '../../providers';
 import { Creation } from '../../bases/creation';

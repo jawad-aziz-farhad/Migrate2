@@ -2,7 +2,7 @@
 import { NavController, MenuController, NavParams } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
          OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
-import { ERROR , MESSAGE, INTERNET_ERROR, ALERT_TITLE, STUDY_CANCELING_MESSAGE } from '../config/config';
+import { MESSAGE, INTERNET_ERROR } from '../config/config';
 import { StudyData } from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateElementPage } from '../pages/create-element/create-element';

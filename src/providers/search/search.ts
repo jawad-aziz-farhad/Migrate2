@@ -1,7 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
-import { DummyData } from '../../models';
 /*
   Generated class for the SearchProvider provider.
 
@@ -11,7 +8,7 @@ import { DummyData } from '../../models';
 @Injectable()
 export class SearchProvider {
 
-  constructor(public http: Http) {
+  constructor() {
     console.log('Hello SearchProvider Provider');
   }
 

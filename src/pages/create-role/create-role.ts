@@ -1,10 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { Storage } from "@ionic/storage";
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { OperationsProvider , AuthProvider , LoaderProvider , ToastProvider, SqlDbProvider,  NetworkProvider } from '../../providers';
-import { MESSAGE, ERROR } from '../../config/config';
-import { Network } from '@ionic-native/network';
 import { Creation } from '../../bases/creation';
 /**
  * Generated class for the CreateRolePage page.

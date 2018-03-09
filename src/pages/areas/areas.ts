@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams , MenuController } from 'ionic-angu
 import { AreaDetailPage } from '../area-detail/area-detail';
 import { Time , ParseDataProvider, SearchProvider, ToastProvider, FormBuilderProvider,
          AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
-import { MESSAGE , SERVER_URL , INTERNET_ERROR} from '../../config/config';
+import { SERVER_URL } from '../../config/config';
 import { Selection } from '../../bases';
 /**
  * Generated class for the AreasPage page.

@@ -5,12 +5,11 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/mergeMap';
 import { Observable } from "rxjs";
-import { forkJoin } from "rxjs/observable/forkJoin";
 import { SERVER_URL , ENTRY_ALREADY_EXIST , SESSION_EXPIRED, ERROR } from '../../config/config';
 import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer';
+import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 /*
   Generated class for the OperationsProvider provider.
 
@@ -31,7 +30,6 @@ export class OperationsProvider {
   }
   
   getdata(){
-    let res = []; let requests = [];
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
     return this.http.post(`${URL}`, null ,{ headers: headers }).catch(this.catchError)
@@ -76,7 +74,7 @@ export class OperationsProvider {
 
   forkJoin(project){
     
-    let requests = []; let request = null; let data = null;
+    let requests = []; let request = null;
     
     request = this.postRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
     requests.push(request);
@@ -155,7 +153,6 @@ export class OperationsProvider {
     
     filename = filename.split("?");
     filename = filename[0];
-    let headers = this.headers.getHeaders();
     
     let options = {
       fileKey: 'photo',

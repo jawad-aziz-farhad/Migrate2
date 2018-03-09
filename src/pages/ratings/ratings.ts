@@ -1,9 +1,8 @@
-import { Component , ViewChild , Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EnterRatingPage} from '../enter-rating/enter-rating';
 import { AddFrequencyPage} from '../add-frequency/add-frequency';
 import { Time , OperationsProvider , ParseDataProvider } from '../../providers';
-import { StudyData , DummyData} from '../../models';
 /**
  * Generated class for the RatingsPage page.
  *

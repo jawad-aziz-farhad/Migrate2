@@ -1,8 +1,7 @@
-import { Component , ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { AddFrequencyPage} from '../add-frequency/add-frequency';
 import { Time , OperationsProvider , ParseDataProvider} from '../../providers';
-import { StudyData } from '../../models';
 import { FREQUENCY_INPUT_ERROR } from '../../config/config';
 /**
  * Generated class for the EnterRatingPage page.
@@ -50,7 +49,6 @@ export class EnterRatingPage {
 
   /* REMOVING ENTERED RATING */ 
   removeRatings(){
-    const length = this.rating.length - 1;
     this.rating = this.rating.slice(0, this.rating.length -1 );
   }
 

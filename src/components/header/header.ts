@@ -1,16 +1,11 @@
-import { Component , Input, ViewChild } from '@angular/core';
+import { Component , Input } from '@angular/core';
 import { ModalController, NavController, MenuController } from 'ionic-angular';
-import { Storage } from "@ionic/storage";
 import { SERVER_URL, ERROR } from '../../config/config';
-import { Observable } from 'rxjs';
-import { ProfilePage } from '../../pages/profile/profile';
 import { NetworkProvider , AlertProvider , Time} from '../../providers';
 import { PopoverController } from 'ionic-angular';
 import { PopOverPage } from '../../pages/pop-over/pop-over';
 import { TermsOfServicesPage } from '../../pages/terms-of-services/terms-of-services';
-import { VersionInfoPage } from '../../pages/version-info/version-info';
 import { PrivacyPolicyPage } from '../../pages/privacy-policy/privacy-policy';
-import { AlertOptions } from 'ionic-angular/components/alert/alert-options';
 /**
  * Generated class for the HeaderComponent component.
  *

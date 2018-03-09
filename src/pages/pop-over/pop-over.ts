@@ -1,6 +1,5 @@
 import { Component , } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController  } from 'ionic-angular';
-import { ViewContainerData } from '@angular/core/src/view';
 
 /**
  * Generated class for the PopOverPage page.

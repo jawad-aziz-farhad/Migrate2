@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { StudyData , AllStudyData} from '../../models';
-import { Observable } from 'rxjs';
 /*
   Generated class for the ParseDataProvider provider.
 

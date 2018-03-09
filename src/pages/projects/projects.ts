@@ -1,16 +1,13 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams  } from 'ionic-angular';
 import { AuthProvider , OperationsProvider , ToastProvider, LoaderProvider, SqlDbProvider, NetworkProvider, FormBuilderProvider , HeadersProvider} from '../../providers/index';
-import { SERVER_URL, MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR} from '../../config/config';
+import {  MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR} from '../../config/config';
 import { Storage } from "@ionic/storage";
 import { AreasPage } from '../areas/areas';
-import { Projects, IDs } from '../../models';
-import { importExpr } from '@angular/compiler/src/output/output_ast';
+import { Projects } from '../../models';
 import { Observable } from 'rxjs/Observable';
-import { FormBuilder } from '@angular/forms/src/form_builder';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { forkJoin } from "rxjs/observable/forkJoin";
 /**
  * Generated class for the ProjectsPage page.
  *
@@ -44,8 +41,6 @@ export class ProjectsPage {
   private TABLE_NAME_8: string = 'Locations_IDs';
   private TABLE_NAME_9: string = 'Categories';
 
-
-  private all_data: Array<any> = [];
   
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,

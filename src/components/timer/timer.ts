@@ -1,5 +1,4 @@
-import { Component , Input, EventEmitter , OnInit, OnDestroy } from '@angular/core';
-import { NavController, ModalController,  NavParams } from 'ionic-angular';
+import { Component } from '@angular/core';
 import { Time } from '../../providers';
 /**
  * Generated class for the TimerComponent component.
@@ -13,8 +12,7 @@ import { Time } from '../../providers';
 })
 export class TimerComponent {
   
-    constructor(private modalCtrl: ModalController,
-                private time: Time) {
+    constructor(private time: Time) {
     }
 
     private getSeconds(ticks: number) {

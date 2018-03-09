@@ -58,7 +58,7 @@ export class EditTitlePage {
 
   updateName(){
     this.data.name = this.studyTitle;
-    const request  = this.formBuilder.initFormForOfflineData(this.data);
+    this.formBuilder.initFormForOfflineData(this.data);
     const data     = this.formBuilder.getFormForOfflineData().value;
     this.operations.offlineRequest(this.getEndPoint(), data).subscribe(result => {
       if(result.success){
