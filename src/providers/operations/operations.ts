@@ -80,7 +80,7 @@ export class OperationsProvider {
        request = this.postRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
        requests.push(request);
        
-       request = this.postRequest('locations/getByIDs',{ids: this.checkRequestData(project.locations)});
+       request = this.postRequest('locations/getByProjectID',{projectID: this.checkRequestData(project._id)});
        requests.push(request);
        
        request = this.postRequest('areas/getByProjectID',{projectID: this.checkRequestData(project._id)});

@@ -33,8 +33,8 @@ export class AreasPage extends Selection {
               public alert: AlertProvider,
               public formBuilder: FormBuilderProvider,
               ) {
-      super(navCtrl,time,parseData,search,loader,operations,sql,network,alert,formBuilder,menuCtrl,toast);         
-      this.initView();         
+    super(navCtrl,navParams,time,parseData,search,loader,operations,sql,network,alert,formBuilder,menuCtrl,toast);         
+    this.initView();         
   }
 
   ionViewDidLoad() {

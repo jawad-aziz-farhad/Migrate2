@@ -75,7 +75,7 @@ export class SqlDbProvider {
   dataforRow(table, data, index){
       let _data = [];
       if(table == 'Projects')
-        _data = [data[index]._id, data[index].name, this.isValueAvailable(data[index].customer.image), null , data[index].customer._id , data[index].customer.name];      
+        _data = [data[index]._id, data[index].name, this.isValueAvailable(data[index].customer.image), null , data[index].customer._id , data[index].customer.name, data[index].rating];      
       else if(table == 'Locations')
         _data = [data[index]._id , data[index].projectID,  data[index].customerID , data[index].name, data[index].addressOne, data[index].addressTwo, data[index].addressThree, data[index].addressFour, null, data[index].contactName, data[index].telephone,
                 data[index].schedule[0].openingHour + ' - ' + data[index].schedule[0].openingMinute + ' ' + data[index].schedule[0].openingTimeFormat,
@@ -149,7 +149,7 @@ export class SqlDbProvider {
   createTable(table): Promise<any> {
       let query = '';
       if(table == 'Projects')
-        query = 'CREATE TABLE IF NOT EXISTS Projects(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT , name TEXT,logo TEXT,headoffice TEXT, customer_id TEXT, customer_name TEXT)';
+        query = 'CREATE TABLE IF NOT EXISTS Projects(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT , name TEXT,logo TEXT,headoffice TEXT, customer_id TEXT, customer_name TEXT, rating NUMBER)';
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, projectID TEXT, _id TEXT)';
       else if(table == 'Locations')
@@ -179,7 +179,7 @@ export class SqlDbProvider {
   insertQuery(table): string {
     let query = '';
     if(table == 'Projects')
-      query = 'INSERT INTO Projects (_id, name, logo, headoffice, customer_id, customer_name) VALUES (? , ? , ? , ?, ?, ?)';
+      query = 'INSERT INTO Projects (_id, name, logo, headoffice, customer_id, customer_name, rating) VALUES (? , ? , ? , ? , ?, ?, ?)';
     else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs' || table == 'Locations_IDs')
       query = 'INSERT INTO ' + table + '(projectID , _id) VALUES (?, ?)';
     else if(table == 'Locations')
@@ -270,7 +270,7 @@ export class SqlDbProvider {
     let data = [];
     for (let i = 0; i < result.rows.length; i++) {
           if(table == 'Projects')
-            data.push(new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name ));
+            data.push(new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name , result.rows.item(i).rating));
           else if(table == 'Locations')
             data.push({_id: result.rows.item(i)._id, projectID: result.rows.item(i).projectID, customer_id: result.rows.item(i).customer_id,locationname: result.rows.item(i).locationname , addresslineone : result.rows.item(i).addresslineone, addresslinetwo: result.rows.item(i).addresslinetwo ,  
                        addresslinethree: result.rows.item(i).addresslinethree,addresslinefour: result.rows.item(i).addresslinefour ,addresslinefive: result.rows.item(i).addresslinefive , contactname: result.rows.item(i).contactname, telephone: result.rows.item(i).telephone,
@@ -354,7 +354,7 @@ export class SqlDbProvider {
             data.push({ id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime,
                         roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area ,element: result.rows.item(i).element , 
                         rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, 
-                        customer: new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name )
+                        customer: new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name, result.rows.item(i).rating )
             });    
           }
         }

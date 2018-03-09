@@ -165,21 +165,40 @@ export class Selection {
   goNext() {
     
     if(this.TABLE_NAME == 'Elements'){
-        if(this._temp.rating == null || this._temp.rating == 3)
-            this.nextComponent =  RatingsPage ;
+
+      if(this.project.rating == 2 || this._temp.rating == 1 || this._temp.rating == 2){
+        let rating = null
+        /* IF SELECTED ELEMENT HAS RATING OF 1 */
+        if(this._temp.rating == 1)
+          rating = 'Not Rated';
+        /* IF SELECTED ELEMENT OR PROJECT HAS RATING 2 */
+        else
+          rating = 100;  
+        this.parseData.getData().setRating(rating);
+        this.parseData.setData(this.parseData.getData());
+        this.nextComponent = AddFrequencyPage;
+      }
+
+      else
+        this.nextComponent =  RatingsPage ;
+
+
+
+        // if(this._temp.rating == null || this._temp.rating == 3)
+        //     this.nextComponent =  RatingsPage ;
         
-        else{
-          console.log("RATING OF SELECTED ELEMENT: \n" + JSON.stringify(this.temp));
-          /* SETTING RATING VALUE AND SKIPPING RATINGS PAGE */
-          let rating = null
-          if(this._temp.rating == 1)
-            rating = 'Not Rated';
-          else if(this._temp.rating == 2)
-            rating = 100;  
-          this.parseData.getData().setRating(rating);
-          this.parseData.setData(this.parseData.getData());
-          this.nextComponent = AddFrequencyPage;
-        }
+        // else{
+        //   console.log("RATING OF SELECTED ELEMENT: \n" + JSON.stringify(this.temp));
+        //   /* SETTING RATING VALUE AND SKIPPING RATINGS PAGE */
+        //   let rating = null
+        //   if(this._temp.rating == 1)
+        //     rating = 'Not Rated';
+        //   else if(this._temp.rating == 2)
+        //     rating = 100;  
+        //   this.parseData.getData().setRating(rating);
+        //   this.parseData.setData(this.parseData.getData());
+        //   this.nextComponent = AddFrequencyPage;
+        // }
       }
 
     this.navCtrl.push(this.nextComponent, { project: this.project});

@@ -78,7 +78,7 @@ export class ProjectsPage {
       if(ready)
         this.sql.getAllData(this.TABLE_NAME).then(result => {
           
-          if(result.length == 0 || typeof result == 'undefined' || result == null){
+          if(result.length == 0){
             if(!this.network.isInternetAvailable())
               this.toast.showToast(INTERNET_ERROR);
             else
@@ -217,6 +217,7 @@ export class ProjectsPage {
 
   /* POPULATING DATA */
   populateData(data){
+    console.log("PROJECTS RESULT: "+ JSON.stringify(data));
     this.projects = data;
     this.show = true;
   }

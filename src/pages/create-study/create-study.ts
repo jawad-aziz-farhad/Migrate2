@@ -60,5 +60,4 @@ export class CreateStudyPage {
     this.viewCtrl.dismiss(data);
   }
 
-
 }
