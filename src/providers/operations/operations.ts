@@ -55,7 +55,7 @@ export class OperationsProvider {
               });
 
                 res[index].customer = result[0];
-                res[index].customer_locations = result[1].result;
+                res[index].customer_locations = result[1];
                 res[index].areas_data = result[2];
                 res[index].elements_data = result[3];
                 res[index].roles_data = result[4];
@@ -75,24 +75,25 @@ export class OperationsProvider {
   }
 
   forkJoin(project){
-       let requests = []; let request = null; let data = null;
-       
-       request = this.postRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
-       requests.push(request);
-       
-       request = this.postRequest('locations/getByProjectID',{projectID: this.checkRequestData(project._id)});
-       requests.push(request);
-       
-       request = this.postRequest('areas/getByProjectID',{projectID: this.checkRequestData(project._id)});
-       requests.push(request);
-      
-       request = this.postRequest('elements/getByProjectID',{projectID: this.checkRequestData(project._id)});
-       requests.push(request);
+    
+    let requests = []; let request = null; let data = null;
+    
+    request = this.postRequest('customers/getByID',{id: this.checkRequestData(project.customer)});
+    requests.push(request);
+    
+    request = this.postRequest('locations/getByProjectID',{projectID: this.checkRequestData(project._id)});
+    requests.push(request);
+    
+    request = this.postRequest('areas/getByProjectID',{projectID: this.checkRequestData(project._id)});
+    requests.push(request);
+  
+    request = this.postRequest('elements/getByProjectID',{projectID: this.checkRequestData(project._id)});
+    requests.push(request);
 
-       request = this.postRequest('roles/getByProjectID',{projectID: this.checkRequestData(project._id)});
-       requests.push(request);
-      
-       return Observable.forkJoin(requests);
+    request = this.postRequest('roles/getByProjectID',{projectID: this.checkRequestData(project._id)});
+    requests.push(request);
+  
+    return Observable.forkJoin(requests);
   }
 
   postRequest(endPoint, data){
