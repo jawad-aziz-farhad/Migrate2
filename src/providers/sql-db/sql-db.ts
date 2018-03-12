@@ -225,11 +225,20 @@ export class SqlDbProvider {
    else if(table == 'Study_Data')
       query = "SELECT * FROM " + `${table}` + " WHERE Study_Id=?";
     else if(table == 'OfflineElement'){
+      
+      if(id.indexOf('element') > -1 )
+      table = 'Create_Element';
+    else  
       table = 'Elements';
+     
       query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
     }     
     else if(table == 'OfflineArea'){
-      table = 'Areas';
+
+      if(id.indexOf('area') > -1 )
+        table = 'Create_Area';
+      else  
+        table = 'Areas';
       query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
     }      
    else

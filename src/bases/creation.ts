@@ -39,7 +39,7 @@ setUserInfo() {
 
   /* CHECKING INTERNET AVAILABILITY, IF NOT AVAILABLE ,SAVING DATA LOCALLY */
  checkInternet(){
-  if(this.network.isInternetAvailable())
+  if(!this.network.isInternetAvailable())
     this.createEntry();
   else{
     this.checkValue().then(result => {
@@ -127,7 +127,7 @@ setUserInfo() {
     });
   }
 
-  /* ADDING NEWLY CREATED TABLE_NAME  */
+  /* ADDING NEWLY CREATED ELEMENT TO AREA/ELEMENT/ROLE TABLE  */
   addEntry(){
     this.sql.addData(this.TABLE_NAME,this.getData()).then(result => {
       this.goBack();
@@ -137,6 +137,7 @@ setUserInfo() {
   }
 
   getData(): Array<any> {
+
     let name     = this.creationForm.get('name').value;
     let username = this.creationForm.get('addedBy.name').value;
     let userid   = this.creationForm.get('addedBy._id').value;

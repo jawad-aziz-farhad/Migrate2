@@ -6,6 +6,7 @@ import { PopoverController } from 'ionic-angular';
 import { PopOverPage } from '../../pages/pop-over/pop-over';
 import { TermsOfServicesPage } from '../../pages/terms-of-services/terms-of-services';
 import { PrivacyPolicyPage } from '../../pages/privacy-policy/privacy-policy';
+import { Storage } from '@ionic/storage';
 /**
  * Generated class for the HeaderComponent component.
  *

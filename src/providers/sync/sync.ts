@@ -4,6 +4,7 @@ import { SqlDbProvider , FormBuilderProvider , OperationsProvider, ParseDataProv
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 import { StudyData } from '../../models';
+import { Storage } from '@ionic/storage';
 /*
   Generated class for the SyncProvider provider.
 

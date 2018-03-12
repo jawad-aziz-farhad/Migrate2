@@ -20,7 +20,7 @@ export class AuthProvider {
   public authUser = new ReplaySubject<any>(1);
   
   constructor(private readonly http: Http, 
-              private readonly storage: Storage,
+              private storage: Storage,
               private readonly jwtHelper: JwtHelper,
               private readonly headersProvider: HeadersProvider) {
   }

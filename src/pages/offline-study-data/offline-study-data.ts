@@ -51,7 +51,6 @@ export class OfflineStudyDataPage {
   /* GETTING OFFLINE DATA AND SYNCING IT TO THE SERVER */
   getStudies(){
     this.sql.getAllData(this.TABLE_NAME).then(result => {
-      console.log("STUDIES: "+JSON.stringify(result));
       if(result && result.length > 0){
         this.getStudyData(result);
       }
@@ -63,31 +62,34 @@ export class OfflineStudyDataPage {
   }
 
   getStudyData(data){
+
     let studies = [];
+    
     data.forEach((element,index) => {
       let study = this.sql.getIDData(this.TABLE_NAME_1, element.id);
       studies.push(study);
     });
 
     const fetch = Observable.forkJoin(studies);
-    fetch.subscribe((result: any) => {
-    
+
+    fetch.subscribe((result: any) => {    
       result.forEach((element, index) => {
-          if(element.length > 0){
-            element.forEach((sub_element, sub_index) => {
-              sub_element.studyStartTime = data[index].studyStartTime;
-              sub_element.title = data[index].title;
-              this.items.push(sub_element);
-            });
-          }
-          if(index == (result.length - 1))
-            this.getElements();
-        });
+        if(element.length > 0){
+          element.forEach((sub_element, sub_index) => {
+            sub_element.studyStartTime = data[index].studyStartTime;
+            sub_element.title = data[index].title;
+            this.items.push(sub_element);
+          });
+        }
+        if(index == (result.length - 1))
+          this.getElements();
+      });
     });
   }
 
   /* GETTING ELEMENT NAME AND NUMERIC ID  */
   getElements(){
+
     let elements = [];
 
     this.items.forEach((element, index) => {
@@ -122,6 +124,7 @@ export class OfflineStudyDataPage {
 
     request.subscribe((result: any) => {
       result.forEach((element, index) => {
+       
         if(element.length > 0){
           this.items[index].area = element[0].name;
         }
@@ -129,6 +132,8 @@ export class OfflineStudyDataPage {
           this.show = true;
       });
     });
+
+    
     
   }
 

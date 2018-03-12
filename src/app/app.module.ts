@@ -74,6 +74,7 @@ import { SQLite } from '@ionic-native/sqlite';
 import { Network } from '@ionic-native/network';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
 
+import { NativeStorage } from '@ionic-native/native-storage';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions, storage: Storage) {
   const authConfig = new AuthConfig({
@@ -181,7 +182,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     LoaderProvider,
     NetworkProvider,
     Time,
-
+    NativeStorage,
     JwtHelper, {
       provide: AuthHttp,
       useFactory: authHttpServiceFactory,

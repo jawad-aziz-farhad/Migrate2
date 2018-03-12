@@ -26,13 +26,14 @@
         "@ionic-native/file": "^4.3.0",
         "@ionic-native/file-path": "^4.3.0",
         "@ionic-native/file-transfer": "^4.3.0",
+        "@ionic-native/native-storage": "^4.5.3",
         "@ionic-native/network": "^4.3.1",
         "@ionic-native/screen-orientation": "^4.5.3",
         "@ionic-native/splash-screen": "3.12.1",
         "@ionic-native/sqlite": "^4.3.1",
         "@ionic-native/sqlite-porter": "^4.3.1",
         "@ionic-native/status-bar": "3.12.1",
-        "@ionic/storage": "2.0.1",
+        "@ionic/storage": "^2.0.1",
         "angular-progress-http": "^0.5.1",
         "angular2-jwt": "^0.2.3",
         "cordova-android": "^6.2.3",
@@ -61,7 +62,7 @@
         "zone.js": "0.8.12"
     },
     "devDependencies": {
-        "@ionic/app-scripts": "3.0.0",
+        "@ionic/app-scripts": "3.1.8",
         "typescript": "2.3.4"
     },
     "description": "An Ionic project",

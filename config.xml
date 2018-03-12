@@ -139,4 +139,5 @@
     <plugin name="cordova-plugin-screen-orientation" spec="~3.0.1" />
     <engine name="android" spec="~6.0.0" />
     <allow-navigation href="http://192.168.100.3:8101" />
+    <plugin name="cordova-plugin-nativestorage" spec="~2.3.1" />
 </widget>
