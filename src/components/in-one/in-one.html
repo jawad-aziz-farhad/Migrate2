@@ -48,8 +48,8 @@
 
 
   <ion-list class="list_items" *ngIf="!isFiltering" padding>
-    <ion-item *ngFor="let item of items; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
-      <p>{{ item.name }}</p>
+    <ion-item *ngFor="let item of items | order; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+      <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
     </ion-item>
   </ion-list>
 
@@ -61,13 +61,13 @@
               </ion-col>              
           </ion-row>
           <ion-item *ngFor="let item of items | sort : 'popularity_number': 'numericID' : order; let i=index;" [ngClass]="getStyle(item)" (click)="selectItem(item)">
-            <p>{{ item.name }}</p>
+            <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
           </ion-item>
       </ion-list>
     
       <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
           <ion-item *ngFor="let item of items?.reverse() | reverse: 'numericID' : order; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
-            <p>{{ item.name }}</p>
+            <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
           </ion-item>
       </ion-list>
   </div>

@@ -13,7 +13,7 @@
   
     <ion-list class="avatar-list" *ngIf="show">
 
-      <ng-template ngFor let-project [ngForOf]="projects" let-i="index">
+      <ng-template ngFor let-project [ngForOf]="projects | order" let-i="index" >
         <ion-item (click)="gotoLocations(project)">
             <ion-avatar item-start>
               <img [src]="getCustomerImage(project.logo)" alt="avatar">
