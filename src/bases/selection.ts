@@ -131,7 +131,49 @@ export class Selection {
     this._temp = {};
     this.data = data;
     this.temp = data;
+    if(this.TABLE_NAME !== 'Elements')
+      this.show = true;
+    else
+      this.groupElementsData();  
+  }
+
+  groupElementsData(){
+    console.log("BEFORE: "+ JSON.stringify(this.data));
+    this.data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
+    let data = this.data;
+    console.log("AFTER SORT: "+ JSON.stringify(this.data))
+    let currentItems = [];
+    let currentValue = false;
+    this.data = [];
+    let studyTypes = [ 'Customer' ,'Task and Process' , 'NVA' ];
+
+    data.forEach((element,index) => {
+      if(currentValue != element.type){
+        currentValue = element.type;
+
+        let newGroup = {
+          letter: studyTypes[element.type],
+          items: []
+        };
+        
+        currentItems = newGroup.items;
+        this.data.push(newGroup);
+      }
+
+      currentItems.push(element);
+
+    });
+
+    console.log(JSON.stringify(this.data));
     this.show = true;
+  }
+
+  compare(a,b) {
+    if (a.type < b.type)
+      return -1;
+    if (a.type > b.type)
+      return 1;
+    return 0;
   }
 
   /* SELECTED ELEMENT FOR STUDY */

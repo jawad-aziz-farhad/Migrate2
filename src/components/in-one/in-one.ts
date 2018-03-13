@@ -23,7 +23,6 @@ export class InOneComponent implements OnInit {
   private _temp: any = {};
   private filter: any;
   private order: any;
-  private color: string = '#989898';
   
   constructor() {
     this._temp = {};

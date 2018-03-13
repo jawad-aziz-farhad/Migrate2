@@ -47,11 +47,22 @@
   </ion-toolbar>
 
 
-  <ion-list class="list_items" *ngIf="!isFiltering" padding>
+  <ion-list class="list_items" *ngIf="!isFiltering && TABLE_NAME !== 'Elements'" padding>
     <ion-item *ngFor="let item of items | order; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
       <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
     </ion-item>
   </ion-list>
+
+  <div *ngIf="!isFiltering && TABLE_NAME == 'Elements'">
+    <ion-item-group class="list_items" padding *ngFor="let group of items;">
+      <ion-item-divider color="light" >{{ group.letter }}</ion-item-divider>
+      <ion-item *ngFor="let item of group.items; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+        <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
+      </ion-item>
+    </ion-item-group>
+  </div>
+  
+
 
   <div [ngSwitch]="filter" *ngIf="isFiltering">
       <ion-list class="list_items" *ngSwitchCase="'most_popular'" padding>

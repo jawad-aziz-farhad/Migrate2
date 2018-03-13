@@ -10,6 +10,7 @@ import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
+import { elementAt } from 'rxjs/operator/elementAt';
 /*
   Generated class for the OperationsProvider provider.
 
@@ -30,49 +31,53 @@ export class OperationsProvider {
   }
   
   getdata(){
+
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
+    
     return this.http.post(`${URL}`, null ,{ headers: headers }).catch(this.catchError)
-                    .flatMap(response => {      
+                    .flatMap(response => {    
+      
       let res = response.json();
       
       return new Observable(observer => {
-          res.forEach((project, index) => {
-            this.forkJoin(project).subscribe((result: any) => {
+      res.forEach((project, index) => {
+        
+        this.forkJoin(project).subscribe((result: any) => {
 
-              result.forEach((item,_index) => {
+          result.forEach((item,_index) => {
 
-                  if(_index == 1 && item.result)
-                    item = item.result;
-                
-                  if(item && _index >= 1 && item.length > 0){
-                    item.forEach((subitem,subindex) => {
-                      subitem.projectID = project._id;
-                    });
-                  }
-              });
-
-                res[index].customer = result[0];
-                res[index].customer_locations = result[1];
-                res[index].areas_data = result[2];
-                res[index].elements_data = result[3];
-                res[index].roles_data = result[4];
-
-                if(index == (res.length - 1)){
-                  this.postRequest('categories/get',null).subscribe(result => {
-                    res[0].categories = result;
-                    observer.next(res);
-                  },
-                  error => this.handleError(error));
-                }
-            },
-            error => console.error("ERROR:" +JSON.stringify(error)));   
+              if(_index == 1 && item.result)
+                item = item.result;
+            
+              if(item && _index >= 1 && item.length > 0){
+                item.forEach((subitem,subindex) => {
+                  subitem.projectID = project._id;
+                });
+              }
           });
+
+          res[index].customer = result[0];
+          res[index].customer_locations = result[1];
+          res[index].areas_data = result[2];
+          res[index].elements_data = result[3];
+          res[index].roles_data = result[4];
+
+          if(index == (res.length - 1)) {
+            this.postRequest('categories/get',null).subscribe(result => {
+              res[0].categories = result;
+              this.getElementsCategories(observer, res);
+            },
+            error => this.handleError(error));
+          }
+        },
+        error => console.error("ERROR:" +JSON.stringify(error)));   
         });
-    });
+      });
+    }).catch(this.catchError);
   }
 
-  forkJoin(project){
+  forkJoin(project) {
     
     let requests = []; let request = null;
     
@@ -146,6 +151,36 @@ export class OperationsProvider {
     
   }
 
+  getElementsCategories(observer, data){
+    
+    let requests = [];
+
+    data.forEach((element,index) => {
+      if(element && element.elements_data.length > 0) {
+        element.elements_data.forEach((sub_element,sub_index) => {
+          let request = this.postRequest('categories/getByID', {id: sub_element.category});
+          requests.push(request);
+        });
+      }
+    });
+
+    Observable.forkJoin(requests).subscribe((result: any) => {
+
+      data.forEach((element,index) => {
+        if(element && element.elements_data.length > 0) {
+          element.elements_data.forEach((sub_element,sub_index) => {
+  
+          element.category = result[sub_index]._id; 
+          element.type = result[sub_index].type;
+        });
+      }
+    });
+
+      observer.next(data);
+      observer.complete();
+    },
+    error => console.error("ERROR: " + JSON.stringify(error)));
+  }
 
   uploadFile(data: any): Promise<any>{
     
