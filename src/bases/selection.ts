@@ -138,10 +138,8 @@ export class Selection {
   }
 
   groupElementsData(){
-    console.log("BEFORE: "+ JSON.stringify(this.data));
     this.data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
     let data = this.data;
-    console.log("AFTER SORT: "+ JSON.stringify(this.data))
     let currentItems = [];
     let currentValue = false;
     this.data = [];
@@ -168,13 +166,6 @@ export class Selection {
     this.show = true;
   }
 
-  compare(a,b) {
-    if (a.type < b.type)
-      return -1;
-    if (a.type > b.type)
-      return 1;
-    return 0;
-  }
 
   /* SELECTED ELEMENT FOR STUDY */
   selectItem(item){

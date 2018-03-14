@@ -48,10 +48,11 @@ export class AddFrequencyPage {
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){
-     if(this.frequency.length == 0 && num == 0)
-      console.log(FREQUENCY_INPUT_ERROR);
-    else  
-      this.frequency = this.frequency + num;
+    //  if(this.frequency.length == 0 && num == 0)
+    //   console.log(FREQUENCY_INPUT_ERROR);
+    // else  
+    //   this.frequency = this.frequency + num;
+    this.frequency = this.frequency + num;
   } 
 
   /* REMOVING ENTERED FREQUENCY */ 
@@ -164,7 +165,10 @@ export class AddFrequencyPage {
     if(!
       photo)  
       this.parseData.getData().setPhoto(null);
-
+   
+    if(!this.frequency)
+      this.frequency = "0";  
+      
     this.parseData.getData().setFrequency(this.frequency);
     this.parseData.setData(this.parseData.getData());
 
@@ -175,6 +179,7 @@ export class AddFrequencyPage {
       this.parser.setRounds(this.parser.getRounds());
       this.parser.geAllData().setRoundData(this.parser.getRounds());
       this.parser.geAllData().setStudyEndTime(new Date().getTime());
+
       /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
       this.parseData.clearDataArray();
       this.parseData.clearData();

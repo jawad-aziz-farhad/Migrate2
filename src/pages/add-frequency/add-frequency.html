@@ -39,13 +39,13 @@
 <ion-footer no-border>
   <ion-row>
     <ion-col col-4>
-      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0" (click)="endStudy()">End</button> 
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="" (click)="endStudy()">End</button> 
     </ion-col>
     <ion-col col-4>
-      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || (parseData.getData() && parseData.getData().getNotes())" (click)="addNotes()">Add Notes</button> 
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="(parseData.getData() && parseData.getData().getNotes())" (click)="addNotes()">Add Notes</button> 
     </ion-col>
     <ion-col col-4>
-      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="frequency.length == 0 || (parseData.getData() && parseData.getData().getPhoto())" (click)="addPhoto()">Add Photo</button> 
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="(parseData.getData() && parseData.getData().getPhoto())" (click)="addPhoto()">Add Photo</button> 
     </ion-col>
   </ion-row>
 </ion-footer>

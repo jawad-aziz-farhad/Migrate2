@@ -1,3 +1,9 @@
 in-one {
 
+    .item-divider {
+        @media(min-width: 768px) {
+            font-size: 26px;
+            font-style: bold;
+        }
+    }
 }
