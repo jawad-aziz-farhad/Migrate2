@@ -1,7 +1,7 @@
 
 import { NavController, MenuController, NavParams } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
-         OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
+         OperationsProvider, SqlDbProvider, NetworkProvider, Time, ParserProvider} from '../providers';
 import { MESSAGE, INTERNET_ERROR } from '../config/config';
 import { StudyData } from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
@@ -30,6 +30,7 @@ export class Selection {
               public navParams: NavParams,
               public time: Time ,
               public parseData: ParseDataProvider,
+              public parser: ParserProvider,
               public search: SearchProvider,
               public loader: LoaderProvider,
               public operations: OperationsProvider,
@@ -294,7 +295,7 @@ export class Selection {
   
   /* CANCELLING STUDY */ 
   cancelStudy() {
-    this.stop = new Stop(this.navCtrl,this.alert, this.time);
+    this.stop = new Stop(this.navCtrl,this.alert, this.parseData, this.parser, this.time);
     this.stop.studyEndConfirmation();
   }
 

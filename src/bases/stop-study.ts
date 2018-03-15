@@ -1,11 +1,13 @@
 import {  NavController } from 'ionic-angular';
 import { STUDY_CANCELING_MESSAGE, ALERT_TITLE } from '../config/config';
-import { Time , AlertProvider } from '../providers';
+import { Time , AlertProvider, ParseDataProvider, ParserProvider } from '../providers';
 
  export class Stop {
 
     constructor(private navCtrl: NavController,
                 private alert: AlertProvider,
+                private parse: ParseDataProvider,
+                private parser: ParserProvider,
                 private time: Time){}
     
     /* ASKING FOR STUDY CONFIRMATION FROM USER, IF USER SAYS YES, 
@@ -14,7 +16,7 @@ import { Time , AlertProvider } from '../providers';
     */            
     studyEndConfirmation(){
         this.alert.presentConfirm(ALERT_TITLE, STUDY_CANCELING_MESSAGE).then(action => {
-            if(action == 'yes'){
+            if(action == 'yes'){              
                 this.time.destroyTimer();
                 this.navCtrl.popToRoot();
             }
@@ -23,5 +25,12 @@ import { Time , AlertProvider } from '../providers';
         })
         .catch(error => console.log("ERROR: " + error));
     }
+
+   /* CLEARING PARSER DATA */ 
+   clearStudyData(){
+    this.parse.clearData();
+    this.parser.clearRounds();
+    this.parser.clearAllData();
+   } 
 
 }

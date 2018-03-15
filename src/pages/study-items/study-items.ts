@@ -4,6 +4,7 @@ import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider }
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { SubmitDataProgressPage } from  '../submit-data-progress/submit-data-progress';
 import { ROUND_ENDED, STUDY_ENDED } from '../../config/config'
+import { Stop } from '../../bases';
 /**
  * 
  * Generated class for the StudyItemsPage page.
@@ -25,6 +26,8 @@ export class StudyItemsPage implements OnInit {
   public temp: any;
   public itemsSelected: any;
   public totalItemsSelected: number;
+
+  public stop: Stop;
   
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
@@ -145,5 +148,11 @@ export class StudyItemsPage implements OnInit {
 
   show(){
     this.showAll = !this.showAll;
+  }
+
+  /* CANCELLING STUDY */ 
+  cancelStudy() {
+    this.stop = new Stop(this.navCtrl,this.alert, this.parseData, this.parser, this.time);
+    this.stop.studyEndConfirmation();
   }
 }
