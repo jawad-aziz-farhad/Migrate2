@@ -19,7 +19,7 @@ export class FormBuilderProvider {
 
   /* INITIALIZING FORMBUILDER OBJECT */
   initFormBuilder(data, user){ 
-    console.log("FORM BUILDER DATA: "+ JSON.stringify(data));
+    
     this.dataForm = this.formBuilder.group({
       name: [data.title],
       studyStartTime: [data.studyStartTime],
@@ -28,6 +28,7 @@ export class FormBuilderProvider {
       projectID: [data.customer._id],
       locationID: [data.locationID],
       userID: [user._id],
+      roundDuration: [data.roundDuration],
       rounds: this.formBuilder.array([ ])
     });
   
@@ -36,8 +37,10 @@ export class FormBuilderProvider {
 
   /* ADDING ROUNDS */
   addRounds(data){
+    console.log("DATA: "+ JSON.stringify(data));
     const formCtrl = <FormArray>this.dataForm.controls['rounds'];
     data.rounds.forEach(item => {
+      console.log("\nITEM: "+ JSON.stringify(item));
       formCtrl.push(this.formBuilder.group({
         roundStartTime: [item.roundStartTime, Validators.required],
         roundEndTime: [item.roundEndTime, Validators.required],

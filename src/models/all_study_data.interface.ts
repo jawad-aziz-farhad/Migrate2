@@ -6,6 +6,7 @@ export class AllStudyData {
     private customer: any;
     private studyStartTime: any;
     private studyEndTime: any;
+    private roundDuration: any;
     private locationID: string;
     private rounds: Array<Rounds>;
 
@@ -16,6 +17,7 @@ export class AllStudyData {
     /* SETTERS */
     setCustomer(customer: any){ this.customer = customer;}
     setTitle(title: string){ this.title = title;}
+    setroundDuration(roundDuration: any){ this.roundDuration = roundDuration; }
     setStudyStartTime(studyStartTime: any){ this.studyStartTime = studyStartTime;}
     setStudyEndTime(studyEndTime: any){ this.studyEndTime = studyEndTime;}
     setRoundData(data: any) { this.rounds.push(data); };
@@ -24,6 +26,7 @@ export class AllStudyData {
     /* GETTERS */
     getCustomer():any { return this.customer; }
     getTitle(): string   { return this.title; }
+    getroundDuration(): any { return this.roundDuration; }
     getSutdyStartTime(): any  { return this.studyStartTime;}
     getSutdyEndTime(): any  { return this.studyEndTime;}
     getRoundData(): any { return this.rounds; }

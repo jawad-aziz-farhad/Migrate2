@@ -54,7 +54,7 @@ export class SubmitDataProgressPage {
 
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
-    if(!this.network.isInternetAvailable())
+    if(this.network.isInternetAvailable())
       this.getUser();
     else
       this.createTable(this.TABLE_NAME);  
@@ -72,8 +72,10 @@ export class SubmitDataProgressPage {
   saveData() {
     this.formProvider.initFormBuilder(this.parser.geAllData(), this.user);
     let formData = this.formProvider.getFormBuilder().value;
-    console.log("FORM DATA IS \n" + JSON.stringify(formData));
+
+    console.log("FORM DATA: "+ JSON.stringify(formData));
     let url = SERVER_URL + 'ras_data/add';
+    
     this.http
         .withUploadProgressListener(progress => { 
           console.log(`Uploading ${progress.percentage}%`); 

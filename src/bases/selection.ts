@@ -176,7 +176,7 @@ export class Selection {
   /* PARSING STUDY DATA */
   _parseData(item: any){
      let study_data = null;
-     if(this.parseData.getData() == null || typeof this.parseData.getData() == 'undefined')
+     if(!this.parseData.getData())
         study_data = new StudyData();
      else
         study_data = this.parseData.getData();   

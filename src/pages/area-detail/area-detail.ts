@@ -24,6 +24,10 @@ export class AreaDetailPage {
   public project: any;
   public logo: any;
   public selectOptions: any;
+
+  public expanded: boolean = false;
+  public itemExpandHeight: number = 800;
+
   
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,
@@ -59,7 +63,9 @@ getImage(){
 
 
 openModal() {
+
     let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project , location: this.location }, { cssClass: 'inset-modal create-study-modal' });
+  
     modal.onDidDismiss(data => {
       if(data.action == 'start'){
         this.time.setRoundTime(data.roundTime);

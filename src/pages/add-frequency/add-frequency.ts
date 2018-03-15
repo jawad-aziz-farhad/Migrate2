@@ -70,12 +70,14 @@ export class AddFrequencyPage {
   _parseData(frequency: number) {
 
     let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
-    let observation_Time = this.millisToMinutesAndSeconds(observationTime);
-    this.parseData.getData().setObservationTime(observation_Time);
+    //let observation_Time = this.millisToMinutesAndSeconds(observationTime);
+    this.parseData.getData().setObservationTime(observationTime);
     this.parseData.getData().setNotes(null);
     this.parseData.getData().setPhoto(null);
     this.parseData.getData().setFrequency(frequency);
     this.parseData.setData(this.parseData.getData());
+
+
   } 
 
   millisToMinutesAndSeconds(millis) {
@@ -130,12 +132,14 @@ export class AddFrequencyPage {
   }
 
   goToStudyItemsPage(){
+    
     this.parseData.setDataArray(this.parseData.getData()); 
     this.parser.getRounds().setRoundData(this.parseData.getDataArray());
     this.parser.getRounds().setRoundEndTime(new Date().getTime())
     this.parser.setRounds(this.parser.getRounds());
     this.parser.geAllData().setRoundData(this.parser.getRounds());
     this.parser.geAllData().setStudyEndTime(new Date().getTime());
+
     /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
     this.parseData.clearDataArray();
     this.parseData.clearData();
@@ -157,6 +161,7 @@ export class AddFrequencyPage {
     let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
     let observation_Time = this.millisToMinutesAndSeconds(observationTime);
     this.parseData.getData().setObservationTime(observation_Time);
+
     let notes = this.parseData.getData().getNotes();
     let photo = this.parseData.getData().getPhoto();
 

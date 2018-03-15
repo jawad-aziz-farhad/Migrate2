@@ -43,10 +43,45 @@
   </ion-item>
 
   <ion-item>
-    <ion-avatar item-start>
+    <ion-avatar item-start [hidden]="expanded">
       <ion-icon name="time"></ion-icon>
     </ion-avatar>
-    <ion-label>Opening Timings</ion-label>
+    <label (click)="this.expanded = !this.expanded"> {{ this.expanded ? 'Close Timings' : 'Open Timings' }}</label>
+    <accordian [expandHeight]="itemExpandHeight" [expanded]="expanded" [location]="location">
+      <ion-list>
+        <ion-item>
+          Monday {{ open_close_Time(location.monday_time_from , location.monday_time_to ) }}
+        </ion-item>
+      
+        <ion-item>
+          Tuesday {{ open_close_Time(location.tuesday_time_from , location.tuesday_time_to ) }}
+        </ion-item>
+      
+        <ion-item>
+          Wednesday  {{ open_close_Time(location.wednesday_time_from , location.wednesday_time_to ) }}
+        </ion-item>
+      
+        <ion-item>
+          Thursday  {{ open_close_Time(location.thursday_time_from , location.thursday_time_to ) }}
+        </ion-item>
+      
+        <ion-item>
+          Friday {{ open_close_Time(location.friday_time_from , location.friday_time_to ) }}
+        </ion-item>
+      
+        <ion-item>
+          Saturday  {{ open_close_Time(location.saturday_time_from , location.saturday_time_to ) }}
+        </ion-item>
+      
+        <ion-item>
+          Sunday {{ open_close_Time(location.sunday_time_from , location.sunday_time_to ) }}
+        </ion-item>
+      
+      </ion-list>
+          
+    </accordian>
+
+    <!-- <ion-label>Opening Timings</ion-label>
     <ion-select [(ngModel)]="timings" [selectOptions]="selectOptions" interface="actionsheet" cancelText="">
         <ion-option>Monday     {{ open_close_Time(location.monday_time_from , location.monday_time_to ) }}</ion-option>
         <ion-option>Tuesday    {{ open_close_Time(location.tuesday_time_from ,  location.tuesday_time_to ) }}</ion-option>
@@ -56,7 +91,7 @@
         <ion-option>Saturday   {{ open_close_Time(location.saturday_time_from ,  location.saturday_time_to) }}</ion-option>
         <ion-option>Sunday     {{ open_close_Time(location.sunday_time_from , location.sunday_time_to) }}</ion-option>
         
-      </ion-select>
+      </ion-select> -->
   </ion-item>
 </ion-list>
 
