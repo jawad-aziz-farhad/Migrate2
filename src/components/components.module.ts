@@ -9,7 +9,6 @@ import { InStudyHeaderComponent } from './in-study-header/in-study-header';
 import { ProgressBarComponent } from './progress-bar/progress-bar';
 import { InOneComponent } from './in-one/in-one';
 import { PipesModule } from "../pipes/pipes.module";
-import { AccordianComponent } from './accordian/accordian';
 
 @NgModule({
 	declarations: [HeaderComponent , TimerComponent,
@@ -17,8 +16,7 @@ import { AccordianComponent } from './accordian/accordian';
     ImgComponent,
     InStudyHeaderComponent,
     ProgressBarComponent,
-    InOneComponent,
-    AccordianComponent
+    InOneComponent
     ],
 	imports: [IonicModule , PipesModule],
 	exports: [HeaderComponent , TimerComponent,
@@ -26,8 +24,7 @@ import { AccordianComponent } from './accordian/accordian';
     ImgComponent,
     InStudyHeaderComponent,
     ProgressBarComponent,
-    InOneComponent,
-    AccordianComponent
+    InOneComponent
     ]
 })
 export class ComponentsModule {}

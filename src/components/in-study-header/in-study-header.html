@@ -1,10 +1,16 @@
-<ion-toolbar color="primary">       
-  <button ion-button (click)="cancelStudy()" class="men_btn">
+<ion-toolbar color="primary">
+           
+  <!-- <button ion-button (click)="cancelStudy()" class="men_btn">
      <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
-  </button>  
+  </button>   
+  -->
+
+  <button ion-button navPop clear class="absolute nav-back">
+    <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
+   </button>
   <ion-title>{{ title }}</ion-title>
 
-  <ion-buttons end>
+    <ion-buttons end>
       <button ion-button clear style="font-size:22px;" (click)="cancelStudy()">
           <ion-icon ios="ios-more" md="md-more" class="ion-md-new-toggle"></ion-icon>
       </button>

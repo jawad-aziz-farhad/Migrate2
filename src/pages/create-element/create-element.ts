@@ -111,7 +111,9 @@ export class CreateElementPage extends Creation {
         userAdded: true
       });
 
-      this.show = true;
+    this.creationForm.get('type').setValue(this.types[0].id);
+    this.creationForm.get('rating').setValue(this.ratings[2].id);  
+    this.show = true;
   }
 
   initType(value){

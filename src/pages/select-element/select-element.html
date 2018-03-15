@@ -8,11 +8,15 @@
 <ion-header class="blue-header role-header" no-border>
 
     <ion-toolbar color="primary" *ngIf="!isSearching">
-        
+     
+      <button ion-button navPop clear class="absolute nav-back">
+        <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
+      </button>
+      <!-- 
       <button ion-button (click)="cancelStudy()" class="men_btn">
         <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
-      </button> 
-    
+      </button>  
+      -->    
       <ion-title>Select {{ TABLE_NAME | slice:0:-1 }}</ion-title>
         
       <ion-buttons end *ngIf="!isSearching">

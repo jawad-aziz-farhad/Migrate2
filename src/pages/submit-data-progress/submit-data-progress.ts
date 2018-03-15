@@ -70,6 +70,7 @@ export class SubmitDataProgressPage {
 
   /* SAVING DATA */
   saveData() {
+    
     this.formProvider.initFormBuilder(this.parser.geAllData(), this.user);
     let formData = this.formProvider.getFormBuilder().value;
 

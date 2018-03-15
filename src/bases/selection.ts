@@ -63,17 +63,17 @@ export class Selection {
   }           
  
   /* PULLING IDs FROM SQLite */
-  pullIDs(){
+  pullIDs(){    
     // const ids = this.sql.getIDData(this.TABLE_NAME_1, this.project._id);
     // ids.then(result => {
     //   console.log('IDs: '+ JSON.stringify(result));
     //   this.pullServerData(result);
-    // }).catch(error => this.handleError(error) );
-    
+    // }).catch(error => this.handleError(error) ); 
 
   }
   /* PULLING DATA FROM SERVER */
   pullServerData(){
+    
     this.loader.showLoader(MESSAGE);
     //this.formBuilder.initIDForm(result);
     //let formData = this.formBuilder.getIDForm().value;
@@ -220,8 +220,6 @@ export class Selection {
       else
         this.nextComponent =  RatingsPage ;
 
-
-
         // if(this._temp.rating == null || this._temp.rating == 3)
         //     this.nextComponent =  RatingsPage ;
         
@@ -238,7 +236,8 @@ export class Selection {
         //   this.nextComponent = AddFrequencyPage;
         // }
       }
-
+    
+    console.log("PARSED DATA: "+ JSON.stringify(this.parseData.getData()));  
     this.navCtrl.push(this.nextComponent, { project: this.project});
   }
 
