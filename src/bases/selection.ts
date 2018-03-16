@@ -150,25 +150,23 @@ export class Selection {
 
     data.forEach((element,index) => {
 
-      if(currentValue != element.type) {
+        if(currentValue != element.type) {
 
-        currentValue = element.type;
+          currentValue = element.type;
 
-        let newGroup = {
-          letter: studyTypes[element.type],
-          items: []
-        };
-        
-        currentItems = newGroup.items;
-        this.data.push(newGroup);
-      }
-
-
+          let newGroup = {
+            letter: studyTypes[element.type],
+            items: []
+          };
+          
+          currentItems = newGroup.items;
+          this.data.push(newGroup);
+        }
+       
       currentItems.push(element);
 
     });
-
-    console.log(JSON.stringify(this.data));
+    
     this.show = true;
   }
 
@@ -220,25 +218,8 @@ export class Selection {
 
       else
         this.nextComponent =  RatingsPage ;
-
-        // if(this._temp.rating == null || this._temp.rating == 3)
-        //     this.nextComponent =  RatingsPage ;
-        
-        // else{
-        //   console.log("RATING OF SELECTED ELEMENT: \n" + JSON.stringify(this.temp));
-        //   /* SETTING RATING VALUE AND SKIPPING RATINGS PAGE */
-        //   let rating = null
-        //   if(this._temp.rating == 1)
-        //     rating = 'Not Rated';
-        //   else if(this._temp.rating == 2)
-        //     rating = 100;  
-        //   this.parseData.getData().setRating(rating);
-        //   this.parseData.setData(this.parseData.getData());
-        //   this.nextComponent = AddFrequencyPage;
-        // }
-      }
+    }
     
-    console.log("PARSED DATA: "+ JSON.stringify(this.parseData.getData()));  
     this.navCtrl.push(this.nextComponent, { project: this.project});
   }
 

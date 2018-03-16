@@ -73,6 +73,7 @@ import { FileTransfer, FileTransferObject, } from '@ionic-native/file-transfer';
 import { SQLite } from '@ionic-native/sqlite';
 import { Network } from '@ionic-native/network';
 import { ScreenOrientation } from '@ionic-native/screen-orientation';
+import { Keyboard } from '@ionic-native/keyboard';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions, storage: Storage) {
   const authConfig = new AuthConfig({
@@ -174,6 +175,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SQLite,
     Network,
     ScreenOrientation,
+    Keyboard,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     AuthProvider,
     HeadersProvider,

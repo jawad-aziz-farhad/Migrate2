@@ -61,6 +61,7 @@ export class OfflineStudyDataPage {
     });
   }
 
+  /* GETTING ALL THE STUDY DATA */
   getStudyData(data){
 
     let studies = [];
@@ -82,60 +83,75 @@ export class OfflineStudyDataPage {
           });
         }
         if(index == (result.length - 1))
-          this.getElements();
+          this.makingSQLiteRequests();
       });
     });
   }
 
-  /* GETTING ELEMENT NAME AND NUMERIC ID  */
-  getElements(){
+  /* MAKING SQLite REQUESTS TO GET NAMES AGAINST EACH ID */
+  makingSQLiteRequests(){
 
+    let items = [];
+    let areas = [];
     let elements = [];
+    let roles = [];
 
     this.items.forEach((element, index) => {
-      const data = this.sql.getIDData('OfflineElement', element.element);
-      elements.push(data)
+      const _element = this.sql.getIDData('OfflineElement', element.element);
+      elements.push(_element)
+      const area = this.sql.getIDData('OfflineArea', element.area);
+      areas.push(area);
+      const role = this.sql.getIDData('OfflineRole', element.role);
+      roles.push(role);
     });
 
-    const request = Observable.forkJoin(elements);
+    items[0] = areas.slice();
+    items[1] = elements.slice();
+    items[2] = roles.slice();
+
+    this.gettingData(items, 'areas');
+  }
+
+  /* AFTER MAKING SQLite REQUEST, GETTING DATA AND MANIPULATING THE IDs WITH NAMES */
+  gettingData(data, table){
+
+    let items = [];
+    if(table == 'areas')
+      items = data[0];
+    else if(table == 'elements')
+    items = data[1];
+    else if(table == 'roles')
+    items = data[2];  
+
+    const request = Observable.forkJoin(items);
 
     request.subscribe((result: any) => {
       result.forEach((element, index) => {
         if(element.length > 0){
-          this.items[index].element = element[0].name;
+          if(table == 'areas')
+            this.items[index].area = element[0].name;
+          else if(table == 'elements')
+            this.items[index].element = element[0].name;
+          else
+            this.items[index].role = element[0].name;
+          
         }
-        if(index == (result.length - 1))
-          this.getAreas();
-      });
-  });
 
-  }
-
-  getAreas(){
-
-    let elements = [];
-
-    this.items.forEach((element, index) => {
-      const data = this.sql.getIDData('OfflineArea', element.area);
-      elements.push(data)
-    });
-
-    const request = Observable.forkJoin(elements);
-
-    request.subscribe((result: any) => {
-      result.forEach((element, index) => {
-       
-        if(element.length > 0){
-          this.items[index].area = element[0].name;
+        if(index == (result.length - 1)){
+          if(table == 'roles')
+            this.show = true;
+          else{
+            if(table == 'areas')
+              table = 'elements';
+            else if(table == 'elements')
+              table = 'roles';
+            this.gettingData(data,table) ; 
+          }
         }
-        if(index == (result.length - 1))
-          this.show = true;
       });
     });
-
-    
-    
   }
+
 
   /* SHOWING SUMMARY OF SINGLE ITEM */
   showSummary(item){

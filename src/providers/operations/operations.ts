@@ -99,10 +99,19 @@ export class OperationsProvider {
     return Observable.forkJoin(requests);
   }
 
-  postRequest(endPoint, data){
+  postRequest(endPoint, data){    
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
-    return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catchError);
+    /* FILTERING ELEMENTS FOR GETTING ONLY THOSE ELEMENTS WHICH HAVE STUDY TYPE EFFICIENCY STUDY */
+    if(endPoint.indexOf('elements') > -1)
+      return this.http.post(`${this.END_POINT}`, data ,{ headers: headers })
+                              .map(res => res.json())
+                              .map((elements: Array<any>) =>  elements.filter(element => element.studyTypes.indexOf(1) > -1 ))
+                              .catch(this.catchError);
+    
+    else
+        return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catchError);
+      
   }
 
   offlineRequest(endPoint,data){

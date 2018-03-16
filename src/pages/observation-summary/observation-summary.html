@@ -28,12 +28,12 @@
 
     <ion-item>
       <ion-label stacked>Role</ion-label>
-      <ion-input type="text" value="{{ data.role.name }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data.role.name ? data.role.name : data.role }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Element</ion-label>
-      <ion-input type="text" value="{{ data.element.name }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data.element.name ? data.element.name : data.element }}" disabled readonly></ion-input>
     </ion-item>
   
     <ion-item>

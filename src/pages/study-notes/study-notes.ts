@@ -1,6 +1,7 @@
-import { Component  } from '@angular/core';
+import { Component , ViewChild , Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { ParseDataProvider } from '../../providers';
+import { Keyboard } from '@ionic-native/keyboard';
 /**
  * Generated class for the StudyNotesPage page.
  *
@@ -14,12 +15,26 @@ import { ParseDataProvider } from '../../providers';
   templateUrl: 'study-notes.html',
 })
 export class StudyNotesPage {
- 
+  
+  @ViewChild('notes') notesInput;
+
   public notes: any;
 
   constructor(public navCtrl: NavController,
-              public parseData: ParseDataProvider) {
+              public parseData: ParseDataProvider,
+              public renderer: Renderer,
+              public elementRef: ElementRef,
+              public keyboard: Keyboard) {          
     this.initView();
+  }
+
+  ionViewDidLoad(){   
+    let element = this.elementRef.nativeElement.querySelector('textarea');
+    setTimeout(() => {
+      this.renderer.invokeElementMethod(element, 'focus', []);   
+      this.keyboard.show();
+    }, 500);
+      
   }
 
   initView(){

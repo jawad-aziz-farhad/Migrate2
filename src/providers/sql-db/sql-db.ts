@@ -241,6 +241,15 @@ export class SqlDbProvider {
         table = 'Areas';
       query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
     }      
+
+    else if(table == 'OfflineRole'){
+
+      if(id.indexOf('role') > -1 )
+        table = 'Create_Role';
+      else  
+        table = 'Roles';
+      query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
+    }       
    else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
     
