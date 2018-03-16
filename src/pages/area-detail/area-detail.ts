@@ -67,9 +67,8 @@ openModal() {
     let modal = this.modalCtrl.create('CreateStudyPage', { customer: this.project , location: this.location }, { cssClass: 'inset-modal create-study-modal' });
   
     modal.onDidDismiss(data => {
-      if(data.action == 'start'){
+      if(data && data.action == 'start'){
         this.time.setRoundTime(data.roundTime);
-        this.time.setTime(data.roundTime);
         this.time.runTimer();
         this.navCtrl.push(SelectRolePage, { project: this.project }); 
       }  

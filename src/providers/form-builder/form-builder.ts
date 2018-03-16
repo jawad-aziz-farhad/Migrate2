@@ -18,7 +18,7 @@ export class FormBuilderProvider {
   }
 
   /* INITIALIZING FORMBUILDER OBJECT */
-  initFormBuilder(data, user){     
+  initFormBuilder(data){     
     this.dataForm = this.formBuilder.group({
       name: [data.title],
       studyStartTime: [data.studyStartTime],
@@ -26,7 +26,7 @@ export class FormBuilderProvider {
       customerID: [data.customer.customer_id],
       projectID: [data.customer._id],
       locationID: [data.locationID],
-      userID: [user._id],
+      userID: [localStorage.getItem("userID")],
       roundDuration: [data.roundDuration],
       rounds: this.formBuilder.array([ ])
     });

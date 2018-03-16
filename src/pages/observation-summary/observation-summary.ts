@@ -58,10 +58,8 @@ export class ObservationSummaryPage {
 
   /* CONVERTING MILLISECONDS TO LOCALE TIME */
   convertTime(){
-    // console.log("TIME: "+ time + " \n CONVERTED: "+ new Date(time).toLocaleString())
-    // return new Date(time).toLocaleString();
     let time = null;
-    if(typeof this.navParams.get('round_index') !== 'undefined' && this.navParams.get('round_index') !== null)
+    if(this.navParams.get('round_index'))
       time = this.parser.geAllData().getSutdyStartTime();
     else
       time = this.data.studyStartTime;
@@ -90,9 +88,9 @@ export class ObservationSummaryPage {
       this.deleteFromSQLite();
   }
 
+  /* DELETING RECORD FROM SQLite TABLE */
   deleteFromSQLite(){
     this.sql.deleteRecord('Study_Data', {id: this.data.id}).then(result => {
-      console.log("DELETE RESULT: "+ JSON.stringify(result));
       if(result)
         this.navCtrl.pop();
     }).catch(error => {

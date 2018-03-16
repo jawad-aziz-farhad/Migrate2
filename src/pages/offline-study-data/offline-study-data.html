@@ -19,53 +19,49 @@
 
 <ion-content>
 
-    <table class="table" *ngIf="show && items?.length > 0">
-        <thead>
-          <tr>
-            <th>Element</th>
-            <th>Rating</th>
-            <th>Frequency</th>
-            <th></th>
-          </tr>
-        </thead>
-      
-        <tbody>
-            <tr *ngFor="let item of items; let i=index;" (click)="showSummary(item)">
-              <td>
-                <div class="number-icon">{{ item.numericID ? item.numericID : '--' }}</div>
-                  {{ item.element }}
-              </td>
-              <td>{{ item.rating }}</td>
-              <td>{{ item.frequency }}</td>
-              <!-- <td>
-                <ion-checkbox >
-                </ion-checkbox>
-              </td> -->
-            </tr>
+  <table class="table" *ngIf="show && items?.length > 0">
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Rating</th>
+        <th>Frequency</th>
+        <th></th>
+      </tr>
+    </thead>
+  
+    <tbody>
+      <tr *ngFor="let item of items; let i=index;" (click)="showSummary(item)">
+        <td>
+          <div class="number-icon">{{ item.numericID ? item.numericID : '--' }}</div>
+            {{ item.element }}
+        </td>
+        <td>{{ item.rating }}</td>
+        <td>{{ item.frequency }}</td>
+      </tr>
 
-        </tbody>
+    </tbody>
       
-      </table>
+    </table>
 
-      <div *ngIf="show && items?.length == 0">
-          <ion-card>
-            <ion-card-content>
-              <ion-card-title>
-               Offline Data
-                </ion-card-title>
-              <p>
-                No Offline Data available.
-              </p>
-            </ion-card-content>
-          </ion-card>
-      </div>
+  <div *ngIf="show && items?.length == 0">
+    <ion-card>
+      <ion-card-content>
+        <ion-card-title>
+          Offline Data
+          </ion-card-title>
+        <p>
+          No Offline Data available.
+        </p>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
 </ion-content>
 
 <ion-footer>
-    <ion-grid no-padding>
-        <ion-row>
-            <button ion-button block no-margin class="theme-btn no-radius" [disabled]="items?.length == 0" (click)="updateOfflineData()">Sync Data</button>
-        </ion-row>
-    </ion-grid>
+  <ion-grid no-padding>
+    <ion-row>
+      <button ion-button block no-margin class="theme-btn no-radius" [disabled]="items?.length == 0" (click)="updateOfflineData()">Sync Data</button>
+    </ion-row>
+  </ion-grid>
 </ion-footer>

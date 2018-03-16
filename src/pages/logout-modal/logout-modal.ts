@@ -48,12 +48,9 @@ export class LogoutModalPage {
   }
 
   getProfileImage() {
-
-    if(typeof this.user.userimage !== 'undefined' && this.user.userimage !== null && this.user.userimage !== ''){
-      let imagePath = SERVER_URL + 'assets/profile_images/' + this.user.userimage.split('/profile_images')[1];
-      return imagePath;
-  }
-  else
+    if(this.user.userimage)
+      return SERVER_URL + 'assets/profile_images/' + this.user.userimage.split('/profile_images')[1];
+    else
       return 'assets/images/person.jpg';
   }
 

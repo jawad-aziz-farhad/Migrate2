@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams  } from 'ionic-angular';
 import { AuthProvider , OperationsProvider , ToastProvider, LoaderProvider, SqlDbProvider, NetworkProvider, FormBuilderProvider , HeadersProvider} from '../../providers/index';
-import {  MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR} from '../../config/config';
+import {  MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR, SERVER_URL} from '../../config/config';
 import { Storage } from "@ionic/storage";
 import { AreasPage } from '../areas/areas';
 import { Projects } from '../../models';
@@ -30,9 +30,6 @@ export class ProjectsPage {
   public dataArray: Array<Projects>;
 
   public  TABLE_NAME: string   = 'Projects';
-  // private TABLE_NAME_1: string = 'Areas_IDs';
-  // private TABLE_NAME_2: string = 'Elements_IDs';
-  // private TABLE_NAME_3: string = 'Roles_IDs';
 
   private TABLE_NAME_4:string = 'Areas';
   private TABLE_NAME_5:string = 'Elements';
@@ -98,8 +95,10 @@ export class ProjectsPage {
       this.projects = res;
       if(res.length > 0) 
         this.createTable(res, this.TABLE_NAME);
-      else
-        this.toast.showBottomToast(NO_DATA_FOUND);  
+      else{
+        this.loader.hideLoader();
+        this.toast.showBottomToast(NO_DATA_FOUND);
+      }  
     },
     error => {
       this.loader.hideLoader();
@@ -109,10 +108,8 @@ export class ProjectsPage {
 
   /* CREATING TABLE TO SAVE TO LOCAL DATA BASE */
   createTable(data, table) {
+    
     const table1 = this.sql.createTable(this.TABLE_NAME);
-    // const table2 = this.sql.createTable(this.TABLE_NAME_1);
-    // const table3 = this.sql.createTable(this.TABLE_NAME_2);
-    // const table4 = this.sql.createTable(this.TABLE_NAME_3);
     const table5 = this.sql.createTable(this.TABLE_NAME_4);
     const table6 = this.sql.createTable(this.TABLE_NAME_5);
     const table7 = this.sql.createTable(this.TABLE_NAME_6);
@@ -131,18 +128,9 @@ export class ProjectsPage {
     () => console.log('DONE'));
   }
 
-  /* INSERTING IDS OF EACH PROJECT TO GET DATA ACCORDINGLY IN FUTURE */
-  insertIDs(projects) {
-    this.inserting(projects,'IDs').subscribe(result => {
-      this.insertData(projects);
-    },
-    error =>  this.loader.hideLoader(),
-    () => console.log('DONE'));
-  }
-
   /* INSERTING DATA TO TABLES */
   insertData(projects) {
-    this.inserting(projects,'DATA').subscribe(result => {
+    this.inserting(projects).subscribe(result => {
       this.getAllData();
     },
     error =>  this.loader.hideLoader(),
@@ -150,50 +138,36 @@ export class ProjectsPage {
   }
 
   /* ITERARING THROUGH PROJECTS ARRAY AND SAVING DATA TO SQLITE TABLES */
-  inserting(projects, value){
+  inserting(projects){
     return new Observable(observer => {
-        projects.forEach((project,index) => {
-          this.forkJoin(project, value).subscribe(result => {
-              if(index == (projects.length -1)){
-                if(value == 'IDs')
-                 observer.next(true);   
-                 else {
-                   this.sql.addData(this.TABLE_NAME_9, projects[0].categories).then(res => {
-                      observer.next(true);
-                   }).catch(error => {
-                     console.error(error);
-                     this.loader.hideLoader();
-                   });
-                 }
-              }
-          });
+      projects.forEach((project,index) => {
+        this.forkJoin(project).subscribe(result => {
+          if(index == (projects.length -1)){
+            this.sql.addData(this.TABLE_NAME_9, projects[0].categories).then(res => {
+              observer.next(true);
+            }).catch(error => {
+              console.error(error);
+              this.loader.hideLoader();
+            });
+          }
+        });
       });
     });
-
   }
 
   /* FOR EACH INDEX CREATING FORK JOIN OBSERVABLE */
-  forkJoin(data,value): Observable<any> {
-    let observablesArray = [];
-    if(value == 'IDs'){
-      //localStorage.setItem('projectID',data._id);
-      // const areas = this.sql.addData(this.TABLE_NAME_1,data.areas);
-      // const elements = this.sql.addData(this.TABLE_NAME_2,data.elements);
-      // const roles = this.sql.addData(this.TABLE_NAME_3,data.roles);
-      //const locations = this.sql.addData(this.TABLE_NAME_8,data.locations);
-      //observablesArray.push(areas,elements,roles);
-    }
-    else if(value == 'DATA'){
-      let _data = [];
-      _data.push(data);
-      const projects = this.sql.addData(this.TABLE_NAME,_data);
-      const areas = this.sql.addData(this.TABLE_NAME_4,data.areas_data);
-      const elements = this.sql.addData(this.TABLE_NAME_5,data.elements_data);
-      const roles = this.sql.addData(this.TABLE_NAME_6,data.roles_data);
-      const locations = this.sql.addData(this.TABLE_NAME_7,data.customer_locations);
+  forkJoin(data): Observable<any> {
 
-      observablesArray.push(areas,elements,roles,locations,projects);
-    }
+    let observablesArray = [];let _data = [];
+    _data.push(data);
+    const projects = this.sql.addData(this.TABLE_NAME,_data);
+    const areas = this.sql.addData(this.TABLE_NAME_4,data.areas_data);
+    const elements = this.sql.addData(this.TABLE_NAME_5,data.elements_data);
+    const roles = this.sql.addData(this.TABLE_NAME_6,data.roles_data);
+    const locations = this.sql.addData(this.TABLE_NAME_7,data.customer_locations);
+
+    observablesArray.push(areas,elements,roles,locations,projects);
+    
 
     return Observable.forkJoin(observablesArray);
 
@@ -212,29 +186,16 @@ export class ProjectsPage {
 
   /* POPULATING DATA */
   populateData(data){
-    console.log("PROJECTS RESULT: "+ JSON.stringify(data));
     this.projects = data;
     this.show = true;
   }
 
   /* GETTING CUSTOMER IMAGE */
   getCustomerImage(image) {
-
-    let imagePath = '';
-    
-    if(typeof image !== 'undefined' && image !== null && image !== ''){
-        
-      if(this.network.isInternetAvailable())
-        //imagePath = SERVER_URL + image;
-        imagePath =  'http://retime-dev.herokuapp.com/' + image;
-      
-      else 
-         imagePath = 'assets/images/person.jpg';
-    return imagePath;
-
-  }
-  else
-      return 'assets/images/logo.png';
+    if(image && this.network.isInternetAvailable())       
+      return SERVER_URL + image;  
+    else 
+      return this.imagePath;   
   }
   
   /* GETTING LOCATIONS OF THIS PROJECT OR BRAND */
@@ -257,9 +218,6 @@ export class ProjectsPage {
   dropTable(refresher){
 
     const table1 = this.sql.dropTable(this.TABLE_NAME);
-    // const table2 = this.sql.dropTable(this.TABLE_NAME_1);
-    // const table3 = this.sql.dropTable(this.TABLE_NAME_2);
-    // const table4 = this.sql.dropTable(this.TABLE_NAME_3);
     const table5 = this.sql.dropTable(this.TABLE_NAME_4);
     const table6 = this.sql.dropTable(this.TABLE_NAME_5);
     const table7 = this.sql.dropTable(this.TABLE_NAME_6);

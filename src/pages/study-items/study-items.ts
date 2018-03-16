@@ -75,7 +75,7 @@ export class StudyItemsPage implements OnInit {
       modal.onDidDismiss(data => {
 
         if(component == 'SubmitDataDialogPage'){
-          if(data.action == 'submit'){
+          if(data && data.action == 'submit'){
             this.navCtrl.push(SubmitDataProgressPage);
           }
           else{

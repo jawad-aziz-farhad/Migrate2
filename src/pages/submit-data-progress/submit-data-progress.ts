@@ -44,9 +44,6 @@ export class SubmitDataProgressPage {
     this.initView();           
   }
 
-  ionViewDidLoad() {
-  }
-
   initView(){
     this.show = false;
     this.checkInternetAvailability();
@@ -54,27 +51,16 @@ export class SubmitDataProgressPage {
 
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
-    if(!this.network.isInternetAvailable())
-      this.getUser();
+    if(this.network.isInternetAvailable())
+      this.saveData();
     else
       this.createTable(this.TABLE_NAME);  
   } 
 
-  /* GETTING USER's INFO */
-  getUser(){
-    this.storage.get('currentUser').then(user => {
-      this.user = user;
-      this.saveData();
-    });
-  }
-
   /* SAVING DATA */
-  saveData() {
-    
-    this.formProvider.initFormBuilder(this.parser.geAllData(), this.user);
+  saveData() {    
+    this.formProvider.initFormBuilder(this.parser.geAllData());
     let formData = this.formProvider.getFormBuilder().value;
-
-    console.log("FORM DATA: "+ JSON.stringify(formData));
     let url = SERVER_URL + 'ras_data/add';
     
     this.http
@@ -123,7 +109,6 @@ createTable(table) {
 insertStudy() {
   let data = [1];
   this.sql.addData(this.TABLE_NAME,data).then(result => {
-    console.log("INSERT STUDY RESPONSE: \n" + JSON.stringify(result));
     if(result)
       this.getStudy();
   }).catch(error => {
@@ -133,31 +118,18 @@ insertStudy() {
 /* GETTING SAVE STUDY */
 getStudy(){
   this.sql.getAllData(this.TABLE_NAME).then(result => {
-    console.log("STUDY: " +JSON.stringify(result));
     this.insertStudyData(result);
-  }).catch(error => {
-    console.error("ERROR: " +JSON.stringify(error));
-  });
+  }).catch(error => console.error("ERROR: " +JSON.stringify(error)));
 }
 
 /* INSERTING STUDY DATA */
 insertStudyData(data) {
   const lastIndex = data.length - 1;
   this.sql.studyData(this.TABLE_NAME_1, data[lastIndex].id).then(result => {
-    console.log("INSERT STUDY DATA RESPONSE: \n" +JSON.stringify(result));
-    this.getAllData();
+    this.show = true;
 }).catch(error => {
     console.error("ERROR: " + JSON.stringify(error));
 });
-}
-
-getAllData(){
-  this.sql.getAllData(this.TABLE_NAME_1).then(result => {
-    console.log("STUDY DATA: " +JSON.stringify(result));
-    this.show = true;
-  }).catch(error => {
-    console.error("ERROR: " +JSON.stringify(error));
-  });
 }
 
 /* GOING TO THE PREVIOUS PAGE BY CLICKING BUTTON  */

@@ -150,6 +150,8 @@ export class Selection {
 
     data.forEach((element,index) => {
 
+        console.log("ELEMENT : "+ JSON.stringify(element));
+
         if(currentValue != element.type) {
 
           currentValue = element.type;

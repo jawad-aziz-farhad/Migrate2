@@ -10,7 +10,6 @@ import { HeadersProvider } from '../headers/headers';
 import { AuthProvider } from '../auth/auth';
 import { ToastProvider } from '../toast/toast';
 import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
-import { elementAt } from 'rxjs/operator/elementAt';
 /*
   Generated class for the OperationsProvider provider.
 
@@ -31,7 +30,6 @@ export class OperationsProvider {
   }
   
   getdata(){
-
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
     
@@ -41,38 +39,44 @@ export class OperationsProvider {
       let res = response.json();
       
       return new Observable(observer => {
-      res.forEach((project, index) => {
-        
-        this.forkJoin(project).subscribe((result: any) => {
 
-          result.forEach((item,_index) => {
+        if(!res || res.length == 0){
+          observer.next([]);
+          observer.complete();
+        }
+        else
+          res.forEach((project, index) => {
+              
+            this.forkJoin(project).subscribe((result: any) => {
 
-              if(_index == 1 && item.result)
-                item = item.result;
-            
-              if(item && _index >= 1 && item.length > 0){
-                item.forEach((subitem,subindex) => {
-                  subitem.projectID = project._id;
+                result.forEach((item,_index) => {
+
+                    if(_index == 1 && item.result)
+                      item = item.result;
+                  
+                    if(item && _index >= 1 && item.length > 0){
+                      item.forEach((subitem,subindex) => {
+                        subitem.projectID = project._id;
+                      });
+                    }
                 });
-              }
+
+                res[index].customer = result[0];
+                res[index].customer_locations = result[1];
+                res[index].areas_data = result[2];
+                res[index].elements_data = result[3];
+                res[index].roles_data = result[4];
+
+                if(index == (res.length - 1)) {
+                  this.postRequest('categories/get',null).subscribe(result => {
+                    res[0].categories = result;
+                    this.getElementsCategories(observer, res);
+                  },
+                  error => this.handleError(error));
+                }
+              },
+              error => console.error("ERROR:" +JSON.stringify(error)));   
           });
-
-          res[index].customer = result[0];
-          res[index].customer_locations = result[1];
-          res[index].areas_data = result[2];
-          res[index].elements_data = result[3];
-          res[index].roles_data = result[4];
-
-          if(index == (res.length - 1)) {
-            this.postRequest('categories/get',null).subscribe(result => {
-              res[0].categories = result;
-              this.getElementsCategories(observer, res);
-            },
-            error => this.handleError(error));
-          }
-        },
-        error => console.error("ERROR:" +JSON.stringify(error)));   
-        });
       });
     }).catch(this.catchError);
   }
@@ -160,6 +164,7 @@ export class OperationsProvider {
     
   }
 
+  /* GETTING CATEGORIES OF ALL ELEMENTS TO AND MANIPULATING type KEY WITH studyType */
   getElementsCategories(observer, data){
     
     let requests = [];
@@ -172,7 +177,6 @@ export class OperationsProvider {
         });
       }
     });
-
     
     Observable.forkJoin(requests).subscribe((result: any) => {
 
@@ -180,7 +184,7 @@ export class OperationsProvider {
         if(element && element.elements_data.length > 0) {
           element.elements_data.forEach((sub_element,sub_index) => {
           sub_element.category = result[sub_index]._id; 
-          sub_element.type = result[sub_index].type;
+          sub_element.type = result[sub_index].studyType;
         });
       }
     });
@@ -208,9 +212,8 @@ export class OperationsProvider {
     };
   
     const fileTransfer: FileTransferObject = this.transfer.create();
-    //this.END_POINT = SERVER_URL + data.endPoint;
+    this.END_POINT = SERVER_URL + data.endPoint;
     
-    this.END_POINT = 'http://retime-dev.herokuapp.com/' + data.endPoint;
     // Using the FileTransfer to upload the image and returning Promise
     return new Promise((resolve, reject) => {
 
@@ -257,6 +260,4 @@ export class OperationsProvider {
         });  
      });
   }
-
-
 }

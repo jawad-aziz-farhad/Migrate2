@@ -109,7 +109,7 @@ export class SqlDbProvider {
       else if(table == 'Create_Element')
         _data = [data[index]._id, data[index].name, data[index].type , data[index].rating , data[index].category ,  data[index].efficiency_study, data[index].activity_study, data[index].role_study , data[index].projectID , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date , data[index].userAdded];
       else if(table == 'Study')
-        _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime(), this.parser.geAllData().getCustomer().customer_id,  this.parser.geAllData().getLocationID()];
+        _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime(), this.parser.geAllData().getCustomer().customer_id,  this.parser.geAllData().getLocationID() , localStorage.getItem("userID")];
       else if(table == 'Study_Data')
         _data = [data[index].role._id , data[index].area._id , data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo ,  data[index].observationTime, this.parser.geAllData().getRoundData()[this.studyDataIndex].roundStartTime , this.parser.geAllData().getRoundData()[this.studyDataIndex].roundEndTime, this.studyID];  
       else if(table == 'Categories')
@@ -157,7 +157,7 @@ export class SqlDbProvider {
       else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID, category, type)'; 
       else if(table == 'Study')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT)';
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT)';
       else if(table == 'Study_Data')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, roundStartTime BIGINT, roundEndTime BIGINT, role TEXT, area TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, observationTime BIGINT, Study_Id INTEGER, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
       else if(table == 'Create_Role')
@@ -187,7 +187,7 @@ export class SqlDbProvider {
     else if(table == 'Areas' || table == 'Roles' || table == 'Elements')
       query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
-      query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID) VALUES (? , ? , ? , ? ,? , ?)';           
+      query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID) VALUES (?, ? , ? , ? , ? ,? , ?)';           
     else if(table == 'Study_Data')
       query = 'INSERT INTO ' + table + '(role, area, element , rating, frequency, notes, photo, observationTime, roundStartTime, roundEndTime, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)';   
     else if(table == 'Create_Role')
@@ -320,7 +320,7 @@ export class SqlDbProvider {
           else if(table == 'Categories')
             data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name });
           else if(table == 'Study')
-            data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID});
+            data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID, userID: result.rows.item(i).userID});
           else if(table == 'Study_Data')
             data.push({id: result.rows.item(i).id , roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
         }
@@ -420,7 +420,7 @@ export class SqlDbProvider {
     // const table14 = this.dropTable("Study");
     // const table15 = this.dropTable("Study_Data");
     
-    // const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15 ];
+    //const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15 ];
     const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 ];
     return Observable.forkJoin(observableArray);
   }

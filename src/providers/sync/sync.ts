@@ -27,7 +27,6 @@ export class Sync {
   private onlineStudyImages$: Array<any> = [];
   private offlineData$: Array<any> = [];
   private table: string = null;
-  private user: any;
   private result: Array<any> = [];
   public isDatSynced: boolean = false;
   
@@ -42,6 +41,8 @@ export class Sync {
     console.log('Hello SyncProvider Provider');
   }
 
+  
+  /* SYNCING OFFLINE DATA */
   syncOfflinedata() {    
    return new Observable(observer => {
      this.checkingOfflineData(this.TABLE_NAME_2);
@@ -49,6 +50,7 @@ export class Sync {
     });
   }
 
+  /* CHECKING AFTER EACH SECOND WHETER SYNCING IS DONE OR NOT  */
   checkSycning(observer){
     setTimeout(() => {
       if(this.isDatSynced){
@@ -98,6 +100,7 @@ export class Sync {
     
   }
 
+  /* CATCHING ERROR */
   catchError(error){
     return Observable.throw(error.json());
   }
@@ -129,9 +132,9 @@ export class Sync {
     });
       
     if(errors.length == 0)
-    this.checkTable();
-   else
-    this.askForUpdateNames(errors, errors[0] , data);
+      this.checkTable();
+    else
+      this.askForUpdateNames(errors, errors[0] , data);
    
   }
 
@@ -186,10 +189,16 @@ export class Sync {
       let modal = this.modalCtrl.create('EditTitlePage', _data, { cssClass: 'inset-modal items-page-modal' });
       
       modal.onDidDismiss(data => {
-        setTimeout(() => {
-          observer.next(data);
+        if(data){
+          setTimeout(() => {
+            observer.next(data);
+            observer.complete();
+          });
+        }
+        else{
+          observer.next(null);
           observer.complete();
-        });
+        }
       });
   
       modal.present();
@@ -209,7 +218,7 @@ export class Sync {
       if(updateFor == 'data')
         this.getofflineStudyImages();
       else
-        this.getUser();  
+        this.getOfflineStudies();  
     },
     error => this.handleError(error));
   }
@@ -290,7 +299,7 @@ export class Sync {
         this.uploadImages(result);
       }
       else
-        this.getUser();
+        this.getOfflineStudies();
     })
     .catch(error => this.handleError(error));
   }
@@ -312,13 +321,6 @@ export class Sync {
     .catch(error => this.handleError(error));
   }
 
-  /* GETTING USER's INFO */
-  getUser(){
-    this.storage.get('currentUser').then(user => {
-      this.user = user;
-      this.getOfflineStudies()
-    });
-  }
 
   /* GETTING OFFLINE STUDIES  */
   getOfflineStudies(){
@@ -393,7 +395,7 @@ export class Sync {
     offlinedataObj.studyEndTime = element.studyEndTime;
     offlinedataObj.customerID = element.customerID;
     offlinedataObj.projectID = element.projectID;
-    offlinedataObj.userID = this.user._id;
+    offlinedataObj.userID = element.userID;
     offlinedataObj.locationID = element.locationID;
     this.offlineData$.push(offlinedataObj);
 
@@ -458,9 +460,8 @@ export class Sync {
     studyData.setRating(data.rating);
 
     return studyData;
-  
   }
-
+  
   /* CLEARING SQLite DATA */
   clearSQLiteData(){
     this.dropTables().subscribe(
@@ -471,6 +472,7 @@ export class Sync {
     error => this.handleError(error));
   }
 
+  /* CLEARING DATA BY DROPPING TABLES AFTER SYNCING IS DONE */
   dropTables(){
     const table1 = this.sql.dropTable(this.TABLE_NAME);
     const table2 = this.sql.dropTable(this.TABLE_NAME_1);
@@ -482,16 +484,12 @@ export class Sync {
     return Observable.forkJoin(observableArray);
   }
 
-
+  /* HANDLING ERROR  */
   handleError(error){
-    
     this.isDatSynced = true;
-    console.error("ERROR: "+ JSON.stringify(error));
-
-    if(error.code){
+    if(error.code)
       if([990, 991, 992, 993, 11000 , 'TokenExpiredError'].indexOf(error.code) || !error.auth)
         this.operations.handleError(error);
-    }
     else
       return Observable.throw(error.json());
       

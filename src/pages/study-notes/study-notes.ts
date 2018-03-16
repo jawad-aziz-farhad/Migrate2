@@ -1,4 +1,4 @@
-import { Component , ViewChild , Renderer, ElementRef } from '@angular/core';
+import { Component , Renderer, ElementRef } from '@angular/core';
 import { IonicPage, NavController } from 'ionic-angular';
 import { ParseDataProvider } from '../../providers';
 import { Keyboard } from '@ionic-native/keyboard';
@@ -16,29 +16,26 @@ import { Keyboard } from '@ionic-native/keyboard';
 })
 export class StudyNotesPage {
   
-  @ViewChild('notes') notesInput;
-
-  public notes: any;
+  public notes: string = '';
 
   constructor(public navCtrl: NavController,
               public parseData: ParseDataProvider,
               public renderer: Renderer,
               public elementRef: ElementRef,
-              public keyboard: Keyboard) {          
-    this.initView();
+              public keyboard: Keyboard) {
   }
 
   ionViewDidLoad(){   
+    this.setFocus();
+  }
+  
+  /* SETTING FOCUS TO TEXT FIELD AND SHOING KEY-BOARD */
+  setFocus(){
     let element = this.elementRef.nativeElement.querySelector('textarea');
     setTimeout(() => {
       this.renderer.invokeElementMethod(element, 'focus', []);   
       this.keyboard.show();
-    }, 500);
-      
-  }
-
-  initView(){
-    this.notes = '';    
+    }, 200);
   }
 
   /* ADDING NOTES FOR STUDY */

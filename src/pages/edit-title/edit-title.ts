@@ -39,15 +39,12 @@ export class EditTitlePage {
     console.log('ionViewDidLoad EditTitlePage');
   }
 
-  ionViewWillEnter(){
-  }
 
   checking(value: string){
     if(this.data)
       this.updateName();
     else
       this.dismiss(value)
-      
   }
 
   dismiss(value: string){

@@ -1,21 +1,17 @@
 <ion-header class="blue-header">
     
-    <ion-navbar color="primary">
-      <ion-title>
-          Observation - Summary
-      </ion-title>
-    </ion-navbar>
-      
-    <!-- <header title="Observation - Summary " button="back"></header> -->
-      
-  </ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      Observation - Summary
+    </ion-title>
+  </ion-navbar>
+</ion-header>
   
 <ion-content *ngIf="show">
 
   <ion-card no-margin class="full-card">
     <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
     <div class="card-title overlayed">
-      <!-- <span>12</span> -->
       {{ navParams.get('round_index') ? parser.geAllData().title : data.title }}</div>
   </ion-card>
 
@@ -48,7 +44,6 @@
 
     <ion-item>
       <ion-label stacked>Study Time:</ion-label>
-      <!-- <ion-input value="{{ navParams.get('round_index') ? convertTime(parser.getAllData().studyStartTime) : convertTime(data.studyStartTime) }}" disabled readonly></ion-input> -->
       <ion-input value="{{ convertTime() }}" disabled readonly></ion-input>
     </ion-item>
 

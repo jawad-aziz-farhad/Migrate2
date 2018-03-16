@@ -152,7 +152,7 @@ export class MyApp {
   openModal() {
     let modal = this.modalCtrl.create('LogoutModalPage', null , { cssClass: 'inset-modal logOut-modal' });
         modal.onDidDismiss(data => {
-          if(data.action == 'yes')
+          if(data && data.action == 'yes')
               this.authProvider.logOut();
           else
               console.log('User dont want to Logout');

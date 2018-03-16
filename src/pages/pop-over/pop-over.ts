@@ -26,7 +26,7 @@ export class PopOverPage {
 
   close(value: any) {
     let data = { value: value };
-    if(typeof data !== 'undefined')
+    if(data)
       this.viewCtrl.dismiss(data);
     else
       this.viewCtrl.dismiss();  

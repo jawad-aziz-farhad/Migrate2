@@ -6,49 +6,41 @@ import 'rxjs/add/operator/takeWhile';
 @Injectable()
 export class Time {
 
-    public time: number;
     public roundTime: number;
     public isTimerRunning: boolean;
     public ticks: number = 0;
     
     constructor(private modalCtrl: ModalController){
     }
-
+    /* SETTING ROUND TIME */
     setRoundTime(roundTime: number){
       this.roundTime = roundTime;
     }
-
+    /* GETTING ROUND TIME */
     getRoundTime(): number {
       return this.roundTime;
     }
 
-    setTime(time: number){
-      this.time = time;
-    }
-
-    getTime(): number {
-      return this.time;
-    }
-    
+    /* RUNNING TIMER */
     runTimer() {
       this.isTimerRunning = true;
       TimerObservable.create(1, 1000)
       .takeWhile(() => this.isTimerRunning)
       .subscribe(t => {
-          this.ticks = this.getTime() - t;
-          console.log('Ticks: '+ this.ticks);
-          if(this.ticks <= 0)
-            this.timerEnds();
+        this.ticks = this.getRoundTime() - t;
+        if(this.ticks <= 0)
+          this.timerEnds();
       });
     }
 
+    /* DESTROING TIMER */
     destroyTimer(){
       console.log('Destorying Timer.');
       this.isTimerRunning = false;
     }
     
+    /* IF TIME IS UP, SHOWING POPUP TO THE USER */
     timerEnds(){
-      console.log('Timer Ended.');
       this.isTimerRunning = false;
       this.openModal();
     }

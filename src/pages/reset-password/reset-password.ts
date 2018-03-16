@@ -34,30 +34,29 @@ export class ResetPasswordPage {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ResetPasswordPage');
-    
+    console.log('ionViewDidLoad ResetPasswordPage');    
   }
 
   /* INIT FORM CONTROLS */
   initFormBuilder() {
-        this.emailSENT = false;
-        this.resetPWForm = this.formBuilder.group({
-          email: ['',  Validators.compose([Validators.maxLength(30), Validators.pattern(EMAIL_REGEXP), Validators.required])]
-        })
+    this.emailSENT = false;
+    this.resetPWForm = this.formBuilder.group({
+      email: ['',  Validators.compose([Validators.maxLength(30), Validators.pattern(EMAIL_REGEXP), Validators.required])]
+    })
   }
 
   submitForm(){
-      this.loader.showLoader(MESSAGE);
-      this.authProvider.resetPassword(this.resetPWForm.value).subscribe(res => {
-        this.loader.hideLoader();
-        this.emailSENT = true;
-        console.log('PASSWORD RESET RESPONSE: ' + JSON.stringify(res));
-      },
-     error => {
-        this.loader.hideLoader();
-        let _error = JSON.parse(error._body);
-        this.handleError(_error);
-     });
+    this.loader.showLoader(MESSAGE);
+    this.authProvider.resetPassword(this.resetPWForm.value).subscribe(res => {
+      this.loader.hideLoader();
+      this.emailSENT = true;
+      console.log('PASSWORD RESET RESPONSE: ' + JSON.stringify(res));
+    },
+    error => {
+      this.loader.hideLoader();
+      let _error = JSON.parse(error._body);
+      this.handleError(_error);
+    });
   }
 
    /* HANDLING LOGIN ERROR */

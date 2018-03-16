@@ -10,23 +10,23 @@
 </ion-header>
 
 <ion-content>
-    <div class="blue-header">
-      <timer></timer>
-    </div> 
+  <div class="blue-header">
+    <timer></timer>
+  </div> 
 
-     <ion-grid class="grid-border-col-4" no-padding>
-        <ion-row>
-            <ion-col *ngFor="let rating of ratings; let i= index;" (click)="continue(rating)" col-3>
-                <div [ngClass]="getStyle(rating)">
-                  {{ rating }}
-                </div>
-            </ion-col>
-        </ion-row>
+  <ion-grid class="grid-border-col-4" no-padding>
+    <ion-row>
+      <ion-col *ngFor="let rating of ratings; let i= index;" (click)="continue(rating)" col-3>
+        <div [ngClass]="getStyle(rating)">
+          {{ rating }}
+        </div>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 
  
 </ion-content>
 
 <ion-footer no-border>
-    <button ion-button block no-margin class="theme-btn no-radius" (click)="goToEnterRating()">Enter Rating</button>
+  <button ion-button block no-margin class="theme-btn no-radius" (click)="goToEnterRating()">Enter Rating</button>
 </ion-footer>

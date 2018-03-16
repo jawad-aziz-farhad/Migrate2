@@ -75,7 +75,6 @@ export class LoginPage {
 
       });
     }
-        
   }
 
   handleJWT(token){
@@ -107,7 +106,7 @@ export class LoginPage {
   openModal(error) {
     let modal = this.modalCtrl.create('AlertModalPage', {error: error, email: this.loginForm.value.email}, { cssClass: 'inset-modal login-error-modal' });
     modal.onDidDismiss(data => {
-      if(data.action == 'reset_password')
+      if(data && data.action == 'reset_password')
         this.navCtrl.push(ResetPasswordPage);
       else
         console.log('User would like to TRY AGAIN.');  

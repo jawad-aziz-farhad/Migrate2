@@ -4,7 +4,7 @@ import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , Parser
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { StudyItemsPage } from '../study-items/study-items';
-import { FREQUENCY_INPUT_ERROR } from '../../config/config';
+
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -97,7 +97,7 @@ export class AddFrequencyPage {
               this._parseData(this.frequency);
         
               /* IF USER CLICKED CONTINUE */
-              if(data.action == 'continue'){
+              if(data && data.action == 'continue'){
                 if(data.notes){
                   this.goNext(StudyNotesPage , { photo: data.photo});
                 }

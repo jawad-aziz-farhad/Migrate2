@@ -10,22 +10,21 @@
 
 
 <ion-content>
-
-     <div class="blue-header">
-        <timer></timer>
-    </div>
-    <h4 text-center *ngIf="!isPhotoTaken">Add a photo of this observation</h4>
-    <div text-center class="__image">
-        <ion-img padding class="subimg" id="file" [src]="isPhotoTaken ? photo : 'assets/images/camera.png'"></ion-img>
-        <p text-center *ngIf="!isPhotoTaken">Tap the Add Photo button to use the camera</p>
-    </div>
+  <div class="blue-header">
+    <timer></timer>
+  </div>
+  <h4 text-center *ngIf="!isPhotoTaken">Add a photo of this observation</h4>
+  <div text-center class="__image">
+    <ion-img padding class="subimg" id="file" [src]="isPhotoTaken ? photo : 'assets/images/camera.png'"></ion-img>
+    <p text-center *ngIf="!isPhotoTaken">Tap the Add Photo button to use the camera</p>
+  </div>
    
 
 </ion-content>
 
 <ion-footer>
     <ion-grid no-padding *ngIf="!isPhotoTaken" >  
-      <ion-row >
+      <ion-row>
         <ion-col col-12>
             <button ion-button block no-margin class="theme-btn no-radius" (click)="takePhoto()">ADD PHOTO</button>
         </ion-col>

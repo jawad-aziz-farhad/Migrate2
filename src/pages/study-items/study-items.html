@@ -5,9 +5,7 @@
   Ionic pages and navigation.
 -->
 <ion-header class="blue-header" no-border>
-
-  <!-- <in-study-header title="{{isStudyEnded ? 'Study Data' : 'Round Data'}}"></in-study-header> -->
-
+  
   <ion-toolbar color="primary">           
     
     <button ion-button (click)="cancelStudy()" class="men_btn">
@@ -65,47 +63,47 @@
         </tr>
       </thead>
 
-      <tbody>
-        <ng-template ngFor let-round [ngForOf]="study_data?.rounds | studyItems : isStudyEnded : showAll" let-i="index">
-          <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
-            <td>
-              <div class="number-icon">{{ item.element.numericID ? item.element.numericID : '--' }}</div>
-                {{ item.element.name }}
-            </td>
-            <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
-            <td>{{ item.rating }}</td>
-            <td>{{ item.frequency }}</td>
-            <td>
-              <ion-checkbox (ionChange)="showSelectedItems(item)">
-              </ion-checkbox>
-            </td>
-          </tr>
-        </ng-template>
-      </tbody>
+    <tbody>
+      <ng-template ngFor let-round [ngForOf]="study_data?.rounds | studyItems : isStudyEnded : showAll" let-i="index">
+        <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
+          <td>
+            <div class="number-icon">{{ item.element.numericID ? item.element.numericID : '--' }}</div>
+              {{ item.element.name }}
+          </td>
+          <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
+          <td>{{ item.rating }}</td>
+          <td>{{ item.frequency }}</td>
+          <td>
+            <ion-checkbox (ionChange)="showSelectedItems(item)">
+            </ion-checkbox>
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
 
-    </table>
+  </table>
 
 </ion-content>
 
 <ion-footer>
-    <ion-grid *ngIf="!isStudyEnded">
-      <ion-row>
-        <ion-col col-4>
-          <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="show()">{{ showAll ? 'SHOW LAST' : 'SHOW ALL' }}</button>
-        </ion-col>
-        <ion-col col-4>
-          <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="endStudy()">END</button>
-        </ion-col>
-        <ion-col col-4>
-          <button ion-button block class="theme-btn no-radius" (click)="startNextRound()">NEXT ROUND</button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+  <ion-grid *ngIf="!isStudyEnded">
+    <ion-row>
+      <ion-col col-4>
+        <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="show()">{{ showAll ? 'SHOW LAST' : 'SHOW ALL' }}</button>
+      </ion-col>
+      <ion-col col-4>
+        <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="endStudy()">END</button>
+      </ion-col>
+      <ion-col col-4>
+        <button ion-button block class="theme-btn no-radius" (click)="startNextRound()">NEXT ROUND</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
     
-    <ion-grid no-padding *ngIf="isStudyEnded">
-        <ion-row>
-            <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
-        </ion-row>
-    </ion-grid>
+  <ion-grid no-padding *ngIf="isStudyEnded">
+    <ion-row>
+        <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
+    </ion-row>
+  </ion-grid>
 </ion-footer>
 
