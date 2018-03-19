@@ -43,11 +43,7 @@ export class StudyItemsPage implements OnInit {
   ngOnInit(){
     this.getData();
   }
-
-  ionViewDidLoad() {}
-
-  ionViewWillEnter() {}
-
+  
   /* GETTING DATA */
   getData(){
     this.totalItemsSelected = 0;
@@ -57,10 +53,10 @@ export class StudyItemsPage implements OnInit {
     this.toast.showBottomToast(ROUND_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
-  showSummary(item,index, sub_index){
+  showSummary(item, index, sub_index){
     if(index == null)
       index = this.study_data.rounds.length - 1
-    this.navCtrl.push(ObservationSummaryPage, {item: item,round_index: index, data_index: sub_index});
+    this.navCtrl.push(ObservationSummaryPage, {item: item, round_index: index, data_index: sub_index});
   }
 
   /* CONFIRMATION FOR SUBMITTING ALL THE STUDY DATA  */
@@ -79,13 +75,14 @@ export class StudyItemsPage implements OnInit {
             this.navCtrl.push(SubmitDataProgressPage);
           }
           else{
-            console.log('User would like to TRY AGAIN.'); 
-            this.isStudyEnded = false;
+            console.log('User does not want to Submit Data.'); 
+            //this.isStudyEnded = false;
           }
         }
-        else if(component == 'EditTitlePage'){
-
-        }
+        
+        else if(component == 'EditTitlePage')
+          console.log("Dismiss the Popup.")
+        
 
     
       });

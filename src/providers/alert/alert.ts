@@ -10,6 +10,8 @@ import { AlertController } from 'ionic-angular';
 @Injectable()
 export class AlertProvider {
 
+  public isPresent: boolean = false;
+
   constructor(private alertCtrl: AlertController) {
     console.log('Hello AlertProvider Provider');
   }
@@ -27,18 +29,21 @@ export class AlertProvider {
             text: 'Cancel',
             role: 'cancel',
             handler: () => {
+              this.isPresent = false;
               resolve('cancel');
             }
           },
           {
             text: 'Yes',
             handler: () => {
+              this.isPresent = false;
               resolve('yes');
             }
           }
         ]
       });
       
+      this.isPresent = true;
       alert.present();
 
     });

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, LoadingController } from 'ionic-angular';
 import { NetworkProvider , SqlDbProvider  , LoaderProvider ,  ToastProvider, Sync } from "../../providers/index";
-import { SYNC_DONE , MESSAGE } from '../../config/config';
+import { SYNC_DONE , MESSAGE, INTERNET_ERROR } from '../../config/config';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { Observable } from 'rxjs';
 
@@ -151,23 +151,27 @@ export class OfflineStudyDataPage {
       });
     });
   }
-
-
+  
   /* SHOWING SUMMARY OF SINGLE ITEM */
   showSummary(item){
     this.navCtrl.push(ObservationSummaryPage, {item: item});
   }
 
-  updateOfflineData(){
-   this.loader.showLoader(MESSAGE);
-   this.sync.syncOfflinedata().subscribe((result: any) => {
-      if(result[0].success){
-        this.toast.showBottomToast(SYNC_DONE);
-        this.items = [];
-      }
-   },
-   error => console.error("SYNCING ERROR: "+ JSON.stringify(error)),
-   () => this.loader.hideLoader());
+  /* SYNCING OFFLINE DATA */
+  syncOfflineData(){
+    if(!this.network.isInternetAvailable())
+      this.toast.showBottomToast(INTERNET_ERROR);
+    else { 
+      this.loader.showLoader(MESSAGE);
+      this.sync.syncOfflinedata().subscribe((result: any) => {
+          if(result[0].success){
+            this.toast.showBottomToast(SYNC_DONE);
+            this.items = [];
+          }
+      },
+      error => console.error("SYNCING ERROR: "+ JSON.stringify(error)),
+      () => this.loader.hideLoader());
+    }
   }
 
 

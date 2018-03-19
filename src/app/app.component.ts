@@ -32,8 +32,8 @@ export class MyApp {
   private user: any;
   private isMenuOpened: boolean;
   private lastTimeBackPress: any = 0;
-  private timePeriodToExit: any = 3000;  
-
+  private timePeriodToExit: any = 3000;
+  
   constructor(public platform: Platform, 
               public modalCtrl: ModalController,          
               public statusBar: StatusBar, 
@@ -93,13 +93,14 @@ export class MyApp {
         this.lastTimeBackPress = new Date().getTime();
       }
     }
-    
   }
 
   /* CANCELING STUDY ON BACK BUTTON PRESSED */
   cancelStudy() {
-    let stop = new Stop(this.nav, this.alertProvider,this.parseData, this.parser, this.time);
-    stop.studyEndConfirmation();
+    if(!this.alertProvider.isPresent){
+      let stop = new Stop(this.nav, this.alertProvider,this.parseData, this.parser, this.time);
+      stop.studyEndConfirmation();
+    }
   }
 
   /* CHECKING LOGIN SESSION AND ROUTING ACCORDINGLY */

@@ -73,6 +73,7 @@ setUserInfo() {
     this.loader.showLoader(MESSAGE)
     this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
       this.loader.hideLoader();
+
       if(res.success)  
         this.dropTable(res);              
       else

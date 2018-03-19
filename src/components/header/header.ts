@@ -52,27 +52,11 @@ export class HeaderComponent {
   }
  
   /* GETTING PROFILE IMAGE */
-  getProfileImage(){
-    
-    if(this.userProfile.userimage){
-        
-        let imagePath = '';
-        
-        if(this.network.isInternetAvailable()){
-          if(this.userProfile.userimage.indexOf('assets/profile_images') > -1)
-              imagePath = SERVER_URL + 'assets/profile_images/' + this.userProfile.userimage.split('/profile_images')[1];
-          else
-          imagePath = SERVER_URL +  this.userProfile.userimage;
-        }
-        else 
-           imagePath = 'assets/images/person.jpg';
-        
-      return imagePath;
-
-    }
+  getProfileImage(){    
+    if(this.userProfile.userimage && this.network.isInternetAvailable())
+      return  SERVER_URL +  this.userProfile.userimage;
     else
         return 'assets/images/person.jpg';
-        
   }
  
   presentPopover(myEvent) {

@@ -14,8 +14,8 @@ import { Time , AlertProvider, ParseDataProvider, ParserProvider } from '../prov
       * ENDING STUDY, STOPPING TIMER 
       * AND NAVIGATING BACK TO ROOT PAGE
     */            
-    studyEndConfirmation(){
-        this.alert.presentConfirm(ALERT_TITLE, STUDY_CANCELING_MESSAGE).then(action => {
+    studyEndConfirmation() {
+        this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
             if(action == 'yes'){              
                 this.time.destroyTimer();
                 this.navCtrl.popToRoot();

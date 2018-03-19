@@ -59,7 +59,8 @@ export class ObservationSummaryPage {
   /* CONVERTING MILLISECONDS TO LOCALE TIME */
   convertTime(){
     let time = null;
-    if(this.navParams.get('round_index'))
+    const round_index = this.navParams.get('round_index');
+    if(typeof round_index !== 'undefined')
       time = this.parser.geAllData().getSutdyStartTime();
     else
       time = this.data.studyStartTime;
@@ -79,7 +80,7 @@ export class ObservationSummaryPage {
   deleteItem(){
     const round_index = this.navParams.get('round_index');
     const data_index  = this.navParams.get('data_index');
-    if(round_index && data_index){
+    if(typeof round_index !== 'undefined'){
       this.parser.geAllData().getRoundData()[round_index].data.splice(data_index,1);
       this.navCtrl.pop();
     }
