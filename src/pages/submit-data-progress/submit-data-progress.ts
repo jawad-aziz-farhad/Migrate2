@@ -51,7 +51,7 @@ export class SubmitDataProgressPage {
 
   /* CHECKING INTERNET CONNECTION's INFO */
   checkInternetAvailability(){
-    if(!this.network.isInternetAvailable())
+    if(this.network.isInternetAvailable())
       this.saveData();
     else
       this.createTable(this.TABLE_NAME);  
