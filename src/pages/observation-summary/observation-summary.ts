@@ -78,13 +78,14 @@ export class ObservationSummaryPage {
 
   /* IF USER SAYS YES, THEN WE WILL DELETE ITEM FROM ARRAY AND MOVE BACK TO STUDY ITEMS PAGE */  
   deleteItem(){
+
     const round_index = this.navParams.get('round_index');
     const data_index  = this.navParams.get('data_index');
-    if(typeof round_index !== 'undefined'){
+    
+    if(!this.isOfflineStudy()){
       this.parser.geAllData().getRoundData()[round_index].data.splice(data_index,1);
       this.navCtrl.pop();
     }
-
     else
       this.deleteFromSQLite();
   }
@@ -97,6 +98,17 @@ export class ObservationSummaryPage {
     }).catch(error => {
       console.error("DELETE ERROR: ")+ JSON.stringify(error);
     });
+  }
+
+  isOfflineStudy() {
+
+    const round_index = this.navParams.get('round_index');
+    const data_index  = this.navParams.get('data_index');
+    
+    if(typeof round_index == undefined || typeof data_index == undefined)
+      return true;
+    else
+      return false;  
   }
 
 }

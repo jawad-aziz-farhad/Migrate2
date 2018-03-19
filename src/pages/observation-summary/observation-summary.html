@@ -12,7 +12,7 @@
   <ion-card no-margin class="full-card">
     <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
     <div class="card-title overlayed">
-      {{ navParams.get('round_index') ? parser.geAllData().title : data.title }}</div>
+      {{ !isOfflineStudy() ? parser.geAllData().title : data.title }}</div>
   </ion-card>
 
   <ion-list>
