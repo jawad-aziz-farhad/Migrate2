@@ -43,6 +43,7 @@ export class AreasPage extends Selection {
   }
 
   initView(){
+    this.TABLE_NAME_1 = 'assignedLocations';
     this.init('Locations',this.navParams.get('project'), AreaDetailPage);
   }
 

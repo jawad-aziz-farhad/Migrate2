@@ -35,7 +35,7 @@ export class ProjectsPage {
   private TABLE_NAME_5:string = 'Elements';
   private TABLE_NAME_6:string = 'Roles';
   private TABLE_NAME_7: string = 'Locations';
-  private TABLE_NAME_8: string = 'Locations_IDs';
+  private TABLE_NAME_8: string = 'assignedLocations';
   private TABLE_NAME_9: string = 'Categories';
 
   
@@ -110,14 +110,14 @@ export class ProjectsPage {
   createTable(data, table) {
     
     const table1 = this.sql.createTable(this.TABLE_NAME);
-    const table5 = this.sql.createTable(this.TABLE_NAME_4);
-    const table6 = this.sql.createTable(this.TABLE_NAME_5);
-    const table7 = this.sql.createTable(this.TABLE_NAME_6);
-    const table8 = this.sql.createTable(this.TABLE_NAME_7);
-    const table9 = this.sql.createTable(this.TABLE_NAME_8);
-    const table10 = this.sql.createTable(this.TABLE_NAME_9);
+    const table2 = this.sql.createTable(this.TABLE_NAME_4);
+    const table3 = this.sql.createTable(this.TABLE_NAME_5);
+    const table4 = this.sql.createTable(this.TABLE_NAME_6);
+    const table5 = this.sql.createTable(this.TABLE_NAME_7);
+    const table6 = this.sql.createTable(this.TABLE_NAME_8);
+    const table7 = this.sql.createTable(this.TABLE_NAME_9);
 
-    const tables = [table1, table5, table6, table7, table8, table9, table10]
+    const tables = [ table1, table2, table3, table4, table5, table6, table7 ];
 
     const create = Observable.forkJoin(tables);
 
@@ -157,7 +157,6 @@ export class ProjectsPage {
 
   /* FOR EACH INDEX CREATING FORK JOIN OBSERVABLE */
   forkJoin(data): Observable<any> {
-
     let observablesArray = [];let _data = [];
     _data.push(data);
     const projects = this.sql.addData(this.TABLE_NAME,_data);
@@ -166,8 +165,13 @@ export class ProjectsPage {
     const roles = this.sql.addData(this.TABLE_NAME_6,data.roles_data);
     const locations = this.sql.addData(this.TABLE_NAME_7,data.customer_locations);
 
-    observablesArray.push(areas,elements,roles,locations,projects);
-    
+    let assignedLocations = null
+    data.fieldUsers.forEach((element,index) => {
+      if(element._id == localStorage.getItem("userID"))
+      assignedLocations = this.sql.addData(this.TABLE_NAME_8, element.locations);
+    });
+
+    observablesArray.push(areas,elements,roles,locations,projects, assignedLocations);
 
     return Observable.forkJoin(observablesArray);
 
@@ -175,13 +179,13 @@ export class ProjectsPage {
 
   /* GETTING ALL DATA OF GIVEN TABLE */
   getAllData() {
-      this.sql.getAllData(this.TABLE_NAME).then(data => {
+    this.sql.getAllData(this.TABLE_NAME).then(data => {
+      this.loader.hideLoader();
+      this.populateData(data);
+    }).catch(error => {
         this.loader.hideLoader();
-        this.populateData(data);
-      }).catch(error => {
-          this.loader.hideLoader();
-          this.toast.showBottomToast(NO_DATA_FOUND);
-      });
+        this.toast.showBottomToast(NO_DATA_FOUND);
+    });
   }
 
   /* POPULATING DATA */

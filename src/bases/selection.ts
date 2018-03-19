@@ -10,11 +10,14 @@ import { CreateRolePage } from '../pages/create-role/create-role';
 import { RatingsPage } from '../pages/ratings/ratings';
 import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { Stop } from './stop-study';
+import { ObservationSummaryPage } from '../pages/observation-summary/observation-summary';
+import { Observable } from 'rxjs';
+import { forkJoin } from 'rxjs/observable/forkJoin';
 
 export class Selection {
   
   protected TABLE_NAME: string = '';
-  //protected TABLE_NAME_1: string = '';
+  protected TABLE_NAME_1: string = '';
   protected project: any;
   protected temp: any;
   protected _temp: any;
@@ -46,9 +49,41 @@ export class Selection {
       this.show = false;
       this.nextComponent = nextComponent;
       this.TABLE_NAME = TABLE_NAME;
-      //this.TABLE_NAME_1 = TABLE_NAME_1;
       this.project = project;
+      if(this.TABLE_NAME == 'Locations')
+        this.pullTwotablesData();
+      else
       this.pullSQLData();
+  }
+
+  /* PULLING TWO TABLES DATA AND SHOWING THOSE LOCATIONS WHICH ARE ASSIGNED TO CURRENT USER */
+  pullTwotablesData(){
+
+    const ids = this.sql.getAllData(this.TABLE_NAME_1);
+    const data = this.sql.getIDData(this.TABLE_NAME, this.project._id);
+    
+    const array = [ids,data];
+
+    Observable.forkJoin(array).subscribe(result => {
+
+      console.log(JSON.stringify(result));
+      const ids = result [0];
+      const data = result[1];
+      this.data = [];
+
+      if(data.length > 0) {
+        data.forEach((element,index) => {
+          if(ids.indexOf(element._id) > -1)
+            this.data.push(element);
+        });
+
+      this.populateData(this.data);
+
+    }
+    else
+      this.pullServerData();
+    },
+    error => console.error("TWO TABLES DATA ERROR: "+ JSON.stringify(error)));
   }
 
   /* PULLING SQLite DATA */
@@ -149,8 +184,6 @@ export class Selection {
     let studyTypes = [ null, 'Customer' ,'Task and Process' , 'NVA' ];
 
     data.forEach((element,index) => {
-
-        console.log("ELEMENT : "+ JSON.stringify(element));
 
         if(currentValue != element.type) {
 
