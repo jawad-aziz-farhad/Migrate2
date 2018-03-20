@@ -141,6 +141,7 @@ export class ProjectsPage {
   inserting(projects){
     return new Observable(observer => {
       projects.forEach((project,index) => {
+        localStorage.setItem("projectID",project._id);
         this.forkJoin(project).subscribe(result => {
           if(index == (projects.length -1)){
             this.sql.addData(this.TABLE_NAME_9, projects[0].categories).then(res => {

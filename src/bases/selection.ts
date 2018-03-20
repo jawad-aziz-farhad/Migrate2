@@ -10,9 +10,8 @@ import { CreateRolePage } from '../pages/create-role/create-role';
 import { RatingsPage } from '../pages/ratings/ratings';
 import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { Stop } from './stop-study';
-import { ObservationSummaryPage } from '../pages/observation-summary/observation-summary';
 import { Observable } from 'rxjs';
-import { forkJoin } from 'rxjs/observable/forkJoin';
+
 
 export class Selection {
   
@@ -53,22 +52,23 @@ export class Selection {
       if(this.TABLE_NAME == 'Locations')
         this.pullTwotablesData();
       else
-      this.pullSQLData();
+        this.pullSQLData();
   }
 
   /* PULLING TWO TABLES DATA AND SHOWING THOSE LOCATIONS WHICH ARE ASSIGNED TO CURRENT USER */
   pullTwotablesData(){
 
-    const ids = this.sql.getAllData(this.TABLE_NAME_1);
+    const ids = this.sql.getIDData(this.TABLE_NAME_1, this.project._id);
     const data = this.sql.getIDData(this.TABLE_NAME, this.project._id);
     
     const array = [ids,data];
 
     Observable.forkJoin(array).subscribe(result => {
 
-      console.log(JSON.stringify(result));
-      const ids = result [0];
+      const ids  = result [0];
       const data = result[1];
+
+      console.log("IDs: \n" + JSON.stringify(ids) + "\n DATA: \n"+ JSON.stringify(data));
       this.data = [];
 
       if(data.length > 0) {
@@ -78,7 +78,6 @@ export class Selection {
         });
 
       this.populateData(this.data);
-
     }
     else
       this.pullServerData();
@@ -90,6 +89,7 @@ export class Selection {
   pullSQLData(){
     const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
     data.then((result: any) => {
+      console.log("SQL DATA FOR "+ this.TABLE_NAME + " IS: "+ JSON.stringify(result))
       if(result.length > 0)
         this.populateData(result);
       else
@@ -98,31 +98,17 @@ export class Selection {
      
   }           
  
-  /* PULLING IDs FROM SQLite */
-  pullIDs(){    
-    // const ids = this.sql.getIDData(this.TABLE_NAME_1, this.project._id);
-    // ids.then(result => {
-    //   console.log('IDs: '+ JSON.stringify(result));
-    //   this.pullServerData(result);
-    // }).catch(error => this.handleError(error) ); 
-
-  }
   /* PULLING DATA FROM SERVER */
-  pullServerData(){
-    
+  pullServerData(){    
     this.loader.showLoader(MESSAGE);
-    //this.formBuilder.initIDForm(result);
-    //let formData = this.formBuilder.getIDForm().value;
-    //let endPoint = this.TABLE_NAME.toLowerCase()+ '/getByIDs';
-    
     let endPoint = this.TABLE_NAME.toLowerCase() + '/getByProjectID';
     let data = { projectID: this.project._id};
     const request = this.operations.postRequest( endPoint , data)
     
     request.subscribe(data => {   
+
       console.log("SERVER DATA:  "+ JSON.stringify(data));
       this.loader.hideLoader();
-      
       if(data.result)
         data = data.result;
      
@@ -130,15 +116,11 @@ export class Selection {
         data.forEach((element,index) => {
           element.projectID = this.project._id;  
         });
-        if(data.result)
-          this.createTable(data.result);
-        else
-          this.createTable(data) 
+        
+        this.createTable(data); 
       }
       else
         console.error("NO DATA FOUND.");
-      
-        
     },
     error => {
       this.loader.hideLoader();

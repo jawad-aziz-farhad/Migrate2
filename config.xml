@@ -141,4 +141,5 @@
     <allow-navigation href="http://192.168.100.3:8101" />
     <plugin name="cordova-plugin-nativestorage" spec="~2.3.1" />
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <allow-navigation href="http://192.168.100.4:8100" />
 </widget>
