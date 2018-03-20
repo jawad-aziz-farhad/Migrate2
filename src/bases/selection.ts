@@ -23,6 +23,7 @@ export class Selection {
   protected isFiltering: boolean;
   protected show: boolean;
   protected data: Array<any>;
+  protected groupedData: Array<any>;
   protected nextComponent: any;
   protected searchInput: any;
 
@@ -68,7 +69,6 @@ export class Selection {
       const ids  = result [0];
       const data = result[1];
 
-      console.log("IDs: \n" + JSON.stringify(ids) + "\n DATA: \n"+ JSON.stringify(data));
       this.data = [];
 
       if(data.length > 0) {
@@ -158,11 +158,12 @@ export class Selection {
   /* CATEGORIZING ELEMENTS ACCORDING TO THEIR STUDY TYPE */
   groupElementsData(){
 
-    this.data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
+    // this.data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
     let data = this.data;
+    data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
     let currentItems = [];
     let currentValue = false;
-    this.data = [];
+    this.groupedData = [];
     let studyTypes = [ null, 'Customer' ,'Task and Process' , 'NVA' ];
 
     data.forEach((element,index) => {
@@ -177,13 +178,14 @@ export class Selection {
           };
           
           currentItems = newGroup.items;
-          this.data.push(newGroup);
+          this.groupedData.push(newGroup);
         }
        
       currentItems.push(element);
 
     });
     
+    console.log("\n\nGROUPED DATA: "+ JSON.stringify(this.groupedData));
     this.show = true;
   }
 

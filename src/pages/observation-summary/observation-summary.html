@@ -4,6 +4,12 @@
     <ion-title>
       Observation - Summary
     </ion-title>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="updateStudyData()" [hidden]="!isUpdateAble()" padding>
+          <ion-icon ios="ios-create" md="md-create"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
   
@@ -12,34 +18,43 @@
   <ion-card no-margin class="full-card">
     <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
     <div class="card-title overlayed">
-      {{ !isOfflineStudy() ? parser.geAllData().title : data.title }}</div>
+      {{ !isOfflineStudy() ? parser.geAllData().title : data?.title }}
+    </div>
   </ion-card>
 
   <ion-list>
       
     <ion-item>
       <ion-label stacked>Area</ion-label>
-      <ion-input type="text" value="{{ data.area.name ? data.area.name : data.area }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data.area.name ? data.area.name : data?.area }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Role</ion-label>
-      <ion-input type="text" value="{{ data.role.name ? data.role.name : data.role }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data.role.name ? data.role.name : data?.role }}" disabled readonly></ion-input>
     </ion-item>
 
+    <!-- 
     <ion-item>
       <ion-label stacked>Element</ion-label>
-      <ion-input type="text" value="{{ data.element.name ? data.element.name : data.element }}" disabled readonly></ion-input>
-    </ion-item>
+      <ion-input type="text" value="{{ data.element.name ? data.element.name : data.element }}"></ion-input>
+    </ion-item> -->
+
+    <ion-item>
+      <ion-label><h3>Elements</h3></ion-label>
+      <ion-select [(ngModel)]="editedElement">
+        <ion-option *ngFor="let element of elements; let i=index;" [value]="element" [selected]="element._id == data.element._id"> {{ element.name }}</ion-option>
+      </ion-select>
+    </ion-item>       
   
     <ion-item>
       <ion-label stacked>Rating</ion-label>
-      <ion-input type="text" value="{{data.rating}}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data?.rating }}" (input)="edit($event.target.value , 'rating')" [disabled]="data?.rating == 'Not Rated'"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Frequency</ion-label>
-      <ion-input type="text" value="{{ data.frequency }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ data?.frequency }}" (input)="edit($event.target.value , 'frequency')"></ion-input>
     </ion-item>
 
     <ion-item>
@@ -49,12 +64,12 @@
 
     <ion-item>
       <ion-label stacked>Observation Time:</ion-label>
-      <ion-input value="{{ data.observationTime }}" disabled readonly></ion-input>
+      <ion-input value="{{ data?.observationTime }}" disabled readonly></ion-input>
     </ion-item>
   
     <ion-item *ngIf="data.notes">
       <ion-label stacked>Notes</ion-label>
-      <ion-textarea value="{{ data.notes }}" disabled readonly></ion-textarea>
+      <ion-textarea value="{{ data?.notes }}" disabled readonly></ion-textarea>
     </ion-item>
 
   </ion-list>

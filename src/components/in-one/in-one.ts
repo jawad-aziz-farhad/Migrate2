@@ -14,6 +14,7 @@ export class InOneComponent implements OnInit {
 
   @Input('tablename') TABLE_NAME;
   @Input('items') items: Array<any> = [];
+  @Input('groupedData') groupedData: Array<any> = [];
   @Input('isFiltering') isFiltering : boolean = false;
 
   @Output() next: any = new EventEmitter<any>();

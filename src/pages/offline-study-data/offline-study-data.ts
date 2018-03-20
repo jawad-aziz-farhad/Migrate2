@@ -50,6 +50,7 @@ export class OfflineStudyDataPage {
   
   /* GETTING OFFLINE DATA AND SYNCING IT TO THE SERVER */
   getStudies(){
+
     this.sql.getAllData(this.TABLE_NAME).then(result => {
       if(result && result.length > 0){
         this.getStudyData(result);
@@ -116,28 +117,37 @@ export class OfflineStudyDataPage {
   gettingData(data, table){
 
     let items = [];
+
     if(table == 'areas')
       items = data[0];
     else if(table == 'elements')
-    items = data[1];
+      items = data[1];
     else if(table == 'roles')
-    items = data[2];  
+      items = data[2];  
 
     const request = Observable.forkJoin(items);
 
     request.subscribe((result: any) => {
       result.forEach((element, index) => {
+
         if(element.length > 0){
+
+          // if(table == 'areas')
+          //   this.items[index].area = element[0].name;
+          // else if(table == 'elements')
+          //   this.items[index].element = element[0].name;
+          // else
+          //   this.items[index].role = element[0].name;
           if(table == 'areas')
-            this.items[index].area = element[0].name;
+            this.items[index].area = element[0];
           else if(table == 'elements')
-            this.items[index].element = element[0].name;
+            this.items[index].element = element[0];
           else
-            this.items[index].role = element[0].name;
+            this.items[index].role = element[0];
           
         }
 
-        if(index == (result.length - 1)){
+        if(index == (result.length - 1)) {
           if(table == 'roles')
             this.show = true;
           else{
@@ -145,7 +155,9 @@ export class OfflineStudyDataPage {
               table = 'elements';
             else if(table == 'elements')
               table = 'roles';
+
             this.gettingData(data,table) ; 
+          
           }
         }
       });

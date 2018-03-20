@@ -54,7 +54,7 @@
   </ion-list>
 
   <div *ngIf="!isFiltering && TABLE_NAME == 'Elements'">
-    <ion-item-group class="list_items" padding *ngFor="let group of items;">
+    <ion-item-group class="list_items" padding *ngFor="let group of groupedData;">
       <ion-item-divider color="light" text-center>{{ group.letter }}</ion-item-divider>
       <ion-item *ngFor="let item of group.items; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
         <p><span class="number-icon">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>

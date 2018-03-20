@@ -436,18 +436,33 @@ export class SqlDbProvider {
     return Observable.forkJoin(observableArray);
   }
 
-  updateTable(table, column , data): Promise<any>{
+  updateTable(table, column , data): Promise<any> {
+
     let query = null; let query_data = null;
+    
     if(table == 'Areas' || table == 'Roles' || table == 'Elements'){
       query = "UPDATE "+ `${table}` + " SET _id=? , name=? ,numericID=?  WHERE _id=?"
       query_data = [data._id, data.name , data.numericID , data.offline];
     }
     else if(table == 'Study_Data'){
-      if(data.photo)
-        query_data = [data.path, data.photo]; 
-      else
-        query_data = [data._id , data.offline];
-      query = "UPDATE "+ `${table}` + " SET "+`${column}`+"=?   WHERE "+`${column}`+"=?"
+
+      /* UPDATING OFFLINE DATA FROM OBSERVATION SUMMARY PAGE */
+      if(data.element && data.rating && data.frequency){
+        query = "UPDATE "+ `${table}` + " SET element=? , rating=?, frequency=?  WHERE id=?"
+
+        query_data = [data.element, data.rating, data.frequency, data.id];
+      }
+
+      /* UPDATING OFFLINE DATA ON SYNCING */
+      else{
+        if(data.photo)
+          query_data = [data.path, data.photo]; 
+        else
+          query_data = [data._id , data.offline];
+
+        query = "UPDATE "+ `${table}` + " SET "+`${column}`+"=?   WHERE "+`${column}`+"=?"
+
+      }
       
     }
 
