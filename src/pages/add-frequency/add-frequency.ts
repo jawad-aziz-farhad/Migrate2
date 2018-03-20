@@ -167,8 +167,7 @@ export class AddFrequencyPage {
 
     if(!notes)
       this.parseData.getData().setNotes(null);
-    if(!
-      photo)  
+    if(!photo)  
       this.parseData.getData().setPhoto(null);
    
     if(!this.frequency)
@@ -178,12 +177,16 @@ export class AddFrequencyPage {
     this.parseData.setData(this.parseData.getData());
 
     if(this.time.ticks <= 0){
+
       this.parseData.setDataArray(this.parseData.getData()); 
       this.parser.getRounds().setRoundData(this.parseData.getDataArray());
       this.parser.getRounds().setRoundEndTime(new Date().getTime())
       this.parser.setRounds(this.parser.getRounds());
       this.parser.geAllData().setRoundData(this.parser.getRounds());
       this.parser.geAllData().setStudyEndTime(new Date().getTime());
+
+
+      console.log("\n\n END DATA IS: " + JSON.stringify(this.parser.geAllData()));
 
       /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
       this.parseData.clearDataArray();

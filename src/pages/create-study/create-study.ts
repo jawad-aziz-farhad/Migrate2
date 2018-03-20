@@ -73,7 +73,7 @@ export class CreateStudyPage {
     this.parser.setAllData(this.all_data);
 
      
-    let data = { action: action , roundTime: this.roundTime , title: this.studyTitle};
+    let data = { action: action , roundTime: 20 , title: this.studyTitle};
     this.viewCtrl.dismiss(data);
   }
 
