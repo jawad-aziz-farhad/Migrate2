@@ -54,34 +54,27 @@ export class Time {
   openModal() {    
     let modal = this.modalCtrl.create('TimerExpiredPage', null, { cssClass: 'inset-modal timer-expired-modal' });
     modal.onDidDismiss(data => {
-      console.log('TIME EXPIRED FOR ROUND.');
       if(data && data.action == 'continue'){
-        this.parsingData();        
+        this.parse_Data();        
         this.runTimer();  
       }
-      else{
-        this.isTimerRunning = false;
-        console.log('ENDING STUDY.');
-      }
-        
+      else
+        this.isTimerRunning = false;        
     });
+
     modal.present();
   }
 
   /* PARSING DATA OF THIS ROUND AND STARTING NEXT ROUND */
-  parsingData(){
-    if(this.parseData.getDataArray()){
-      this.parseData.setDataArray(this.parseData.getData());
+  parse_Data(){
+    if(this.parseData.getDataArray().length > 0){
       this.parser.getRounds().setRoundData(this.parseData.getDataArray());
       this.parser.getRounds().setRoundEndTime(new Date().getTime())
       this.parser.setRounds(this.parser.getRounds());
       this.parser.geAllData().setRoundData(this.parser.getRounds());
+      this.parseData.clearDataArray();
+      this.parser.clearRounds();
+      this.parser.getRounds().setRoundStartTime(new Date().getTime());  
     }
-
-    console.log("\n\nDATA AT END TIME IS: "+ JSON.stringify(this.parser.geAllData()) + "\n\nDATA " +JSON.stringify(this.parseData.getData()) );
-
-
-    this.parseData.clearDataArray();
-    this.parser.clearRounds();
   }
 }

@@ -38,9 +38,6 @@ export class AddFrequencyPage {
      console.log('SelectElementPage');
    }
 
-  ionViewWillEnter() {
-  }
-
   init(){
     this.frequency = '';
     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
@@ -48,10 +45,6 @@ export class AddFrequencyPage {
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){
-    //  if(this.frequency.length == 0 && num == 0)
-    //   console.log(FREQUENCY_INPUT_ERROR);
-    // else  
-    //   this.frequency = this.frequency + num;
     this.frequency = this.frequency + num;
   } 
 
@@ -59,26 +52,6 @@ export class AddFrequencyPage {
   removeFrequency(){
     this.frequency = this.frequency.slice(0, this.frequency.length -1 );
   }
-
-  /* ADDING FREQUENCY TO THE ROUND DATA AND MOVING TO NEXT PAGE */
-  addFrequency(){
-    console.log('FREQUENCY IS: ' + this.frequency);
-    this.openModal();
-  }
-
-  /* PARSING DATA */
-  _parseData(frequency: number) {
-
-    let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
-    //let observation_Time = this.millisToMinutesAndSeconds(observationTime);
-    this.parseData.getData().setObservationTime(observationTime);
-    this.parseData.getData().setNotes(null);
-    this.parseData.getData().setPhoto(null);
-    this.parseData.getData().setFrequency(frequency);
-    this.parseData.setData(this.parseData.getData());
-
-
-  } 
 
   millisToMinutesAndSeconds(millis) {
     const minutes = Math.floor(millis / 60000);
@@ -89,63 +62,6 @@ export class AddFrequencyPage {
       return '00:' +(parseInt(seconds) < 10 ? '0' : '') + seconds;
   }
    
-  /* OPENING MODAL FOR ADDING FREQUENCY */
-  openModal() {
-      let modal = this.modalCtrl.create('StudyOptionsPage', null, { cssClass: 'inset-modal study-options-modal' });        
-      modal.onDidDismiss(data => {
-
-              this._parseData(this.frequency);
-        
-              /* IF USER CLICKED CONTINUE */
-              if(data && data.action == 'continue'){
-                if(data.notes){
-                  this.goNext(StudyNotesPage , { photo: data.photo});
-                }
-                else if(data.photo)  
-                  this.goNext(StudyPhotoPage , 'studyPhotoPage' );
-              }
-              /* IF USER CLICKED END */
-              else{
-                if(this.time.ticks <= 0)
-                  this.goToStudyItemsPage();
-                else
-                  this.startNextObservation();
-              }
-      });
-
-    modal.present();
-  }
-
-  startNextObservation(){
-    if(this.navCtrl.length() <= 12){
-      this.parseData.setDataArray(this.parseData.getData()); 
-      this.parseData.clearData();
-      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 3))); 
-    }  
-    else
-      this.navCtrl.popToRoot(); 
-  }
-
-  /* GOING TO THE NEXT PAGE */
-  goNext(component , data) {
-    this.navCtrl.push(component , data);
-  }
-
-  goToStudyItemsPage(){
-    
-    this.parseData.setDataArray(this.parseData.getData()); 
-    this.parser.getRounds().setRoundData(this.parseData.getDataArray());
-    this.parser.getRounds().setRoundEndTime(new Date().getTime())
-    this.parser.setRounds(this.parser.getRounds());
-    this.parser.geAllData().setRoundData(this.parser.getRounds());
-    this.parser.geAllData().setStudyEndTime(new Date().getTime());
-
-    /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
-    this.parseData.clearDataArray();
-    this.parseData.clearData();
-    this.parser.clearRounds();
-    this.goNext(StudyItemsPage , 'studyItemsPage' );
-  }
 
   /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
   onCancelStudy(event){
@@ -155,7 +71,7 @@ export class AddFrequencyPage {
     }
   }
 
-
+  /* ENDING OBSERVATION OR ROUND BY CHECKING THE TIME STATUS */
   endStudy(){
     
     let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
@@ -176,6 +92,9 @@ export class AddFrequencyPage {
     this.parseData.getData().setFrequency(this.frequency);
     this.parseData.setData(this.parseData.getData());
 
+    /* IF TIME IS UP AND USER HAS ENDED UP THE STUDY, 
+        PARSING DATA AND GOING TO STUDY ITEMS PAGE 
+    */
     if(this.time.ticks <= 0){
 
       this.parseData.setDataArray(this.parseData.getData()); 
@@ -185,16 +104,13 @@ export class AddFrequencyPage {
       this.parser.geAllData().setRoundData(this.parser.getRounds());
       this.parser.geAllData().setStudyEndTime(new Date().getTime());
 
-
-      console.log("\n\n END DATA IS: " + JSON.stringify(this.parser.geAllData()));
-
       /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
       this.parseData.clearDataArray();
       this.parseData.clearData();
       this.parser.clearRounds();
-      this.goNext(StudyItemsPage , 'studyItemsPage' );
+      this.navCtrl.push(StudyItemsPage);
     }
-      
+    /* STARTING NEXT OBSERVATION */
     else{
 
       if(this.navCtrl.length() <= 12){
@@ -207,10 +123,12 @@ export class AddFrequencyPage {
     }
   }
 
+  /* ADDING NOTES FOR THE CURRENT OBSERVATION */
   addNotes(){
     this.navCtrl.push(StudyNotesPage);
   }
 
+  /* ADDING PHOTO FOR THE CURRENT OBSERVATION */
   addPhoto(){
     this.navCtrl.push(StudyPhotoPage);
   }
