@@ -21,6 +21,7 @@ export class Selection {
   protected temp: any;
   protected _temp: any;
   protected isFiltering: boolean;
+  protected isSearching: boolean;
   protected show: boolean;
   protected data: Array<any>;
   protected groupedData: Array<any>;
@@ -46,7 +47,7 @@ export class Selection {
   }
 
   init(TABLE_NAME: string, project: any, nextComponent: any){
-      this.show = false;
+      this.show = this.isSearching = false;
       this.nextComponent = nextComponent;
       this.TABLE_NAME = TABLE_NAME;
       this.project = project;
@@ -185,7 +186,6 @@ export class Selection {
 
     });
     
-    console.log("\n\nGROUPED DATA: "+ JSON.stringify(this.groupedData));
     this.show = true;
   }
 
@@ -239,6 +239,7 @@ export class Selection {
         this.nextComponent =  RatingsPage ;
     }
     
+    this.isSearching = false;
     this.navCtrl.push(this.nextComponent, { project: this.project});
   }
 
@@ -267,6 +268,7 @@ export class Selection {
 
   /* ON SEARCH CANCEL, SETTING THE ORIGINAL DATA BACK TO ARRAY  */
   onSearchCancel() : any {
+    this.isSearching = false;
     this.data = this.temp;
   }
 
@@ -313,6 +315,7 @@ export class Selection {
   }
 
   is_Filtering(){
+    this.isSearching = false;
     this.isFiltering = !this.isFiltering;
   } 
 }

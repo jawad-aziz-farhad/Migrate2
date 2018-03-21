@@ -58,6 +58,7 @@ export class AuthProvider {
       const decodedUser =  this.decodeUserFromToken(token);
       const user = this.decodeUser(decodedUser);
       localStorage.setItem("userID", user._id);
+      localStorage.setItem("userName", user.firstname + ' ' + user.lastname);
       return this.storage.set('currentUser', user);
   }
   decodeUserFromToken(jwt: string){
@@ -68,6 +69,7 @@ export class AuthProvider {
     this.storage.remove('jwt').then(() => {
        localStorage.removeItem('TOKEN');
        localStorage.removeItem("userID");
+       localStorage.removeItem("userName");
        this.storage.remove('currentUser').then(() => this.authUser.next(null));
     });
   }  

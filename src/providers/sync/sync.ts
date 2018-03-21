@@ -386,6 +386,11 @@ export class Sync {
       projectID: null,
       locationID: null,
       userID: null,
+      addedBy: {
+        date: new Date().getDate(),
+        name: localStorage.getItem("userName"),
+        _id: localStorage.getItem("userID")
+      },
       rounds: []
     };
 

@@ -44,6 +44,9 @@ export class StudyItemsPage implements OnInit {
     this.getData();
   }
   
+  ionViewWillEnter(){
+    //this.getData();
+  }
   /* GETTING DATA */
   getData(){
     this.totalItemsSelected = 0;

@@ -4,13 +4,13 @@
     <ion-title>
       Observation - Summary
     </ion-title>
-    <!-- 
+    
     <ion-buttons end>
       <button ion-button icon-only (click)="updateStudyData()" [hidden]="!isUpdateAble()" padding>
-        <ion-icon ios="ios-create" md="md-create"></ion-icon>
+        <ion-icon ios="ios-document" md="md-document"></ion-icon>
       </button>
     </ion-buttons> 
-    -->
+   
   </ion-navbar>
 </ion-header>
   
@@ -71,13 +71,13 @@
 </ion-content>
 
 <ion-footer no-padding>
-  <!-- <button ion-button block no-margin class="theme-btn no-radius" (click)="deletConfirmation()">Delete</button> -->
-  <ion-row>
+  <button ion-button block no-margin class="theme-btn no-radius" (click)="deletConfirmation()">Delete</button>
+  <!-- <ion-row>
     <ion-col col-6>
       <button ion-button block no-radius class="theme-btn no-radius" [disabled]="!isUpdateAble()" (click)="updateStudyData()">UPDATE</button>
     </ion-col>
     <ion-col col-6>
       <button ion-button block class="theme-btn no-radius" (click)="deletConfirmation()">DELETE</button>
     </ion-col>
-  </ion-row>
+  </ion-row> -->
 </ion-footer>
