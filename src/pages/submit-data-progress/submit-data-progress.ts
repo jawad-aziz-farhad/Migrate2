@@ -61,7 +61,6 @@ export class SubmitDataProgressPage {
   saveData() {    
     this.formProvider.initFormBuilder(this.parser.geAllData());
     let formData = this.formProvider.getFormBuilder().value;
-    alert(JSON.stringify(formData))
     let url = SERVER_URL + 'ras_data/add';
     
     this.http
