@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams  } from 'ionic-angular';
 import { AuthProvider , OperationsProvider , ToastProvider, LoaderProvider, SqlDbProvider, NetworkProvider, FormBuilderProvider , HeadersProvider} from '../../providers/index';
-import {  MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR, SERVER_URL} from '../../config/config';
+import { MESSAGE , INTERNET_ERROR, NO_DATA_FOUND, ERROR, SERVER_URL} from '../../config/config';
 import { Storage } from "@ionic/storage";
 import { AreasPage } from '../areas/areas';
 import { Projects } from '../../models';
@@ -158,6 +158,7 @@ export class ProjectsPage {
 
   /* FOR EACH INDEX CREATING FORK JOIN OBSERVABLE */
   forkJoin(data): Observable<any> {
+
     let observablesArray = [];let _data = [];
     _data.push(data);
     const projects = this.sql.addData(this.TABLE_NAME,_data);
@@ -240,7 +241,6 @@ export class ProjectsPage {
         if(refresher !== '')
           refresher.complete();
      });
-
   }
 
 }

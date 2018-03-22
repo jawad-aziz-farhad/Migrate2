@@ -38,7 +38,6 @@ export class ProfilePage {
   initView() {
     this.user = this.navParams.get('user');
     this.show = true;
-    console.log('USER INFO' + JSON.stringify(this.user));
   }
   
   /* GETTING PROFILE IMAGE */

@@ -77,7 +77,6 @@ export class Selection {
           if(ids.indexOf(element._id) > -1)
             this.data.push(element);
         });
-
       this.populateData(this.data);
     }
     else
@@ -90,7 +89,6 @@ export class Selection {
   pullSQLData(){
     const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
     data.then((result: any) => {
-      console.log("SQL DATA FOR "+ this.TABLE_NAME + " IS: "+ JSON.stringify(result))
       if(result.length > 0)
         this.populateData(result);
       else
@@ -101,14 +99,15 @@ export class Selection {
  
   /* PULLING DATA FROM SERVER */
   pullServerData(){    
+
     this.loader.showLoader(MESSAGE);
+    this.data = this.groupedData = [];
     let endPoint = this.TABLE_NAME.toLowerCase() + '/getByProjectID';
     let data = { projectID: this.project._id};
-    const request = this.operations.postRequest( endPoint , data)
+    const request = this.operations.postRequest(endPoint , data)
     
     request.subscribe(data => {   
 
-      console.log("SERVER DATA:  "+ JSON.stringify(data));
       this.loader.hideLoader();
       if(data.result)
         data = data.result;
@@ -118,7 +117,10 @@ export class Selection {
           element.projectID = this.project._id;  
         });
         
-        this.createTable(data); 
+        if(this.TABLE_NAME.toLowerCase() == 'elements')
+          this.getElementsCategories(data);
+        else
+          this.createTable(data); 
       }
       else
         console.error("NO DATA FOUND.");
@@ -127,6 +129,29 @@ export class Selection {
       this.loader.hideLoader();
       this.operations.handleError(error);
     });
+  }
+
+  getElementsCategories(data){
+    
+    let requests = [];
+    if(data && data.length > 0) {
+
+      data.forEach((element,index) => {
+        let request = this.operations.postRequest('categories/getByID', {id: element.category});
+        requests.push(request);
+      });
+
+      Observable.forkJoin(requests).subscribe((result: any) => {
+
+        data.forEach((element,index) => {
+          element.category = result[index]._id; 
+          element.type = result[index].studyType;
+        });
+
+        this.createTable(data);
+      },
+      error => console.error("ERROR: " + JSON.stringify(error)));
+    }
   }
 
   /* CREATIN TABLE */
@@ -267,7 +292,7 @@ export class Selection {
   /* REFRESHING DATA ON SWIPE DOWN */
   doRefresh(refresher) {
     /* IF INTERNET IS NOT AVAILABLE */
-    if(!this.network.isInternetAvailable()){
+    if(!this.network.isInternetAvailable()) {
       this.toast.showToast(INTERNET_ERROR);
       refresher.complete();
       return;
