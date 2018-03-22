@@ -28,6 +28,11 @@ export class FormBuilderProvider {
       locationID: [data.locationID],
       userID: [localStorage.getItem("userID")],
       roundDuration: [data.roundDuration],
+      addedBy: this.formBuilder.group({
+                date: new Date(),
+                name: localStorage.getItem("userName"),
+                _id: localStorage.getItem("userID")
+              }),
       rounds: this.formBuilder.array([ ])
     });
   

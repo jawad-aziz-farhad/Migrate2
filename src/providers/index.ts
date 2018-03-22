@@ -6,7 +6,6 @@ export * from './operations/operations';
 export * from './headers/headers';
 export * from './time/time';
 export * from './parse-data/parse-data';
-export * from './search/search';
 export * from './sql-db/sql-db';
 export * from './network/network';
 export * from './form-builder/form-builder';

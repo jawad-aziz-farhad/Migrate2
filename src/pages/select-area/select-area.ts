@@ -1,7 +1,7 @@
 import { Component  } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { SelectElementPage } from '../select-element/select-element';
-import { Time , ParseDataProvider, SearchProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
+import { Time , ParseDataProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
         OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider, ParserProvider} from '../../providers';
 import { Selection } from '../../bases';
 /**
@@ -23,7 +23,6 @@ import { Selection } from '../../bases';
               time: Time ,
               parseData: ParseDataProvider,
               parser: ParserProvider,
-              search: SearchProvider,
               loader: LoaderProvider,
               operations: OperationsProvider,
               sql: SqlDbProvider,
@@ -32,7 +31,7 @@ import { Selection } from '../../bases';
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl,navParams, time,parseData,parser,search,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl,navParams, time,parseData,parser,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
   }
 
   ionViewDidLoad() {

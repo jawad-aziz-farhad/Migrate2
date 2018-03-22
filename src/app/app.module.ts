@@ -52,7 +52,6 @@ import { OperationsProvider } from '../providers/operations/operations';
 import { ParseDataProvider } from '../providers/parse-data/parse-data';
 import { NetworkProvider } from '../providers/network/network';
 import { Time } from '../providers/time/time';
-import { SearchProvider } from '../providers/search/search';
 import { SqlDbProvider } from '../providers/sql-db/sql-db';
 import { FormBuilderProvider } from '../providers/form-builder/form-builder';
 import { ParserProvider } from '../providers/parser/parser';
@@ -191,7 +190,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     AlertProvider,
     OperationsProvider,
     ParseDataProvider,
-    SearchProvider,
     SqlDbProvider,
     FormBuilderProvider,
     ParserProvider,

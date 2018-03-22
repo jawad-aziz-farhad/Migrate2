@@ -29,7 +29,7 @@
     [(ngModel)]="searchInput"
     [showCancelButton]="true"
     [animated]="true"
-    (ionInput)="onSearchInput($event)"
+    (ionInput)="searchInput"
     (ionCancel)="isSearching = !isSearching">
   </ion-searchbar>
   </ion-toolbar>
@@ -45,9 +45,15 @@
       </ion-refresher-content>
     </ion-refresher>
 
-    <in-one *ngIf="show" tablename="Areas" [isFiltering]="isFiltering" [items]="data" (is_Filtering)="is_Filtering($event)" 
+    <in-one *ngIf="show && !isSearching" tablename="Areas" [isFiltering]="isFiltering" [items]="data" (is_Filtering)="is_Filtering($event)" 
       (selectedItem)="selectItem($event)" (create)="createItem($event)"></in-one> 
       
+    <ion-list class="list_items" *ngIf="isSearching" padding>
+      <ion-item *ngFor="let item of data | search : 'name' : searchInput; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+        <p>{{ item.name }}</p>
+      </ion-item>
+    </ion-list>
+
   </ion-content>
 
   <ion-footer no-border>

@@ -4,12 +4,13 @@
     <ion-title>
       Observation - Summary
     </ion-title>
-
+    
     <ion-buttons end>
-      <button ion-button icon-only (click)="updateStudyData()" [hidden]="!isUpdateAble()" padding>
-          <ion-icon ios="ios-create" md="md-create"></ion-icon>
+      <button ion-button icon-only (click)="updateStudyData()" [disabled]="!isUpdateAble()" padding>
+        <ion-icon ios="ios-document" md="md-document"></ion-icon>
       </button>
-    </ion-buttons>
+    </ion-buttons> 
+   
   </ion-navbar>
 </ion-header>
   
@@ -33,12 +34,6 @@
       <ion-label stacked>Role</ion-label>
       <ion-input type="text" value="{{ data.role.name ? data.role.name : data?.role }}" disabled readonly></ion-input>
     </ion-item>
-
-    <!-- 
-    <ion-item>
-      <ion-label stacked>Element</ion-label>
-      <ion-input type="text" value="{{ data.element.name ? data.element.name : data.element }}"></ion-input>
-    </ion-item> -->
 
     <ion-item>
       <ion-label><h3>Elements</h3></ion-label>
@@ -76,5 +71,13 @@
 </ion-content>
 
 <ion-footer no-padding>
-    <button ion-button block  no-margin class="theme-btn no-radius" (click)="deletConfirmation()">Delete</button>
+  <button ion-button block no-margin class="theme-btn no-radius" (click)="deletConfirmation()">Delete</button>
+  <!-- <ion-row>
+    <ion-col col-6>
+      <button ion-button block no-radius class="theme-btn no-radius" [disabled]="!isUpdateAble()" (click)="updateStudyData()">UPDATE</button>
+    </ion-col>
+    <ion-col col-6>
+      <button ion-button block class="theme-btn no-radius" (click)="deletConfirmation()">DELETE</button>
+    </ion-col>
+  </ion-row> -->
 </ion-footer>

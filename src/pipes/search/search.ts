@@ -14,6 +14,6 @@ export class SearchPipe implements PipeTransform {
    */
   transform(items: any[], field: string, value: string): any[] {
     if (!value) return items;
-    return items.filter(it => it[field].toLowerCase().indexOf(value) > -1);
+    return items.filter(it => it[field].toLowerCase().indexOf(value.toLowerCase()) > -1);
   }
 }

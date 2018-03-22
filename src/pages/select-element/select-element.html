@@ -47,7 +47,7 @@
       </ion-refresher-content>
     </ion-refresher>
 
-    <in-one *ngIf="show && !isSearching" tablename="Elements" [isFiltering]="isFiltering" [groupedData]="groupedData"  [items]="data" (is_Filtering)="is_Filtering($event)" 
+    <in-one *ngIf="show && !isSearching" tablename="Elements" [isFiltering]="isFiltering" [groupedData]="groupedData" [items]="data" (is_Filtering)="is_Filtering($event)" 
       (selectedItem)="selectItem($event)" (create)="createItem($event)"></in-one>
       
     <ion-list class="list_items" *ngIf="isSearching" padding>

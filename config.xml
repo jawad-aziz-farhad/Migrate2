@@ -89,8 +89,6 @@
     <allow-navigation href="http://169.254.192.216:8101" />
     <allow-navigation href="http://192.168.0.100:8101" />
     <allow-navigation href="http://192.168.0.100:8100" />
-    <engine name="browser" spec="^4.1.0" />
-    <engine name="ios" spec="^4.5.2" />
     <plugin name="cordova-plugin-camera" spec="^2.4.1" />
     <plugin name="cordova-plugin-device" spec="^1.1.4" />
     <plugin name="cordova-plugin-file" spec="^4.3.3" />
@@ -137,9 +135,11 @@
     <allow-navigation href="http://192.168.100.3:8100" />
     <allow-navigation href="http://192.168.100.3:8102" />
     <plugin name="cordova-plugin-screen-orientation" spec="~3.0.1" />
-    <engine name="android" spec="~6.0.0" />
     <allow-navigation href="http://192.168.100.3:8101" />
     <plugin name="cordova-plugin-nativestorage" spec="~2.3.1" />
-    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
     <allow-navigation href="http://192.168.100.4:8100" />
+    <plugin name="ionic-plugin-keyboard" spec="^2.2.1" />
+    <engine name="android" spec="^6.2.3" />
+    <engine name="browser" spec="^4.1.0" />
+    <engine name="ios" spec="^4.5.2" />
 </widget>

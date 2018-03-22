@@ -1,6 +1,6 @@
 
 import { NavController, MenuController, NavParams } from 'ionic-angular';
-import { ToastProvider, LoaderProvider, FormBuilderProvider, SearchProvider, AlertProvider, ParseDataProvider,
+import { ToastProvider, LoaderProvider, FormBuilderProvider, AlertProvider, ParseDataProvider,
          OperationsProvider, SqlDbProvider, NetworkProvider, Time, ParserProvider} from '../providers';
 import { MESSAGE, INTERNET_ERROR } from '../config/config';
 import { StudyData } from '../models';
@@ -21,6 +21,7 @@ export class Selection {
   protected temp: any;
   protected _temp: any;
   protected isFiltering: boolean;
+  protected isSearching: boolean;
   protected show: boolean;
   protected data: Array<any>;
   protected groupedData: Array<any>;
@@ -34,7 +35,6 @@ export class Selection {
               public time: Time ,
               public parseData: ParseDataProvider,
               public parser: ParserProvider,
-              public search: SearchProvider,
               public loader: LoaderProvider,
               public operations: OperationsProvider,
               public sql: SqlDbProvider,
@@ -186,7 +186,6 @@ export class Selection {
 
     });
     
-    console.log("\n\nGROUPED DATA: "+ JSON.stringify(this.groupedData));
     this.show = true;
   }
 
@@ -240,6 +239,7 @@ export class Selection {
         this.nextComponent =  RatingsPage ;
     }
     
+    this.isSearching = false;
     this.navCtrl.push(this.nextComponent, { project: this.project});
   }
 
@@ -258,16 +258,9 @@ export class Selection {
     console.error('ERROR: ' + error);
   }
 
- /* WHEN USER TYPES TO SEARCH */ 
- onSearchInput(): any{
-    if(this.searchInput)
-      this.data = this.search.search_Item(this.data, this.searchInput);
-    else
-      this.data = this.temp;
-  }
-
   /* ON SEARCH CANCEL, SETTING THE ORIGINAL DATA BACK TO ARRAY  */
   onSearchCancel() : any {
+    this.isSearching = false;
     this.data = this.temp;
   }
 
@@ -314,6 +307,7 @@ export class Selection {
   }
 
   is_Filtering(){
+    this.isSearching = false;
     this.isFiltering = !this.isFiltering;
   } 
 }
