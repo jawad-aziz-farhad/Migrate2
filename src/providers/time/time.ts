@@ -70,7 +70,8 @@ export class Time {
 
   /* PARSING DATA OF THIS ROUND AND STARTING NEXT ROUND */
   parsingData(){
-    if(this.parseData.getDataArray()){
+    
+    if(this.parseData.getDataArray().length > 0){
       this.parseData.setDataArray(this.parseData.getData());
       this.parser.getRounds().setRoundData(this.parseData.getDataArray());
       this.parser.getRounds().setRoundEndTime(new Date().getTime())

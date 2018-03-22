@@ -46,6 +46,7 @@ export class Selection {
   }
 
   init(TABLE_NAME: string, project: any, nextComponent: any){
+      this.searchInput = '';
       this.show = false;
       this.nextComponent = nextComponent;
       this.TABLE_NAME = TABLE_NAME;

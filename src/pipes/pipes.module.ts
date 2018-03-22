@@ -3,15 +3,18 @@ import { ReversePipe } from './../pipes/reverse/reverse';
 import { SortPipe } from './sort/sort';
 import { StudyItemsPipe } from './study-items/study-items';
 import { OrderPipe } from './order/order';
+import { SearchPipe } from './search/search';
 @NgModule({
 	declarations: [ReversePipe,
     SortPipe,
     StudyItemsPipe,
-    OrderPipe],
+    OrderPipe,
+    SearchPipe],
 	imports: [],
 	exports: [ReversePipe,
     SortPipe,
     StudyItemsPipe,
-    OrderPipe]
+    OrderPipe,
+    SearchPipe]
 })
 export class PipesModule {}

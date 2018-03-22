@@ -24,14 +24,16 @@
     </ion-toolbar>
 
     <ion-toolbar *ngIf="isSearching">
-        <ion-searchbar
-        [class.has-content]="!!searchInput"
+      
+      <ion-searchbar 
         [(ngModel)]="searchInput"
+        [class.has-content]="!!searchInput"
         [showCancelButton]="true"
         [animated]="true"
-        (ionInput)="onSearchInput($event)"
+        (ionInput)="searchInput"
         (ionCancel)="isSearching = !isSearching">
       </ion-searchbar>
+
     </ion-toolbar>
   
   </ion-header>
@@ -45,8 +47,14 @@
       </ion-refresher-content>
     </ion-refresher>
 
-    <in-one *ngIf="show" tablename="Elements" [isFiltering]="isFiltering" [groupedData]="groupedData"  [items]="data" (is_Filtering)="is_Filtering($event)" 
-      (selectedItem)="selectItem($event)" (create)="createItem($event)"></in-one> 
+    <in-one *ngIf="show && !isSearching" tablename="Elements" [isFiltering]="isFiltering" [groupedData]="groupedData"  [items]="data" (is_Filtering)="is_Filtering($event)" 
+      (selectedItem)="selectItem($event)" (create)="createItem($event)"></in-one>
+      
+    <ion-list class="list_items" *ngIf="isSearching" padding>
+      <ion-item *ngFor="let item of data | search : 'name' : searchInput; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+        <p>{{ item.name }}</p>
+      </ion-item>
+    </ion-list>
       
   </ion-content>
 
