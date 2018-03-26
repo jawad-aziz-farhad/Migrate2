@@ -44,12 +44,12 @@
   
     <ion-item>
       <ion-label stacked>Rating</ion-label>
-      <ion-input type="text" value="{{ data?.rating }}" (input)="edit($event.target.value , 'rating')" [disabled]="data?.rating == 'Not Rated'"></ion-input>
+      <ion-input type="number" pattern="\\d*" value="{{ data?.rating }}" (input)="edit($event.target.value , 'rating')" [disabled]="data?.rating == 'Not Rated'"></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Frequency</ion-label>
-      <ion-input type="text" value="{{ data?.frequency }}" (input)="edit($event.target.value , 'frequency')"></ion-input>
+      <ion-input type="number" pattern="\\d*" value="{{ data?.frequency }}" (input)="edit($event.target.value , 'frequency')"></ion-input>
     </ion-item>
 
     <ion-item>
