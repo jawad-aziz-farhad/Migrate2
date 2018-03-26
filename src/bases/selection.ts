@@ -145,7 +145,8 @@ export class Selection {
 
         data.forEach((element,index) => {
           element.category = result[index]._id; 
-          element.type = result[index].studyType;
+          element.studyType = result[index].studyType;
+          element.type = result[index].type;
         });
 
         this.createTable(data);
@@ -187,13 +188,14 @@ export class Selection {
     let data = this.data;
     data.sort(function(a,b) {return (a.studyType > b.studyType) ? 1 : ((b.studyType > a.studyType) ? -1 : 0); });
     let currentItems = [];
+    let trackingItems = [];
     let currentValue = false;
     this.groupedData = [];
     let studyTypes = [ null, 'Customer' , 'Task and Process' , 'NVA' ];
 
     data.forEach((element,index) => {
 
-      if(currentValue != element.studyType) {
+      if(currentValue !== element.studyType && element.type !== 2) {
 
         currentValue = element.studyType;
 
@@ -204,11 +206,26 @@ export class Selection {
         currentItems = newGroup.items;
         this.groupedData.push(newGroup);
       }
+      
       if(element.type != 2) 
         currentItems.push(element);
+      else
+        trackingItems.push(element);
 
     });
-    
+
+    /* MAKING A NEW GROUP OF ELEMENTS HAVING TYPE 2 AND MOVING THIS GROUP TO 0 INDEX OF ARRAY */
+    let newGroup = {
+      letter: "Tracking",
+      items: []
+    };   
+
+    trackingItems.forEach((element,index) => {
+      newGroup.items.push(element);
+    });
+
+    this.groupedData.splice(0, 0 , newGroup);
+
     this.show = true;
   }
 
