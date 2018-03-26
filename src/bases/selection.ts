@@ -185,28 +185,27 @@ export class Selection {
   groupElementsData(){
     
     let data = this.data;
-    data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
+    data.sort(function(a,b) {return (a.studyType > b.studyType) ? 1 : ((b.studyType > a.studyType) ? -1 : 0); });
     let currentItems = [];
     let currentValue = false;
     this.groupedData = [];
-    let studyTypes = [ null, 'Customer' ,'Task and Process' , 'NVA' ];
+    let studyTypes = [ null, 'Customer' , 'Task and Process' , 'NVA' ];
 
     data.forEach((element,index) => {
 
-        if(currentValue != element.type) {
+      if(currentValue != element.studyType) {
 
-          currentValue = element.type;
+        currentValue = element.studyType;
 
-          let newGroup = {
-            letter: studyTypes[element.type],
-            items: []
-          };
-          
-          currentItems = newGroup.items;
-          this.groupedData.push(newGroup);
-        }
-       
-      currentItems.push(element);
+        let newGroup = {
+          letter: studyTypes[element.studyType],
+          items: []
+        };        
+        currentItems = newGroup.items;
+        this.groupedData.push(newGroup);
+      }
+      if(element.type != 2) 
+        currentItems.push(element);
 
     });
     

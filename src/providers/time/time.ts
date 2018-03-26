@@ -37,7 +37,7 @@ export class Time {
         this.ticks = this.getRoundTime() - t;
         console.log("TICKS: "+ this.ticks);
         if(this.ticks == 0)
-          this.destroyTimer();
+          this.isTimerRunning = false;
       },
       error => console.error("TIMER ERROR"),
       () => {
@@ -52,7 +52,9 @@ export class Time {
 
     /* DESTROING TIMER */
     destroyTimer(){
-      this.isTimerRunning = false;
+      this.ticks = 0;
+      this.isTimerRunning = false; 
+      this.isStudyEnded = true;
     }
     
    
@@ -64,11 +66,9 @@ export class Time {
       if(data && data.action == 'continue'){
         this.parse_Data();
       }
-      else {
-        this.ticks = 0;
-        this.isTimerRunning = false; 
-        this.isStudyEnded = true;
-      }       
+      else 
+        this.destroyTimer();  
+         
     });
     
     this.isPopupPresent = true;

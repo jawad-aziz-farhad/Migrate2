@@ -184,7 +184,8 @@ export class OperationsProvider {
         if(element && element.elements_data.length > 0) {
           element.elements_data.forEach((sub_element,sub_index) => {
           sub_element.category = result[sub_index]._id; 
-          sub_element.type = result[sub_index].studyType;
+          sub_element.studyType = result[sub_index].studyType;
+          sub_element.type = result[sub_index].type;
         });
       }
     });

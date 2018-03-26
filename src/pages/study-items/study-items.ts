@@ -41,6 +41,7 @@ export class StudyItemsPage implements OnInit {
 
 
   ngOnInit(){
+    this.isStudyEnded = true;
     this.getData();
   }
   
@@ -51,7 +52,7 @@ export class StudyItemsPage implements OnInit {
   getData(){
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
-    this.isStudyEnded = this.showAll = false;
+    this.showAll = false;
     this.study_data = this.parser.geAllData();
     this.toast.showBottomToast(ROUND_ENDED);
   }
@@ -78,8 +79,7 @@ export class StudyItemsPage implements OnInit {
             this.navCtrl.push(SubmitDataProgressPage);
           }
           else{
-            console.log('User does not want to Submit Data.'); 
-            //this.isStudyEnded = false;
+            console.log('User does not want to Submit Data.');
           }
         }
         
@@ -121,8 +121,8 @@ export class StudyItemsPage implements OnInit {
     }
     
     this.itemsSelected = [];
-    if(rounds.length == 0)
-      this.isStudyEnded = false;
+    // if(rounds.length == 0)
+    //   this.isStudyEnded = false;
   }
 
   /* START NEXT ROUND */
@@ -137,7 +137,6 @@ export class StudyItemsPage implements OnInit {
 
   /* END STUDY BUTTON CLICKED FUNCTION */
   endStudy(){
-    this.isStudyEnded = !this.isStudyEnded;
     this.toast.showBottomToast(STUDY_ENDED);
   }
 
