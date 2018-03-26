@@ -20,7 +20,7 @@ export class TimerComponent {
     }
 
     private getMinutes(ticks: number) {
-         return this.pad((Math.floor(ticks / 60)) % 60);
+        return this.pad((Math.floor(ticks / 60)) % 60);
     }
 
     private getHours(ticks: number) {

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TimerObservable } from "rxjs/observable/TimerObservable";
 import { ModalController } from 'ionic-angular';
-import 'rxjs/add/operator/takeWhile';
 import { ParserProvider } from '../parser/parser';
 import { ParseDataProvider } from '../parse-data/parse-data';
+import 'rxjs/add/operator/takeWhile';
 
 @Injectable()
 export class Time {
@@ -11,13 +11,15 @@ export class Time {
     public roundTime: number;
     public isTimerRunning: boolean;
     public ticks: number = 0;
+    public isPopupPresent: boolean = false;
+    public isStudyEnded : boolean = false;
     
     constructor(private modalCtrl: ModalController,
                 private parser: ParserProvider,
                 private parseData: ParseDataProvider){
     }
     /* SETTING ROUND TIME */
-    setRoundTime(roundTime: number){
+    setRoundTime(roundTime: number) {
       this.roundTime = roundTime;
     }
     /* GETTING ROUND TIME */
@@ -27,41 +29,49 @@ export class Time {
 
     /* RUNNING TIMER */
     runTimer() {
+      this.isStudyEnded = false;
       this.isTimerRunning = true;
       TimerObservable.create(1, 1000)
       .takeWhile(() => this.isTimerRunning)
       .subscribe(t => {
         this.ticks = this.getRoundTime() - t;
-        if(this.ticks <= 0)
-          this.timerEnds();
+        console.log("TICKS: "+ this.ticks);
+        if(this.ticks == 0)
+          this.destroyTimer();
+      },
+      error => console.error("TIMER ERROR"),
+      () => {
+        console.log("TIME COMPLETED.")
+        if(!this.isStudyEnded){
+          this.runTimer();
+          if(!this.isPopupPresent)
+            this.openModal();
+        }
       });
     }
 
     /* DESTROING TIMER */
     destroyTimer(){
-      console.log('Destorying Timer.');
       this.isTimerRunning = false;
     }
     
-    /* IF TIME IS UP, SHOWING POPUP TO THE USER */
-    timerEnds(){
-      this.isTimerRunning = false;
-      this.openModal();
-    }
-
-
+   
   /* OPENING MODAL WHEN STUDY TIME IS OVER */
-  openModal() {    
+  openModal() { 
     let modal = this.modalCtrl.create('TimerExpiredPage', null, { cssClass: 'inset-modal timer-expired-modal' });
     modal.onDidDismiss(data => {
+      this.isPopupPresent = false;
       if(data && data.action == 'continue'){
-        this.parse_Data();        
-        this.runTimer();  
+        this.parse_Data();
       }
-      else
-        this.isTimerRunning = false;        
+      else {
+        this.ticks = 0;
+        this.isTimerRunning = false; 
+        this.isStudyEnded = true;
+      }       
     });
-
+    
+    this.isPopupPresent = true;
     modal.present();
   }
 

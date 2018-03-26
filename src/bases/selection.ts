@@ -183,8 +183,7 @@ export class Selection {
 
   /* CATEGORIZING ELEMENTS ACCORDING TO THEIR STUDY TYPE */
   groupElementsData(){
-
-    // this.data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
+    
     let data = this.data;
     data.sort(function(a,b) {return (a.type > b.type) ? 1 : ((b.type > a.type) ? -1 : 0); });
     let currentItems = [];
