@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams , ModalController} from 'ionic-angu
 import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider } from '../../providers';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { SubmitDataProgressPage } from  '../submit-data-progress/submit-data-progress';
-import { ROUND_ENDED, STUDY_ENDED } from '../../config/config'
+import { STUDY_ENDED } from '../../config/config'
 import { Stop } from '../../bases';
 /**
  * 
@@ -21,8 +21,6 @@ import { Stop } from '../../bases';
 export class StudyItemsPage implements OnInit {
   
   public study_data: any;
-  public isStudyEnded: boolean;
-  public showAll: boolean;
   public temp: any;
   public itemsSelected: any;
   public totalItemsSelected: number;
@@ -41,7 +39,6 @@ export class StudyItemsPage implements OnInit {
 
 
   ngOnInit(){
-    this.isStudyEnded = true;
     this.getData();
   }
   
@@ -52,9 +49,8 @@ export class StudyItemsPage implements OnInit {
   getData(){
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
-    this.showAll = false;
     this.study_data = this.parser.geAllData();
-    this.toast.showBottomToast(ROUND_ENDED);
+    this.toast.showBottomToast(STUDY_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
   showSummary(item, index, sub_index){
@@ -121,8 +117,6 @@ export class StudyItemsPage implements OnInit {
     }
     
     this.itemsSelected = [];
-    // if(rounds.length == 0)
-    //   this.isStudyEnded = false;
   }
 
   /* START NEXT ROUND */
@@ -135,18 +129,10 @@ export class StudyItemsPage implements OnInit {
     this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length()- (this.navCtrl.length() - 3)));
   }
 
-  /* END STUDY BUTTON CLICKED FUNCTION */
-  endStudy(){
-    this.toast.showBottomToast(STUDY_ENDED);
-  }
 
   /* CONVERTING MILLISECONDS TO TIME STRING */
   convertTime(time){
     return new Date(time).toLocaleTimeString();
-  }
-
-  show(){
-    this.showAll = !this.showAll;
   }
 
   /* CANCELLING STUDY */ 

@@ -12,7 +12,7 @@
       <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
     </button> 
       
-    <ion-title>{{ isStudyEnded ? 'Study Data' : 'Round Data' }}</ion-title>
+    <ion-title>Study Data</ion-title>
 
     <ion-buttons end>
       <button ion-button clear style="font-size:22px;" (click)="cancelStudy()">
@@ -28,10 +28,9 @@
 
     <ion-toolbar color="primary" padding>
 
-      <!-- <ion-title>{{ isStudyEnded ?  study_data.title : 'Round Summary' }}</ion-title>  -->
-      <ion-title>Round Summary</ion-title>
+      <ion-title>{{ study_data.title }}</ion-title>
       
-      <ion-buttons end *ngIf="isStudyEnded">
+      <ion-buttons end>
         <button ion-button clear (click)="openModal('EditTitlePage')">
             <ion-icon ios="ios-create" md="md-create" class="ion-md-edit"></ion-icon>
         </button> 
@@ -56,7 +55,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th *ngIf="isStudyEnded">Round</th>
+          <th>Round</th>
           <th>Element</th>
           <th>Rating</th>
           <th>Frequency</th>
@@ -65,21 +64,7 @@
       </thead>
 
     <tbody>
-      <!-- <ng-template ngFor let-round [ngForOf]="study_data?.rounds | studyItems : isStudyEnded : showAll" let-i="index">
-        <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
-          <td *ngIf="isStudyEnded">{{ convertTime(round.roundStartTime) }}</td>
-          <td>
-            <div class="number-icon">{{ item.element.numericID ? item.element.numericID : '--' }}</div>
-              {{ item.element.name }}
-          </td>
-          <td>{{ item.rating }}</td>
-          <td>{{ item.frequency }}</td>
-          <td>
-            <ion-checkbox (ionChange)="showSelectedItems(item)">
-            </ion-checkbox>
-          </td>
-        </tr>
-      </ng-template> -->
+     
       <ng-template ngFor let-round [ngForOf]="study_data?.rounds" let-i="index">
         <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
           <td>{{ convertTime(round.roundStartTime) }}</td>
@@ -102,26 +87,6 @@
 </ion-content>
 
 <ion-footer>
-  <!-- <ion-grid *ngIf="!isStudyEnded">
-    <ion-row>
-      <ion-col col-4>
-        <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="show()">{{ showAll ? 'SHOW LAST' : 'SHOW ALL' }}</button>
-      </ion-col>
-      <ion-col col-4>
-        <button ion-button block no-radius class="theme-btn no-radius" [disabled]="study_data.rounds.length == 0" (click)="endStudy()">END</button>
-      </ion-col>
-      <ion-col col-4>
-        <button ion-button block class="theme-btn no-radius" (click)="startNextRound()">NEXT ROUND</button>
-      </ion-col>
-    </ion-row>
-  </ion-grid> -->
-    
-  <!-- 
-  <ion-grid no-padding *ngIf="isStudyEnded">
-    <ion-row>
-        <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
-    </ion-row>
-  </ion-grid> -->
   <ion-grid no-padding>
     <ion-row>
       <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
