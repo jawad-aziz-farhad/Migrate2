@@ -95,7 +95,7 @@ export class AddFrequencyPage {
     /* IF TIME IS UP AND USER HAS ENDED UP THE STUDY, 
         PARSING DATA AND GOING TO STUDY ITEMS PAGE 
     */
-    if(this.time.ticks <= 0){
+    if(this.time.isStudyEnded){
 
       this.parseData.setDataArray(this.parseData.getData()); 
       this.parser.getRounds().setRoundData(this.parseData.getDataArray());
