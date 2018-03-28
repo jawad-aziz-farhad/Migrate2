@@ -75,10 +75,20 @@
       </ion-item>
     </ion-list>
     
-    <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
+    <div *ngIf="TABLE_NAME == 'Elements'">
+      <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
         <ion-item *ngFor="let item of items?.reverse() | reverse: 'numericID' : order; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
           <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
         </ion-item>
-    </ion-list>
+      </ion-list>
+    </div>
+
+    <div *ngIf="TABLE_NAME !== 'Elements'">
+      <ion-list class="list_items" *ngSwitchCase="'recently_added'" padding>
+        <ion-item *ngFor="let item of items?.reverse(); let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+          <p><span class="number-icon" *ngIf="TABLE_NAME == 'Elements'">{{ item.numericID ? item.numericID : '--' }}</span> {{ item.name }}</p>
+        </ion-item>
+      </ion-list>
+    </div>
   </div>
 </div>
