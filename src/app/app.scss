@@ -24,12 +24,12 @@
    Variables
    ===================== */
 
-   $skyblue:           #f3a929;
-   $lightblue:         #f37621;
-   $dark-blue:         #8C4007;
-   $theme-color:       #FF9800;
-   $extra-light-grey:  #b3b3b3;
-   $body-bg:           #fafafa;
+    $skyblue:           #C797F4;
+    $lightblue:         #6F19A3;
+    $dark-blue:         #6F24A3;
+    $theme-color:       #874FC1;
+    $extra-light-grey:  #b3b3b3;
+    $body-bg:           #fafafa;
    
    $font-light:    100;
    $font-regular:  400;
@@ -1024,7 +1024,7 @@ button[clear]{
 }
 
 .menu-footer {
-        background-color:#ff9800;
+        background-color:$theme-color;
         color:white;
         text-align:center;
 }

@@ -80,21 +80,21 @@ export class SqlDbProvider {
         _data = [data[index]._id, data[index].name, this.isValueAvailable(data[index].customer.image), null , data[index].customer._id , data[index].customer.name, data[index].rating];      
       else if(table == 'Locations')
         _data = [data[index]._id , data[index].projectID,  data[index].customerID , data[index].name, data[index].addressOne, data[index].addressTwo, data[index].addressThree, data[index].addressFour, null, data[index].contactName, data[index].telephone,
-                data[index].schedule[0].openingHour + ' - ' + data[index].schedule[0].openingMinute + ' ' + data[index].schedule[0].openingTimeFormat,
-                data[index].schedule[1].openingHour + ' - ' + data[index].schedule[1].openingMinute + ' ' + data[index].schedule[1].openingTimeFormat,
-                data[index].schedule[2].openingHour + ' - ' + data[index].schedule[2].openingMinute + ' ' + data[index].schedule[2].openingTimeFormat,
-                data[index].schedule[3].openingHour + ' - ' + data[index].schedule[3].openingMinute + ' ' + data[index].schedule[3].openingTimeFormat,
-                data[index].schedule[4].openingHour + ' - ' + data[index].schedule[4].openingMinute + ' ' + data[index].schedule[4].openingTimeFormat,
-                data[index].schedule[5].openingHour + ' - ' + data[index].schedule[5].openingMinute + ' ' + data[index].schedule[5].openingTimeFormat,
-                data[index].schedule[6].openingHour + ' - ' + data[index].schedule[6].openingMinute + ' ' + data[index].schedule[6].openingTimeFormat,
+                data[index].schedule[0].openingHour + ':' + data[index].schedule[0].openingMinute + ' ' + data[index].schedule[0].openingTimeFormat,
+                data[index].schedule[1].openingHour + ':' + data[index].schedule[1].openingMinute + ' ' + data[index].schedule[1].openingTimeFormat,
+                data[index].schedule[2].openingHour + ':' + data[index].schedule[2].openingMinute + ' ' + data[index].schedule[2].openingTimeFormat,
+                data[index].schedule[3].openingHour + ':' + data[index].schedule[3].openingMinute + ' ' + data[index].schedule[3].openingTimeFormat,
+                data[index].schedule[4].openingHour + ':' + data[index].schedule[4].openingMinute + ' ' + data[index].schedule[4].openingTimeFormat,
+                data[index].schedule[5].openingHour + ':' + data[index].schedule[5].openingMinute + ' ' + data[index].schedule[5].openingTimeFormat,
+                data[index].schedule[6].openingHour + ':' + data[index].schedule[6].openingMinute + ' ' + data[index].schedule[6].openingTimeFormat,
               
-                data[index].schedule[0].closingHour + ' - ' + data[index].schedule[0].closingMinute + ' ' + data[index].schedule[0].closingTimeFormat,
-                data[index].schedule[1].closingHour + ' - ' + data[index].schedule[1].closingMinute + ' ' + data[index].schedule[1].closingTimeFormat,
-                data[index].schedule[2].closingHour + ' - ' + data[index].schedule[2].closingMinute + ' ' + data[index].schedule[2].closingTimeFormat,
-                data[index].schedule[3].closingHour + ' - ' + data[index].schedule[3].closingMinute + ' ' + data[index].schedule[3].closingTimeFormat,
-                data[index].schedule[4].closingHour + ' - ' + data[index].schedule[4].closingMinute + ' ' + data[index].schedule[4].closingTimeFormat,
-                data[index].schedule[5].closingHour + ' - ' + data[index].schedule[5].closingMinute + ' ' + data[index].schedule[5].closingTimeFormat,
-                data[index].schedule[6].closingHour + ' - ' + data[index].schedule[6].closingMinute + ' ' + data[index].schedule[6].closingTimeFormat
+                data[index].schedule[0].closingHour + ':' + data[index].schedule[0].closingMinute + ' ' + data[index].schedule[0].closingTimeFormat,
+                data[index].schedule[1].closingHour + ':' + data[index].schedule[1].closingMinute + ' ' + data[index].schedule[1].closingTimeFormat,
+                data[index].schedule[2].closingHour + ':' + data[index].schedule[2].closingMinute + ' ' + data[index].schedule[2].closingTimeFormat,
+                data[index].schedule[3].closingHour + ':' + data[index].schedule[3].closingMinute + ' ' + data[index].schedule[3].closingTimeFormat,
+                data[index].schedule[4].closingHour + ':' + data[index].schedule[4].closingMinute + ' ' + data[index].schedule[4].closingTimeFormat,
+                data[index].schedule[5].closingHour + ':' + data[index].schedule[5].closingMinute + ' ' + data[index].schedule[5].closingTimeFormat,
+                data[index].schedule[6].closingHour + ':' + data[index].schedule[6].closingMinute + ' ' + data[index].schedule[6].closingTimeFormat
               ]
       else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')        
         _data = [localStorage.getItem('projectID'), data[index]];     

@@ -83,17 +83,17 @@ openModal() {
     let time = '';
     if(typeof from !== 'undefined' && typeof to !== 'undefined'){
     
-      if(from.trim() !== "00 - 00"){
-        if(from.trim() !== "00 - 00")
+      if(from.trim() !== "00:00"){
+        if(from.trim() !== "00:00")
           time += from;
         
-        if(to.trim() !== "00 - 00")
-          time += ' - ' + to; 
+        if(to.trim() !== "00:00")
+          time += '   -   ' + to; 
         else
-          time += ' - Closed' ;
+          time += '     Closed' ;
     }
     else
-      time = '  Closed ';
+      time = '    Closed ';
     
   
   }
