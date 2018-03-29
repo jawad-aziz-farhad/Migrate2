@@ -18,7 +18,7 @@ import { FileTransfer, FileTransferObject } from '@ionic-native/file-transfer';
 */
 @Injectable()
 export class OperationsProvider {
-  
+
   private END_POINT: any;
 
   constructor(public http: Http ,
@@ -55,8 +55,12 @@ export class OperationsProvider {
                       item = item.result;
                   
                     if(item && _index >= 1 && item.length > 0){
-                      item.forEach((subitem,subindex) => {
+                      item.forEach((subitem,subindex) => {                        
                         subitem.projectID = project._id;
+                        if(_index == 4 && subindex == 0)
+                          subitem.elements_data.forEach((element,sub_index)=> {
+                            element.projectID = project._id;
+                          });
                       });
                     }
                 });
@@ -64,8 +68,9 @@ export class OperationsProvider {
                 res[index].customer = result[0];
                 res[index].customer_locations = result[1];
                 res[index].areas_data = result[2];
-                res[index].elements_data = result[3];
-                res[index].roles_data = result[4];
+                res[index].roles_data = result[3];
+                res[index].tasks_data = result[4];
+                res[index].elements_data = result[4][0].elements_data;
 
                 if(index == (res.length - 1)) {
                   this.postRequest('categories/get',null).subscribe(result => {
@@ -94,12 +99,12 @@ export class OperationsProvider {
     request = this.postRequest('areas/getByProjectID',{projectID: this.checkRequestData(project._id)});
     requests.push(request);
   
-    request = this.postRequest('elements/getByProjectID',{projectID: this.checkRequestData(project._id)});
-    requests.push(request);
-
     request = this.postRequest('roles/getByProjectID',{projectID: this.checkRequestData(project._id)});
     requests.push(request);
-  
+
+    request = this.postRequest('tasks/getByProjectID',{projectID: this.checkRequestData(project._id)});
+    requests.push(request);
+    
     return Observable.forkJoin(requests);
   }
 
@@ -107,14 +112,14 @@ export class OperationsProvider {
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
     /* FILTERING ELEMENTS FOR GETTING ONLY THOSE ELEMENTS WHICH HAVE STUDY TYPE EFFICIENCY STUDY */
-    if(endPoint.indexOf('elements/getByProjectID') > -1)
+    if(endPoint.indexOf('tasks/getByProjectID') > -1)
       return this.http.post(`${this.END_POINT}`, data ,{ headers: headers })
                               .map(res => res.json())
-                              .map((elements: Array<any>) =>  elements.filter(element => element.studyTypes.indexOf(1) > -1 ))
+                              .flatMap((tasks: Array<any>) =>  this.getTaskElements(tasks))
                               .catch(this.catchError);
     
     else
-        return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catchError);
+      return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catchError);
       
   }
 
@@ -122,7 +127,80 @@ export class OperationsProvider {
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
     return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catch_Error);
+  }
 
+  /* GETTING ELEMENTS RELATED TO EACH TASK */
+  getTaskElements(tasks): Observable<any> {
+
+    return new Observable(observer => {
+    
+      if(tasks.length == 0) {
+        observer.next([]);
+        observer.complete();
+      }
+
+      else {
+        let requests = [];
+        tasks.forEach((task,index) => {
+          if(task.elements.length > 0){
+            let ids = [];
+            task.elements.forEach((element,index) => {
+              ids.push(element._id);
+            });
+
+            let request = this.postRequest('elements/getByIDs', {ids: ids});
+            requests.push(request);
+          }
+        });
+      
+       let fork_Join =  Observable.forkJoin(requests);
+       let elements_data = [];
+       fork_Join.subscribe(result => {
+          result.forEach((result: any,index) => {
+            result.forEach((item,sub_index) => {
+              item.taskID = tasks[index]._id;
+              elements_data.push(item);
+;            });
+            tasks[index].elements = result;
+          });
+
+          tasks[0].elements_data = elements_data;
+          observer.next(tasks);
+          observer.complete();
+       });
+      }
+    });
+  }
+
+  /* GETTING CATEGORIES OF ALL ELEMENTS TO AND MANIPULATING type KEY WITH studyType */
+  getElementsCategories(observer, data){    
+    let requests = [];
+    data.forEach((element,index) => {
+      if(element && element.elements_data.length > 0) {
+        element.elements_data.forEach((sub_element,sub_index) => {
+          let request = this.postRequest('categories/getByID', {id: sub_element.category});
+          requests.push(request);
+        });
+      }
+    });
+    
+    Observable.forkJoin(requests).subscribe((result: any) => {
+
+      data.forEach((element,index) => {
+        if(element && element.elements_data.length > 0) {
+          element.elements_data.forEach((sub_element,sub_index) => {
+          sub_element.category = result[sub_index]._id; 
+          sub_element.studyType = result[sub_index].studyType;
+          sub_element.type = result[sub_index].type;
+        });
+      }
+    });
+    
+
+      observer.next(data);
+      observer.complete();
+    },
+    error => console.error("ERROR: " + JSON.stringify(error)));
   }
 
   /* CATCHING ERROR */
@@ -134,6 +212,7 @@ export class OperationsProvider {
       return Observable.throw(error.json() || 'Server Error');
   }
 
+  /* CHECKING DATA */
   checkRequestData(data){
     let request_data = null;
     if(data.length > 0)
@@ -162,39 +241,6 @@ export class OperationsProvider {
     else 
       this.toast.showToast(ERROR);
     
-  }
-
-  /* GETTING CATEGORIES OF ALL ELEMENTS TO AND MANIPULATING type KEY WITH studyType */
-  getElementsCategories(observer, data){
-    
-    let requests = [];
-
-    data.forEach((element,index) => {
-      if(element && element.elements_data.length > 0) {
-        element.elements_data.forEach((sub_element,sub_index) => {
-          let request = this.postRequest('categories/getByID', {id: sub_element.category});
-          requests.push(request);
-        });
-      }
-    });
-    
-    Observable.forkJoin(requests).subscribe((result: any) => {
-
-      data.forEach((element,index) => {
-        if(element && element.elements_data.length > 0) {
-          element.elements_data.forEach((sub_element,sub_index) => {
-          sub_element.category = result[sub_index]._id; 
-          sub_element.studyType = result[sub_index].studyType;
-          sub_element.type = result[sub_index].type;
-        });
-      }
-    });
-    
-
-      observer.next(data);
-      observer.complete();
-    },
-    error => console.error("ERROR: " + JSON.stringify(error)));
   }
 
   uploadFile(data: any): Promise<any>{

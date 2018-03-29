@@ -104,31 +104,20 @@ export class StudyItemsPage implements OnInit {
   /* REMOVING ITEM FROM LIST */
   removeItems() {    
     let rounds = this.study_data.rounds;
-        for (let i = rounds.length - 1; i >= 0; i -= 1) {       
-        for(let j= rounds[i].data.length - 1; j>=0; j-=1){
-          const index = this.itemsSelected.indexOf(rounds[i].data[j])
-          if(index > -1){
-            rounds[i].data.splice(j,1);
-            this.totalItemsSelected--;
-          }
-        if(rounds[i].data.length == 0)
-            rounds.splice(i,1);
+      for (let i = rounds.length - 1; i >= 0; i -= 1) {       
+      for(let j= rounds[i].data.length - 1; j>=0; j-=1){
+        const index = this.itemsSelected.indexOf(rounds[i].data[j])
+        if(index > -1){
+          rounds[i].data.splice(j,1);
+          this.totalItemsSelected--;
+        }
+      if(rounds[i].data.length == 0)
+          rounds.splice(i,1);
       }
     }
     
     this.itemsSelected = [];
   }
-
-  /* START NEXT ROUND */
-  startNextRound(){
-    this.parseData.clearData();
-    this.parseData.clearDataArray();
-    this.parser.clearRounds();
-    this.time.runTimer();
-    this.parser.getRounds().setRoundStartTime(new Date().getTime());
-    this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length()- (this.navCtrl.length() - 3)));
-  }
-
 
   /* CONVERTING MILLISECONDS TO TIME STRING */
   convertTime(time){

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { StudyData , AllStudyData} from '../../models';
+import { StudyData , AllStudyData, StudyElements} from '../../models';
 /*
   Generated class for the ParseDataProvider provider.
 
@@ -13,6 +13,7 @@ export class ParseDataProvider {
 
   private data: StudyData;
   private data_array: Array<StudyData>;
+  private studyElements: Array<StudyElements>;
   public final_data: {title: any , data: Array<StudyData> };
   public round_data: { roundStartTime: any, roundEndTime: any, data: Array<StudyData>};
   public rounds: Array<any>;
@@ -20,6 +21,7 @@ export class ParseDataProvider {
   constructor(public http: Http) {
     console.log('Hello ParseDataProvider Provider');
     this.data_array = [];
+    this.studyElements = [];
     this.final_data = {title: '' , data: []};
     this.rounds = [];
     this.round_data = {roundStartTime: '', roundEndTime: '', data: [ ]};
@@ -46,6 +48,9 @@ export class ParseDataProvider {
   getDataArray(): Array<StudyData> {
     return this.data_array;
   }
+
+  setStudyElements(studyElements: StudyElements){ this.studyElements.push(studyElements); }
+  getStudyElements(): Array<StudyElements> { return this.studyElements; }
 
   clearDataArray(){
     this.data_array = [];

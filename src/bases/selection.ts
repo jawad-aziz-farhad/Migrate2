@@ -214,17 +214,21 @@ export class Selection {
 
     });
 
-    /* MAKING A NEW GROUP OF ELEMENTS HAVING TYPE 2 AND MOVING THIS GROUP TO 0 INDEX OF ARRAY */
-    let newGroup = {
-      letter: "Tracking",
-      items: []
-    };   
+    if(trackingItems.length > 0) {
 
-    trackingItems.forEach((element,index) => {
-      newGroup.items.push(element);
-    });
+      /* MAKING A NEW GROUP OF ELEMENTS HAVING TYPE 2 AND MOVING THIS GROUP TO 0 INDEX OF ARRAY */
+      let newGroup = {
+        letter: "Tracking",
+        items: []
+      };   
 
-    this.groupedData.splice(0, 0 , newGroup);
+      trackingItems.forEach((element,index) => {
+        newGroup.items.push(element);
+      });
+
+      this.groupedData.splice(0, 0 , newGroup);
+    
+    }
 
     this.show = true;
   }
@@ -248,11 +252,14 @@ export class Selection {
       study_data.setArea(item);
     else if(this.TABLE_NAME == 'Elements')
       study_data.setElement(item);
+    else if(this.TABLE_NAME == 'Tasks'){
+      study_data.setTask(item);  
+    }
     else if(this.TABLE_NAME == 'Roles'){
       study_data.setRole(item);
       study_data.setObservationTime(new Date().getTime());
     }
-    
+
     this.parseData.setData(study_data);
     this.goNext();
   }
@@ -277,10 +284,17 @@ export class Selection {
 
       else
         this.nextComponent =  RatingsPage ;
+
+      this.time.runTimer();  
     }
     
     this.isSearching = false;
-    this.navCtrl.push(this.nextComponent, { project: this.project});
+    let data = null;
+    if(this.TABLE_NAME == 'Tasks')
+      data = {task: this.parseData.getData().getTask() , project: this.project };
+    else
+      data = { project: this.project}
+    this.navCtrl.push(this.nextComponent, data);
   }
 
   /* GIVING A STYLE TO SELECTED LIST ITEM */

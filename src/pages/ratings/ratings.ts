@@ -26,10 +26,12 @@ export class RatingsPage {
     public navParams: NavParams , 
     public time: Time,
     public operations: OperationsProvider,
-    public parseData: ParseDataProvider) {     
+    public parseData: ParseDataProvider) {
+            
   }
 
-  ionViewDidLoad() {     
+  ionViewDidLoad() {
+       
     console.log('SelectElementPage');
   }
 

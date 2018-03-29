@@ -17,7 +17,6 @@ import { Keyboard } from '@ionic-native/keyboard';
 })
 export class CreateStudyPage {
   
-  public roundTime: any;
   public all_data: any;
   public round_data: any;
   public studyTitle: any;
@@ -36,7 +35,6 @@ export class CreateStudyPage {
 
   ionViewDidLoad() {
     this.studyTitle = '';
-    this.roundTime = 3; 
     this.customer = this.navParams.get('customer');
     this.location = this.navParams.get('location');
     this.setFocus();
@@ -53,15 +51,12 @@ export class CreateStudyPage {
   /* DISMISSING ALERT */
   dismiss(action: string) {
 
-    this.roundTime = this.roundTime * 60;
-    
     /* SETTING ALL DATA OBJECTS */
     this.all_data = new AllStudyData();
     this.all_data.setTitle(this.studyTitle);
     this.all_data.setCustomer(this.customer);
     this.all_data.setStudyStartTime(new Date().getTime());
     this.all_data.setLocationID(this.location._id);
-    this.all_data.setroundDuration(this.roundTime * 1000);
     this.all_data.setStudyEndTime(null);
 
     /* SETTING ROUNDS OBJECT */
@@ -72,7 +67,7 @@ export class CreateStudyPage {
     this.parser.setRounds(this.round_data);
     this.parser.setAllData(this.all_data);
     
-    let data = { action: action , roundTime: this.roundTime , title: this.studyTitle};
+    let data = { action: action , title: this.studyTitle};
     this.viewCtrl.dismiss(data);
   }
 

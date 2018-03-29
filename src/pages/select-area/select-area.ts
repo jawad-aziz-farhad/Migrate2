@@ -1,9 +1,9 @@
 import { Component  } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
-import { SelectElementPage } from '../select-element/select-element';
 import { Time , ParseDataProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
         OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider, ParserProvider} from '../../providers';
 import { Selection } from '../../bases';
+import { SelectTaskPage } from '../select-task/select-task';
 /**
  * Generated class for the SelectAreaPage page.
  *
@@ -39,7 +39,7 @@ import { Selection } from '../../bases';
   }
 
   ionViewWillEnter(){
-    this.init('Areas', this.navParams.get('project'), SelectElementPage);
+    this.init('Areas', this.navParams.get('project'), SelectTaskPage);
  }
 
 }

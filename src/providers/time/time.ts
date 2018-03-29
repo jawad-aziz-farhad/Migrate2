@@ -18,6 +18,7 @@ export class Time {
                 private parser: ParserProvider,
                 private parseData: ParseDataProvider){
     }
+
     /* SETTING ROUND TIME */
     setRoundTime(roundTime: number) {
       this.roundTime = roundTime;
@@ -34,14 +35,11 @@ export class Time {
       TimerObservable.create(1, 1000)
       .takeWhile(() => this.isTimerRunning)
       .subscribe(t => {
-        this.ticks = this.getRoundTime() - t;
+        this.ticks = 0 + t;
         console.log("TICKS: "+ this.ticks);
-        if(this.ticks == 0)
-          this.isTimerRunning = false;
       },
       error => console.error("TIMER ERROR"),
       () => {
-        console.log("TIME COMPLETED.")
         if(!this.isStudyEnded){
           this.runTimer();
           if(!this.isPopupPresent)
@@ -50,25 +48,22 @@ export class Time {
       });
     }
 
-    /* DESTROING TIMER */
-    destroyTimer(){
-      this.ticks = 0;
-      this.isTimerRunning = false; 
-      this.isStudyEnded = true;
-    }
-    
-   
+  /* DESTROING TIMER */
+  destroyTimer(){
+    this.ticks = 0;
+    this.isTimerRunning = false; 
+    this.isStudyEnded = true;
+  }
+
   /* OPENING MODAL WHEN STUDY TIME IS OVER */
   openModal() { 
     let modal = this.modalCtrl.create('TimerExpiredPage', null, { cssClass: 'inset-modal timer-expired-modal' });
     modal.onDidDismiss(data => {
       this.isPopupPresent = false;
-      if(data && data.action == 'continue'){
+      if(data && data.action == 'continue')
         this.parse_Data();
-      }
       else 
-        this.destroyTimer();  
-         
+        this.destroyTimer();
     });
     
     this.isPopupPresent = true;
@@ -76,8 +71,7 @@ export class Time {
   }
 
   /* PARSING DATA OF THIS ROUND AND STARTING NEXT ROUND */
-  parse_Data(){
-    
+  parse_Data(){    
     if(this.parseData.getDataArray().length > 0){
       this.parseData.setDataArray(this.parseData.getData());
       this.parser.getRounds().setRoundData(this.parseData.getDataArray());

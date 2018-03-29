@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AllStudyData, Rounds } from '../../models/index';
+import { AllStudyData, Rounds , StudyElements } from '../../models/index';
 
 /*
   Generated class for the ParserProvider provider.
@@ -12,6 +12,7 @@ export class ParserProvider {
 
   private all_data: AllStudyData;
   private rounds: Rounds;
+  private studyElements: StudyElements;
 
   constructor() {
     console.log('Hello ParserProvider Provider');

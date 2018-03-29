@@ -72,8 +72,7 @@ export class AddFrequencyPage {
   }
 
   /* ENDING OBSERVATION OR ROUND BY CHECKING THE TIME STATUS */
-  endStudy(){
-    
+  endStudy(){    
     let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
     let observation_Time = this.millisToMinutesAndSeconds(observationTime);
     this.parseData.getData().setObservationTime(observation_Time);
@@ -112,7 +111,6 @@ export class AddFrequencyPage {
     }
     /* STARTING NEXT OBSERVATION */
     else{
-
       if(this.navCtrl.length() <= 12){
         this.parseData.setDataArray(this.parseData.getData()); 
         this.parseData.clearData();

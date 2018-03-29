@@ -1,0 +1,61 @@
+<!--
+  Generated template for the SelectTaskPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+
+<ion-header class="blue-header role-header" no-border>
+
+  <ion-toolbar color="primary" *ngIf="!isSearching">
+
+    <button ion-button navPop clear class="absolute nav-back">
+      <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
+    </button>
+    
+    <ion-title>Select {{ TABLE_NAME | slice:0:-1 }}</ion-title>
+      
+    <ion-buttons end *ngIf="!isSearching">
+      <button ion-button clear (click)="isSearching = !isSearching">
+          <ion-icon ios="ios-search" md="md-search" class="ion-md-new-toggle"></ion-icon>
+      </button> 
+    </ion-buttons>
+  
+  </ion-toolbar>
+
+  <ion-toolbar *ngIf="isSearching">
+    <ion-searchbar
+    [class.has-content]="!!searchInput"
+    [(ngModel)]="searchInput"
+    [showCancelButton]="true"
+    [animated]="true"
+    (ionInput)="searchInput"
+    (ionCancel)="isSearching = !isSearching">
+  </ion-searchbar>
+  </ion-toolbar>
+  
+  </ion-header>
+
+  <ion-content>
+
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content
+          pullingIcon="arrow-dropdown"
+          pullingText="Pull to refresh">
+      </ion-refresher-content>
+    </ion-refresher>
+
+    <in-one *ngIf="show && !isSearching" tablename="Tasks" [isFiltering]="isFiltering" [items]="data" (is_Filtering)="is_Filtering($event)" 
+      (selectedItem)="selectItem($event)" (create)="createItem($event)"></in-one> 
+      
+    <ion-list class="list_items" *ngIf="isSearching" padding>
+      <ion-item *ngFor="let item of data | search : 'name' : searchInput; let i=index;" (click)="selectItem(item)" [ngClass]="getStyle(item)">
+        <p>{{ item.name }}</p>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+
+  <ion-footer no-border>
+    <button ion-button block no-margin class="theme-btn no-radius" (click)="createItem()">Create {{ TABLE_NAME | slice:0:-1 }}</button>
+  </ion-footer>

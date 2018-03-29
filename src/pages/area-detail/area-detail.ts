@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , ModalController } from 'ionic-angular';
 import { SelectRolePage } from '../select-role/select-role';
-import { Time } from '../../providers/time/time';
 import { StudyData } from '../../models';
 import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider  } from '../../providers';
 import { SERVER_URL  } from '../../config/config';
@@ -32,7 +31,6 @@ export class AreaDetailPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,
               public modalCtrl: ModalController ,
-              public time: Time,
               public parseData: ParseDataProvider,
               public sql: SqlDbProvider,
               public loader: LoaderProvider,
@@ -68,8 +66,6 @@ openModal() {
   
     modal.onDidDismiss(data => {
       if(data && data.action == 'start'){
-        this.time.setRoundTime(data.roundTime);
-        this.time.runTimer();
         this.navCtrl.push(SelectRolePage, { project: this.project }); 
       }  
       else

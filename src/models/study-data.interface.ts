@@ -3,6 +3,7 @@ export class StudyData {
     private role: any;
     private area: any;
     private element: any;
+    private task: any;
     private notes: string;
     private observationTime: any
     private rating: number;
@@ -15,6 +16,7 @@ export class StudyData {
     setRole(role: any){ this.role = role; }
     setArea(area: any){ this.area = area;}
     setElement(element: any){ this.element = element;}
+    setTask(task: any){ this.task = task; }
     setRating(rating: any){ this.rating = rating;} 
     setNotes(notes: string){ this.notes = notes;}
     setPhoto(photo: string){ this.photo= photo;}
@@ -26,6 +28,7 @@ export class StudyData {
     getRating(): any  { return this.rating; }
     getArea(): any    { return this.area; }
     getElement(): any { return this.element; }
+    getTask(): any { return this.task; }
     getNotes(): string   { return this.notes; }
     getPhoto(): string   { return this.photo; }
     getRole(): any    { return this.role; }
