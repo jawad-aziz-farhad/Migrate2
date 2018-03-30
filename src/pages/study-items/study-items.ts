@@ -1,6 +1,6 @@
 import { Component , OnInit} from '@angular/core';
 import { IonicPage, NavController, NavParams , ModalController} from 'ionic-angular';
-import { Time, ParseDataProvider, AlertProvider, ParserProvider, ToastProvider } from '../../providers';
+import { Time, ParseDataProvider, AlertProvider, ToastProvider } from '../../providers';
 import { ObservationSummaryPage } from '../observation-summary/observation-summary';
 import { SubmitDataProgressPage } from  '../submit-data-progress/submit-data-progress';
 import { STUDY_ENDED } from '../../config/config'
@@ -33,12 +33,12 @@ export class StudyItemsPage implements OnInit {
               public modalCtrl: ModalController,
               public time: Time,
               public alert: AlertProvider,
-              public parser: ParserProvider,
               public toast: ToastProvider) {
   }
 
 
   ngOnInit(){
+    console.log("\n\n\nSTUDY ITEMS: "+ JSON.stringify(this.parseData.getData()));
     this.getData();
   }
   
@@ -49,14 +49,12 @@ export class StudyItemsPage implements OnInit {
   getData(){
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
-    this.study_data = this.parser.geAllData();
+    this.study_data = this.parseData.getStudyData();
     this.toast.showBottomToast(STUDY_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
-  showSummary(item, index, sub_index){
-    if(index == null)
-      index = this.study_data.rounds.length - 1
-    this.navCtrl.push(ObservationSummaryPage, {item: item, round_index: index, data_index: sub_index});
+  showSummary(item, index){
+    this.navCtrl.push(ObservationSummaryPage, {item: item, index: index});
   }
 
   /* CONFIRMATION FOR SUBMITTING ALL THE STUDY DATA  */
@@ -103,16 +101,16 @@ export class StudyItemsPage implements OnInit {
 
   /* REMOVING ITEM FROM LIST */
   removeItems() {    
-    let rounds = this.study_data.rounds;
-      for (let i = rounds.length - 1; i >= 0; i -= 1) {       
-      for(let j= rounds[i].data.length - 1; j>=0; j-=1){
-        const index = this.itemsSelected.indexOf(rounds[i].data[j])
+    let data = this.study_data.data;
+      for (let i = data.length - 1; i >= 0; i -= 1) {       
+      for(let j= data[i].data.length - 1; j>=0; j-=1){
+        const index = this.itemsSelected.indexOf(data[i].data[j])
         if(index > -1){
-          rounds[i].data.splice(j,1);
+          data[i].data.splice(j,1);
           this.totalItemsSelected--;
         }
-      if(rounds[i].data.length == 0)
-          rounds.splice(i,1);
+        if(data[i].data.length == 0)
+          data.splice(i,1);
       }
     }
     
@@ -126,7 +124,7 @@ export class StudyItemsPage implements OnInit {
 
   /* CANCELLING STUDY */ 
   cancelStudy() {
-    this.stop = new Stop(this.navCtrl,this.alert, this.parseData, this.parser, this.time);
+    this.stop = new Stop(this.navCtrl,this.alert, this.parseData,  this.time);
     this.stop.studyEndConfirmation();
   }
 }

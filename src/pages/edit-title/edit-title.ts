@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , ViewController} from 'ionic-angular';
-import { ParserProvider, OperationsProvider , FormBuilderProvider } from '../../providers';
+import { ParseDataProvider, OperationsProvider , FormBuilderProvider } from '../../providers';
 /**
  * Generated class for the EditTitlePage page.
  *
@@ -21,7 +21,7 @@ export class EditTitlePage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public viewCtrl: ViewController,
-              public parser: ParserProvider,
+              public parser: ParseDataProvider,
               public operations: OperationsProvider,
               public formBuilder: FormBuilderProvider) {
     this.init();
@@ -39,7 +39,6 @@ export class EditTitlePage {
     console.log('ionViewDidLoad EditTitlePage');
   }
 
-
   checking(value: string){
     if(this.data)
       this.updateName();
@@ -48,7 +47,7 @@ export class EditTitlePage {
   }
 
   dismiss(value: string){
-    let parser = this.parser.geAllData();
+    let parser = this.parser.getData();
     parser.setTitle(this.studyTitle);
     this.viewCtrl.dismiss();
   }
@@ -78,6 +77,4 @@ export class EditTitlePage {
       endPoint = 'areas/add';
     return endPoint;  
   }
-
-
 }

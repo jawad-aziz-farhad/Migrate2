@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angular';
-import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider , ParserProvider } from '../../providers';
+import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider } from '../../providers';
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { StudyItemsPage } from '../study-items/study-items';
-
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -22,6 +21,8 @@ export class AddFrequencyPage {
   public roundTime: number = 0;
   public numbers: Array<number>;
   public frequency: any;
+  public elements: Array<any> = [];
+  public nextElement: any;
 
   constructor(public navCtrl: NavController, 
                public navParams: NavParams , 
@@ -29,8 +30,7 @@ export class AddFrequencyPage {
                public operations: OperationsProvider,
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
-               public toast: ToastProvider,
-               public parser: ParserProvider) {
+               public toast: ToastProvider) {
     this.init();
    }
    
@@ -41,12 +41,22 @@ export class AddFrequencyPage {
   init(){
     this.frequency = '';
     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
+    this.elements = this.navParams.get("elements");
+
+    let element = this.parseData.getData().getElement();
+    let index  = this.elements.indexOf(element);
+    if(index == this.elements.length - 1)
+      this.nextElement = null;
+    else
+      this.nextElement = this.elements[index + 1];
+    console.log("LAST INDEX IS: "+ index + "\n NEXT ELEMENT IS: "+ JSON.stringify(this.nextElement));
   }
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){
     this.frequency = this.frequency + num;
   } 
+
 
   /* REMOVING ENTERED FREQUENCY */ 
   removeFrequency(){
@@ -61,7 +71,6 @@ export class AddFrequencyPage {
     else
       return '00:' +(parseInt(seconds) < 10 ? '0' : '') + seconds;
   }
-   
 
   /* WHEN USER CANCEL THE STUDY WE WILL KILL TIMER AND NAVIGATE USER TO ROOT PAGE */
   onCancelStudy(event){
@@ -71,64 +80,77 @@ export class AddFrequencyPage {
     }
   }
 
-  /* ENDING OBSERVATION OR ROUND BY CHECKING THE TIME STATUS */
-  endStudy(){    
-    let observationTime  = new Date().getTime() - this.parseData.getData().getObservationTime();
-    let observation_Time = this.millisToMinutesAndSeconds(observationTime);
-    this.parseData.getData().setObservationTime(observation_Time);
+  go(value: string): void {
 
-    let notes = this.parseData.getData().getNotes();
-    let photo = this.parseData.getData().getPhoto();
+    this.parsingData();
+    
+    /* STOPPING TIMER  */
+    this.time.stopTimer();
 
-    if(!notes)
-      this.parseData.getData().setNotes(null);
-    if(!photo)  
-      this.parseData.getData().setPhoto(null);
-   
+    /* IF USER SELECTS THE NEXT ELEMENT */
+    if(value == 'nextElement'){
+      this.time.isNext = true;
+      this.frequency = '';
+
+      let studyTasks = this.parseData.getData();
+      studyTasks.setElement(this.nextElement);
+      /* IF ELEMENT's RATING IS NOT RATED */
+      if(this.nextElement.rating == 'Not Rated'){
+        studyTasks.setRating('Not Rated');
+        this.parseData.setData(studyTasks); 
+      }
+      /* IF ELEMENT's RATING IS 100 */   
+      else if(this.nextElement.rating == 100){
+        studyTasks.setRating(100);    
+        this.parseData.setData(studyTasks); 
+      }
+      else{
+        this.parseData.setData(studyTasks); 
+        this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 7)));
+      }
+
+    }
+    /* IF USER SELECT TO GO TO ELEMENTS' LIST */
+    else if(value == 'elements')
+      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 6)));
+    /* IF USER GO TO GO TO TASKS PAGE */
+    else if(value == 'tasks')
+      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 5)));
+  }
+
+  /* PARSING STUDY DATA */
+  parsingData(){
+    let studyTasks = this.parseData.getData();
+    studyTasks.setTime(this.time.ticks);
+    /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
     if(!this.frequency)
-      this.frequency = "0";  
-      
-    this.parseData.getData().setFrequency(this.frequency);
-    this.parseData.setData(this.parseData.getData());
+      studyTasks.setFrequency(0);
+    else
+      studyTasks.setFrequency(this.frequency);
+    /* IF NO NOTES ADDED FOR THIS OBSERVATION */
+    if(!studyTasks.getNotes())
+      studyTasks.setNotes(null);
+    /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
+    if(!studyTasks.getPhoto())
+      studyTasks.setPhoto(null);
 
-    /* IF TIME IS UP AND USER HAS ENDED UP THE STUDY, 
-        PARSING DATA AND GOING TO STUDY ITEMS PAGE 
-    */
-    if(this.time.isStudyEnded){
-
-      this.parseData.setDataArray(this.parseData.getData()); 
-      this.parser.getRounds().setRoundData(this.parseData.getDataArray());
-      this.parser.getRounds().setRoundEndTime(new Date().getTime())
-      this.parser.setRounds(this.parser.getRounds());
-      this.parser.geAllData().setRoundData(this.parser.getRounds());
-      this.parser.geAllData().setStudyEndTime(new Date().getTime());
-
-      /* CLEARING STUDY DATA OBJECT AND ARRAY FOR NEXT ENTRIES AND NEXT ROUND*/
-      this.parseData.clearDataArray();
-      this.parseData.clearData();
-      this.parser.clearRounds();
-      this.navCtrl.push(StudyItemsPage);
-    }
-    /* STARTING NEXT OBSERVATION */
-    else{
-      if(this.navCtrl.length() <= 12){
-        this.parseData.setDataArray(this.parseData.getData()); 
-        this.parseData.clearData();
-        this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 3)));
-      }  
-      else
-        this.navCtrl.popToRoot(); 
-    }
+    this.parseData.setData(studyTasks);
+    studyTasks = this.parseData.getData();
+    this.parseData.setDataArray(this.parseData.getData());
+    /* SETTING NOTES AND PHOTO TO NULL */
+    studyTasks.setNotes(null);
+    studyTasks.setPhoto(null);
   }
 
   /* ADDING NOTES FOR THE CURRENT OBSERVATION */
   addNotes(){
     this.navCtrl.push(StudyNotesPage);
   }
-
   /* ADDING PHOTO FOR THE CURRENT OBSERVATION */
   addPhoto(){
     this.navCtrl.push(StudyPhotoPage);
   }
 }
 
+
+  

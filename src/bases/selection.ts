@@ -1,9 +1,9 @@
 
 import { NavController, MenuController, NavParams } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, AlertProvider, ParseDataProvider,
-         OperationsProvider, SqlDbProvider, NetworkProvider, Time, ParserProvider} from '../providers';
+         OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
 import { MESSAGE, INTERNET_ERROR } from '../config/config';
-import { StudyData } from '../models';
+import { StudyData, Data } from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateElementPage } from '../pages/create-element/create-element';
 import { CreateRolePage } from '../pages/create-role/create-role';
@@ -34,7 +34,6 @@ export class Selection {
               public navParams: NavParams,
               public time: Time ,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider,
               public loader: LoaderProvider,
               public operations: OperationsProvider,
               public sql: SqlDbProvider,
@@ -242,32 +241,39 @@ export class Selection {
 
   /* PARSING STUDY DATA */
   _parseData(item: any){
-     let study_data = null;
-     if(!this.parseData.getData())
-        study_data = new StudyData();
-     else
-        study_data = this.parseData.getData();   
-     
-    if(this.TABLE_NAME == 'Areas')
-      study_data.setArea(item);
-    else if(this.TABLE_NAME == 'Elements')
-      study_data.setElement(item);
-    else if(this.TABLE_NAME == 'Tasks'){
-      study_data.setTask(item);  
+
+    if(this.TABLE_NAME == 'Elements' || this.TABLE_NAME == 'Tasks'){
+      let studyTasks = null;
+      if(this.TABLE_NAME == 'Tasks')
+        studyTasks = new Data();
+      else
+        studyTasks = this.parseData.getData();
+      
+      if(this.TABLE_NAME == 'Elements')
+        studyTasks.setElement(item); 
+      else if(this.TABLE_NAME == 'Tasks')
+        studyTasks.setTask(item);
+
+      this.parseData.setData(studyTasks);
     }
-    else if(this.TABLE_NAME == 'Roles'){
-      study_data.setRole(item);
-      study_data.setObservationTime(new Date().getTime());
+    else{
+      let study_data = this.parseData.getStudyData();   
+     
+      if(this.TABLE_NAME == 'Areas')
+        study_data.setArea(item);
+      else if(this.TABLE_NAME == 'Roles')
+        study_data.setRole(item);
+      
+      this.parseData.setStudyData(study_data);
     }
 
-    this.parseData.setData(study_data);
     this.goNext();
   }
 
   /* GOING TO THE NEXT PAGE */
   goNext() {
     
-    if(this.TABLE_NAME == 'Elements'){
+    if(this.TABLE_NAME == 'Elements') {
 
       if(this.project.rating == 2 || this._temp.rating == 1 || this._temp.rating == 2){
         let rating = null
@@ -286,14 +292,15 @@ export class Selection {
         this.nextComponent =  RatingsPage ;
 
       this.time.runTimer();  
-    }
-    
+    }    
     this.isSearching = false;
     let data = null;
     if(this.TABLE_NAME == 'Tasks')
       data = {task: this.parseData.getData().getTask() , project: this.project };
+    else if(this.TABLE_NAME == 'Elements')
+      data = {project: this.project, elements: this.data }  
     else
-      data = { project: this.project}
+      data = { project: this.project };
     this.navCtrl.push(this.nextComponent, data);
   }
 
@@ -343,7 +350,7 @@ export class Selection {
   
   /* CANCELLING STUDY */ 
   cancelStudy() {
-    this.stop = new Stop(this.navCtrl,this.alert, this.parseData, this.parser, this.time);
+    this.stop = new Stop(this.navCtrl,this.alert, this.parseData,this.time);
     this.stop.studyEndConfirmation();
   }
 

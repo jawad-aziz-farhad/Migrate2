@@ -27,12 +27,12 @@
       
     <ion-item>
       <ion-label stacked>Area</ion-label>
-      <ion-input type="text" value="{{ data.area.name ? data.area.name : data?.area }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ parseData.getStudyData().getArea().name ? parseData.getStudyData().getArea().name : data?.area }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Role</ion-label>
-      <ion-input type="text" value="{{ data.role.name ? data.role.name : data?.role }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ parseData.getStudyData().getRole().name ? parseData.getStudyData().getRole().name : data?.role }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>
@@ -52,14 +52,10 @@
       <ion-input type="number" pattern="\\d*" value="{{ data?.frequency }}" (input)="edit($event.target.value , 'frequency')"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label stacked>Study Time:</ion-label>
-      <ion-input value="{{ convertTime() }}" disabled readonly></ion-input>
-    </ion-item>
-
+    
     <ion-item>
       <ion-label stacked>Observation Time:</ion-label>
-      <ion-input value="{{ data?.observationTime }}" disabled readonly></ion-input>
+      <ion-input value="{{ data?.time }}" disabled readonly></ion-input>
     </ion-item>
   
     <ion-item *ngIf="data.notes">
@@ -72,12 +68,4 @@
 
 <ion-footer no-padding>
   <button ion-button block no-margin class="theme-btn no-radius" (click)="deletConfirmation()">Delete</button>
-  <!-- <ion-row>
-    <ion-col col-6>
-      <button ion-button block no-radius class="theme-btn no-radius" [disabled]="!isUpdateAble()" (click)="updateStudyData()">UPDATE</button>
-    </ion-col>
-    <ion-col col-6>
-      <button ion-button block class="theme-btn no-radius" (click)="deletConfirmation()">DELETE</button>
-    </ion-col>
-  </ion-row> -->
 </ion-footer>

@@ -56,7 +56,6 @@ import { NetworkProvider } from '../providers/network/network';
 import { Time } from '../providers/time/time';
 import { SqlDbProvider } from '../providers/sql-db/sql-db';
 import { FormBuilderProvider } from '../providers/form-builder/form-builder';
-import { ParserProvider } from '../providers/parser/parser';
 import { Sync } from '../providers/sync/sync';
 
 import { JwtHelper, AuthConfig, AuthHttp } from "angular2-jwt";
@@ -198,7 +197,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     ParseDataProvider,
     SqlDbProvider,
     FormBuilderProvider,
-    ParserProvider,
     Sync
   ]
 })

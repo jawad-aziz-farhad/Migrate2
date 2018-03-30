@@ -1,6 +1,6 @@
 import { Component , Input } from '@angular/core';
 import { NavController} from 'ionic-angular';
-import { AlertProvider, Time, ParseDataProvider, ParserProvider } from '../../providers';
+import { AlertProvider, Time, ParseDataProvider } from '../../providers';
 import { Stop } from '../../bases';
 /**
  * Generated class for the InStudyHeaderComponent component.
@@ -19,13 +19,12 @@ export class InStudyHeaderComponent {
   constructor(private navCtrl: NavController,
               private alertProvider: AlertProvider,
               private parseData: ParseDataProvider,
-              private parser: ParserProvider,
               private time: Time
               ) {  
   }
   /* CANCELLING STUDY */ 
   cancelStudy() {
-    let stop = new Stop(this.navCtrl,this.alertProvider,this.parseData,this.parser,this.time);
+    let stop = new Stop(this.navCtrl,this.alertProvider,this.parseData,this.time);
     stop.studyEndConfirmation();
 
   }

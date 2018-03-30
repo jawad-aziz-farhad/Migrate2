@@ -30,15 +30,16 @@ export class RatingsPage {
             
   }
 
-  ionViewDidLoad() {
-       
+  ionViewDidLoad() {       
     console.log('SelectElementPage');
   }
 
   ionViewWillEnter() {
+    if(!this.time.isTimerRunning && !this.time.isNext)
+      this.time.runTimer(); 
    this.ratings = [  40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ];
    this.initView()
- }
+  }
 
   /* iNITIALIZING VIEW  */
   initView(){
@@ -53,14 +54,16 @@ export class RatingsPage {
 
   /* PARSING ROUND DATA TO NEXT PAGE */
   _parseData(rating: number) {    
+    // this.parseData.getData().setRating(rating);
+    // this.parseData.setData(this.parseData.getData());
     this.parseData.getData().setRating(rating);
     this.parseData.setData(this.parseData.getData());
-    console.log("STUDY DATA AT RATING PAGE: " + JSON.stringify(this.parseData.getData()));
+    console.log("STUDY TASKS AT RATING PAGE: " + JSON.stringify(this.parseData.getData()));
   }
 
   /* GOING TO NEXT PAGE */
   gotoNextPage(page: any){
-    this.navCtrl.push(page);
+    this.navCtrl.push(page, { elements: this.navParams.get("elements")});
   }
 
   /* ENTERING RATING FROM CURRENT FORM */

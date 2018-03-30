@@ -40,8 +40,11 @@ export class StudyNotesPage {
 
   /* ADDING NOTES FOR STUDY */
   add_Notes(){
+    // this.parseData.getData().setNotes(this.notes);
+    // this.parseData.setData(this.parseData.getData());
     this.parseData.getData().setNotes(this.notes);
     this.parseData.setData(this.parseData.getData());
+    console.log("TASKS DATA AT NOTES PAGE: "+ JSON.stringify(this.parseData.getData()));
     this.navCtrl.pop();
   }
   

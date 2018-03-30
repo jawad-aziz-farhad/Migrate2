@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
-import { ParseDataProvider , ParserProvider, AlertProvider, SqlDbProvider } from '../../providers';
+import { ParseDataProvider , AlertProvider, SqlDbProvider } from '../../providers';
 import { SERVER_URL, DELETE_MSG, DELETE_TITLE } from '../../config/config';
 /**
  * Generated class for the ObservationSummaryPage page.
@@ -23,14 +23,13 @@ export class ObservationSummaryPage {
   
   private editedElement: any;
   private rating: string;
-  private frequency: string;
+  private frequency: any;
 
   private elements : Array<any> = [];
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams ,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider,
               public alert: AlertProvider,
               public sql: SqlDbProvider) {
     this.show = false;
@@ -75,9 +74,9 @@ export class ObservationSummaryPage {
   /* CONVERTING MILLISECONDS TO LOCALE TIME */
   convertTime(){
     let time = null;
-    const round_index = this.navParams.get('round_index');
-    if(typeof round_index !== 'undefined')
-      time = this.parser.geAllData().getSutdyStartTime();
+    const index = this.navParams.get('index');
+    if(typeof index !== 'undefined')
+      time = this.parseData.getStudyData().getSutdyStartTime();
     else
       time = this.data.studyStartTime;
       
@@ -95,11 +94,10 @@ export class ObservationSummaryPage {
   /* IF USER SAYS YES, THEN WE WILL DELETE ITEM FROM ARRAY AND MOVE BACK TO STUDY ITEMS PAGE */  
   deleteItem(){
 
-    const round_index = this.navParams.get('round_index');
-    const data_index  = this.navParams.get('data_index');
+    const index = this.navParams.get('index');
     
     if(!this.isOfflineStudy()){
-      this.parser.geAllData().getRoundData()[round_index].data.splice(data_index,1);
+      this.parseData.getStudyData().getData().splice(index,1);
       this.navCtrl.pop();
     }
     else
@@ -119,10 +117,8 @@ export class ObservationSummaryPage {
   /* CHECKING STUDY WHETER ITS COMING FROM SQLite OR FROM CLASS OBJECTS */
   isOfflineStudy() {
 
-    const round_index = this.navParams.get('round_index');
-    const data_index  = this.navParams.get('data_index');
-    
-    if(typeof round_index == 'undefined' || typeof data_index == 'undefined')
+    const index = this.navParams.get('index');
+    if(typeof index == 'undefined')
       return true;
     else
       return false;  
@@ -153,10 +149,9 @@ export class ObservationSummaryPage {
   /* UPDATING STUDY DATA */
   updateStudyData(){
 
-    const round_index = this.navParams.get('round_index');
-    const data_index = this.navParams.get('data_index');
+    const index = this.navParams.get('index');
     
-    if(typeof round_index == 'undefined'){
+    if(typeof index == 'undefined'){
       if(this.editedElement || this.rating || this.frequency){
         this.updateOfflineStudy();
       }
@@ -165,11 +160,11 @@ export class ObservationSummaryPage {
     else{
       
       if(this.rating)
-        this.parser.geAllData().getRoundData()[round_index].data[data_index].rating = this.rating ;
+        this.parseData.getStudyData().getData()[index].setRating(this.rating) ;
       if(this.frequency)
-        this.parser.geAllData().getRoundData()[round_index].data[data_index].frequency = this.frequency;
+        this.parseData.getStudyData().getData()[index].setFrequency(this.frequency);
       if(this.editedElement)
-        this.parser.geAllData().getRoundData()[round_index].data[data_index].element = this.editedElement; 
+        this.parseData.getStudyData().getData()[index].setElement(this.editedElement); 
       
       this.navCtrl.pop();  
     }

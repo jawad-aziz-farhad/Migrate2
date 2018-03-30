@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, MenuController } from 'ionic-angular';
 import { RatingsPage } from '../ratings/ratings';
 import { Time , ParseDataProvider, ToastProvider, LoaderProvider, FormBuilderProvider,
-         OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider, ParserProvider } from '../../providers';
+         OperationsProvider, SqlDbProvider, NetworkProvider , AlertProvider } from '../../providers';
 import { Selection } from '../../bases';
 /**
  * Generated class for the SelectElementPage page.
@@ -21,7 +21,6 @@ export class SelectElementPage extends Selection  {
               navParams: NavParams,
               time: Time ,
               parseData: ParseDataProvider,
-              parser: ParserProvider,
               loader: LoaderProvider,
               operations: OperationsProvider,
               sql: SqlDbProvider,
@@ -30,11 +29,11 @@ export class SelectElementPage extends Selection  {
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl,navParams,time,parseData,parser,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl,navParams,time,parseData,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SelectAerPage');
+    console.log('ionViewDidLoad SelectElementPage');
   }
 
   ionViewWillEnter(){

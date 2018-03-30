@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ModalController } from 'ionic-angular';
-import { SqlDbProvider , FormBuilderProvider , OperationsProvider, ParseDataProvider, ParserProvider, LoaderProvider } from '../index';
+import { SqlDbProvider , FormBuilderProvider , OperationsProvider, ParseDataProvider, LoaderProvider } from '../index';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { StudyData } from '../../models';
+import { StudyData, StudyTasks } from '../../models';
 import { Storage } from '@ionic/storage';
 /*
   Generated class for the SyncProvider provider.
@@ -35,7 +35,6 @@ export class Sync {
               public formBuilder: FormBuilderProvider,
               public operations: OperationsProvider ,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider,
               public loader: LoaderProvider,
               public storage: Storage) {
     console.log('Hello SyncProvider Provider');
@@ -391,7 +390,9 @@ export class Sync {
         name: localStorage.getItem("userName"),
         _id: localStorage.getItem("userID")
       },
-      rounds: []
+      role: null,
+      area: null,
+      data: []
     };
 
     var element = study;
@@ -402,6 +403,8 @@ export class Sync {
     offlinedataObj.projectID = element.projectID;
     offlinedataObj.userID = element.userID;
     offlinedataObj.locationID = element.locationID;
+    offlinedataObj.role = element.role;
+    offlinedataObj.area = element.area;
     this.offlineData$.push(offlinedataObj);
 
     this.buildRoundsData(study_data);
@@ -411,58 +414,20 @@ export class Sync {
   /* BUILDING ROUNDs DATA AND PUSHING IT IN ROUNDS ARRAY */
   buildRoundsData(data) {
 
-    var s_Time = ''; var e_Time = '';
-    let rounds = [];
-    let lastIndex = this.offlineData$.length - 1;
-
-    data.forEach((element , index) => {
-      /* IF TIME IS SAME, THAT MEANS THIS OBSERVATION IS OCCURED IN THE SAME ROUND */
-      if(s_Time == element.roundStartTime && e_Time == element.roundEndTime){
-
-        rounds.push(this.getStudyData(element));
-
-        if((index + 1) == data.length){
-          this.parser.getRounds().setRoundStartTime(element.roundStartTime)
-          this.parser.getRounds().setRoundEndTime(element.roundEndTime);
-          this.parser.getRounds().setRoundData(rounds);
-          this.offlineData$[lastIndex].rounds.push(this.parser.getRounds());
-          this.parser.clearRounds();
-          rounds = [];
-        }
-      }
-
-      else{
-        if(rounds.length > 0){
-          this.parser.getRounds().setRoundData(rounds);
-          this.offlineData$[lastIndex].rounds.push(this.parser.getRounds());
-        }
-        
-        this.parser.clearRounds();
-        rounds = [];
-        this.parser.getRounds().setRoundStartTime(element.roundStartTime)
-        this.parser.getRounds().setRoundEndTime(element.roundEndTime);
-        rounds.push(this.getStudyData(element));
-      } 
-      
-      s_Time = element.roundStartTime;
-      e_Time = element.roundEndTime;
-     
-    }); 
     
   }
 
   /* GETTING STUDY DATA FOR ONE OBSERVATION */
   getStudyData(data){
 
-    let studyData = new StudyData();
-    studyData.setArea(data.area);
+    let studyData = new StudyTasks();
+    studyData.setTask(data.task);
     studyData.setElement(data.element);
-    studyData.setRole(data.role);
+    studyData.setRating(data.rating);
     studyData.setFrequency(data.frequency);
     studyData.setNotes(data.notes);
-    studyData.setObservationTime(data.observationTime);
     studyData.setPhoto(data.photo);
-    studyData.setRating(data.rating);
+    studyData.setTime(data.time)
 
     return studyData;
   }

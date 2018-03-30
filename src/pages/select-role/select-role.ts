@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , MenuController} from 'ionic-angular';
 import { SelectAreaPage } from '../select-area/select-area';
 import { Time , ParseDataProvider,  ToastProvider, FormBuilderProvider,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, ParserProvider } from '../../providers';
+         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
 import { Selection } from '../../bases';
 /**
  * Generated class for the SelectRolePage page.
@@ -22,7 +22,6 @@ export class SelectRolePage extends Selection {
               navParams: NavParams,
               time: Time ,
               parseData: ParseDataProvider,
-              parser: ParserProvider,
               loader: LoaderProvider,
               operations: OperationsProvider,
               sql: SqlDbProvider,
@@ -31,7 +30,7 @@ export class SelectRolePage extends Selection {
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl, navParams ,time,parseData,parser,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl, navParams ,time,parseData,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
   }
 
   ionViewDidLoad() {

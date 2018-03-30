@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 import { ProgressHttp } from "angular-progress-http";
 import { FormBuilder, FormGroup  } from '@angular/forms';
-import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider , ParserProvider} from '../../providers';
+import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider } from '../../providers';
 import { SERVER_URL , ERROR } from '../../config/config';
 import { Storage } from '@ionic/storage';
 
@@ -38,7 +38,6 @@ export class SubmitDataProgressPage {
               public sql: SqlDbProvider,
               public toast: ToastProvider,
               public formProvider: FormBuilderProvider,
-              public parser: ParserProvider,
               public headers: HeadersProvider,
               private operations: OperationsProvider) {
     this.initView();           
@@ -59,30 +58,30 @@ export class SubmitDataProgressPage {
 
   /* SAVING DATA */
   saveData() {  
-
-    this.formProvider.initFormBuilder(this.parser.geAllData());
+    this.formProvider.initFormBuilder(this.parseData.getData());
     let formData = this.formProvider.getFormBuilder().value;
     console.log("FORM DATA: "+ JSON.stringify(formData));
-    let url = SERVER_URL + 'ras_data/add';
     
-    this.http
-        .withUploadProgressListener(progress => { 
-          console.log(`Uploading ${progress.percentage}%`); 
-          this.progress = progress.percentage;
-        })
-        .post(`${url}`, formData, {headers: this.headers.getHeaders()})
-        .map(res => res.json())
-        .subscribe((response) => {
-            console.log("RESPONSE: " +JSON.stringify(response));
-            if(response.success)
-               this.show = true;
-            else
-              console.error(ERROR);   
-        },
-        error => {
-          let _error = error.json();
-          this.operations.handleError(_error);
-        });
+    // let url = SERVER_URL + 'ras_data/add';
+    
+    // this.http
+    //     .withUploadProgressListener(progress => { 
+    //       console.log(`Uploading ${progress.percentage}%`); 
+    //       this.progress = progress.percentage;
+    //     })
+    //     .post(`${url}`, formData, {headers: this.headers.getHeaders()})
+    //     .map(res => res.json())
+    //     .subscribe((response) => {
+    //         console.log("RESPONSE: " +JSON.stringify(response));
+    //         if(response.success)
+    //            this.show = true;
+    //         else
+    //           console.error(ERROR);   
+    //     },
+    //     error => {
+    //       let _error = error.json();
+    //       this.operations.handleError(_error);
+    //     });
   }
 
 /* DROPPING TABLES IF EXISTS BEFORE SAVING DATA INTO STUDY AND STUDY_DATA TABLES*/  
@@ -125,18 +124,17 @@ getStudy(){
 }
 
 /* INSERTING STUDY DATA */
-insertStudyData(data) {
-  const lastIndex = data.length - 1;
-  this.sql.studyData(this.TABLE_NAME_1, data[lastIndex].id).then(result => {
+insertStudyData(data) {  
+  let studyData = this.parseData.getStudyData().getData();
+  this.sql.addData(this.TABLE_NAME_1, studyData).then(result => {
     this.show = true;
-}).catch(error => {
-    console.error("ERROR: " + JSON.stringify(error));
-});
+  }).catch(error => {
+      console.error("ERROR: " + JSON.stringify(error));
+  });
 }
 
 /* GOING TO THE PREVIOUS PAGE BY CLICKING BUTTON  */
 go(value: string) {
-    this.parseData.clearDataArray();
     this.parseData.clearData();
     if(value == 'projects')
         this.navCtrl.popToRoot();

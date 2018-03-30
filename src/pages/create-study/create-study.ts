@@ -1,7 +1,7 @@
 import { Component , Renderer, ElementRef} from '@angular/core';
 import { IonicPage, NavController, NavParams , ViewController } from 'ionic-angular';
-import { AllStudyData , Rounds } from '../../models';
-import { ParserProvider , Time} from '../../providers'
+import { StudyData } from '../../models';
+import { ParseDataProvider , Time} from '../../providers'
 import { Keyboard } from '@ionic-native/keyboard';
 /**
  * Generated class for the CreateStudyPage page.
@@ -17,8 +17,7 @@ import { Keyboard } from '@ionic-native/keyboard';
 })
 export class CreateStudyPage {
   
-  public all_data: any;
-  public round_data: any;
+  public studyData: StudyData;
   public studyTitle: any;
   public customer: any;
   public location: any;
@@ -29,7 +28,7 @@ export class CreateStudyPage {
               public elementRef: ElementRef,
               public viewCtrl: ViewController,
               public keyboard: Keyboard,
-              public parser: ParserProvider,
+              public parse: ParseDataProvider,
               public time: Time) {
   }
 
@@ -52,21 +51,14 @@ export class CreateStudyPage {
   dismiss(action: string) {
 
     /* SETTING ALL DATA OBJECTS */
-    this.all_data = new AllStudyData();
-    this.all_data.setTitle(this.studyTitle);
-    this.all_data.setCustomer(this.customer);
-    this.all_data.setStudyStartTime(new Date().getTime());
-    this.all_data.setLocationID(this.location._id);
-    this.all_data.setStudyEndTime(null);
-
-    /* SETTING ROUNDS OBJECT */
-    this.round_data = new Rounds();
-    this.round_data.setRoundStartTime(new Date().getTime());
-
-    /* PARSING ROUND DATA AND ALL DATA */
-    this.parser.setRounds(this.round_data);
-    this.parser.setAllData(this.all_data);
+    this.studyData = new StudyData();
+    this.studyData.setTitle(this.studyTitle);
+    this.studyData.setCustomer(this.customer);
+    this.studyData.setStudyStartTime(new Date().getTime());
+    this.studyData.setLocationID(this.location._id);
+    this.studyData.setStudyEndTime(null);
     
+    this.parse.setStudyData(this.studyData);
     let data = { action: action , title: this.studyTitle};
     this.viewCtrl.dismiss(data);
   }

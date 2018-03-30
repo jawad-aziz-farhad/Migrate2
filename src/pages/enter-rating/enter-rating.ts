@@ -67,5 +67,4 @@ export class EnterRatingPage {
       this.navCtrl.popToRoot();
     }
   }
-
 }

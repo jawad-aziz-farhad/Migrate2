@@ -3,10 +3,9 @@ import { Platform } from 'ionic-angular';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { Storage } from '@ionic/storage';
 import { Projects } from '../../models/projects.interface';
-import { ParserProvider } from '../parser/parser';
+import { ParseDataProvider } from '../parse-data/parse-data';
 import 'rxjs/add/operator/map';
 import { BehaviorSubject } from 'rxjs/Rx';
-import * as $ from 'jQuery';
 import { Observable } from 'rxjs/Observable';
 import { NO_DATA_FOUND } from '../../config/config';
 /*
@@ -20,7 +19,6 @@ export class SqlDbProvider {
 
   private database: SQLiteObject;
   private databaseReady: BehaviorSubject<boolean>;
-  private studyDataIndex: number = 0;
   private studyID: any = null;
 
   private config: any = {
@@ -28,7 +26,7 @@ export class SqlDbProvider {
     location: 'default'
   };
  
-  constructor(private storage: Storage, private sqlite: SQLite, private platform: Platform, private parser: ParserProvider) {
+  constructor(private storage: Storage, private sqlite: SQLite, private platform: Platform, private parser: ParseDataProvider) {
     this.databaseReady = new BehaviorSubject(false);
     this.platform.ready().then(() => {
       this.sqlite.create(this.config)
@@ -38,7 +36,7 @@ export class SqlDbProvider {
             if (val) {
               this.databaseReady.next(true);
             } else {
-              console.log('NO DATA Found.');
+              console.log(NO_DATA_FOUND);
               this.databaseReady.next(true);
             }
           });
@@ -117,31 +115,16 @@ export class SqlDbProvider {
       else if(table == 'Create_Task')
         _data = [data[index]._id, data[index].name, data[index].projectID, data[index].addedby, data[index].id_of_addedby, data[index].status, data[index].date]      
       else if(table == 'Study')
-        _data = [this.parser.geAllData().getTitle() , this.parser.geAllData().getCustomer()._id ,this.parser.geAllData().getSutdyStartTime(), this.parser.geAllData().getSutdyEndTime(), this.parser.geAllData().getCustomer().customer_id,  this.parser.geAllData().getLocationID() , localStorage.getItem("userID")];
+        _data = [this.parser.getStudyData().getTitle() , this.parser.getStudyData().getCustomer()._id ,this.parser.getStudyData().getSutdyStartTime(), this.parser.getStudyData().getSutdyEndTime(), this.parser.getStudyData().getCustomer().customer_id, this.parser.getStudyData().getLocationID() , localStorage.getItem("userID"), data[index].role._id , data[index].area._id ];
       else if(table == 'Study_Data')
-        _data = [data[index].role._id , data[index].area._id , data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo ,  data[index].observationTime, this.parser.geAllData().getRoundData()[this.studyDataIndex].roundStartTime , this.parser.geAllData().getRoundData()[this.studyDataIndex].roundEndTime, this.studyID];  
+        _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time, this.studyID];  
       else if(table == 'Categories')
          _data = [data[index]._id , data[index].name];
       return _data;
   }
 
 
-  studyData(table, id){
-    this.studyID = id;
-    return new Promise((resolve, reject) => {
-      $(this.parser.geAllData().getRoundData()).each((index,element) => {
-        this.studyDataIndex = index;
-        this.addData( table, element.data).then(res => {
-          if((index + 1) == this.parser.geAllData().getRoundData().length)
-            resolve(true);
-        }).catch(error => {
-          reject(error);
-      });
-    });
-    });
-    
-  }
-
+  
   /* CHECKING THE NUMBER AND ADDING ZERO IF NUMBER IS LESS THAN 10 */
   pad(number) {
     if(typeof number == 'undefined' || number == null || number == '')
@@ -170,9 +153,9 @@ export class SqlDbProvider {
       else if(table == 'Elements')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT, taskID TEXT)'; 
       else if(table == 'Study')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT)';
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT, role TEXT, area TEXT)';
       else if(table == 'Study_Data')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, roundStartTime BIGINT, roundEndTime BIGINT, role TEXT, area TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, observationTime BIGINT, Study_Id INTEGER, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, time BIGINT, Study_Id INTEGER, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
       else if(table == 'Create_Role')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, position TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT)';
       else if(table == 'Create_Area')
@@ -206,9 +189,9 @@ export class SqlDbProvider {
     else if(table == 'Elements')
       query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, studyType ,type, taskID) VALUES (?, ? , ?, ?, ?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
-      query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID) VALUES (?, ? , ? , ? , ? ,? , ?)';           
+      query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID, role, area) VALUES (?, ? , ?, ? , ? , ? , ? ,? , ?)';           
     else if(table == 'Study_Data')
-      query = 'INSERT INTO ' + table + '(role, area, element , rating, frequency, notes, photo, observationTime, roundStartTime, roundEndTime, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ?)';   
+      query = 'INSERT INTO ' + table + '(task, element , rating, frequency, notes, photo, time, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ?)';   
     else if(table == 'Create_Role')
       query = 'INSERT INTO ' + table + '(_id ,name , position, projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Area' || table == 'Create_Task')
@@ -314,7 +297,7 @@ export class SqlDbProvider {
    }); 
  }
 
-
+  /*  PUTTING ALL THE DATA IN ARRAY AND RETURNING IT BACK TO THE VIEW */
   putDatainArray(table, result){
     let data = [];
     for (let i = 0; i < result.rows.length; i++) {
@@ -332,8 +315,6 @@ export class SqlDbProvider {
             data.push(result.rows.item(i).locationID);
           else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
             data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, popularity: result.rows.item(i).popularity, projectID: result.rows.item(i).projectID});
-          // else if(table == 'Roles') 
-          //    data.push({_id: result.rows.item(i)._id, name: result.rows.item(i).name, popularity: result.rows.item(i).popularity, projectID: result.rows.item(i).projectID}); 
           else if(table == 'Elements')
              data.push({_id: result.rows.item(i)._id ,name: result.rows.item(i).name , popularity: result.rows.item(i).popularity, rating: result.rows.item(i).rating,numericID: result.rows.item(i).numericID, 
                         projectID: result.rows.item(i).projectID , category: result.rows.item(i).category,studyType: result.rows.item(i).studyType, type: result.rows.item(i).type, taskID: result.rows.item(i).taskID});
@@ -353,9 +334,9 @@ export class SqlDbProvider {
           else if(table == 'Categories')
             data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name });
           else if(table == 'Study')
-            data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID, userID: result.rows.item(i).userID});
+            data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID, userID: result.rows.item(i).userID , role: result.rows.item(i).role, area : result.rows.item(i).area });
           else if(table == 'Study_Data')
-            data.push({id: result.rows.item(i).id , roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, Study_Id: result.rows.item(i).Study_Id })
+            data.push({id: result.rows.item(i).id , task: result.rows.item(i).task , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , time: result.rows.item(i).time, Study_Id: result.rows.item(i).Study_Id })
         }
       
       return data;
@@ -391,35 +372,7 @@ export class SqlDbProvider {
   getDatabaseState() {
     return this.databaseReady.asObservable();
   }
-
-  /* GETTING OFFLINE DATA FOR SPECIFIC ID */  
-  getOfflineStudyData(studyId) {
-
-    let query = "SELECT * FROM Study join Study_Data on Study.id=Study_Data.Study_Id join Projects on Projects._id=Study.projectID Where Study.id=" +`${studyId}`;
-    
-    return new Promise((resolve, reject) => {
-      this.database.executeSql(query, []).then((result) => {
-        let data = [];
-        if (result.rows.length > 0) {
-          for (let i = 0; i < result.rows.length; i++) {
-            data.push({ id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime,
-                        roundStartTime: result.rows.item(i).roundStartTime ,roundEndTime: result.rows.item(i).roundEndTime , role: result.rows.item(i).role, area: result.rows.item(i).area ,element: result.rows.item(i).element , 
-                        rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , observationTime: result.rows.item(i).observationTime, 
-                        customer: new Projects(result.rows.item(i)._id, result.rows.item(i).name, result.rows.item(i).logo , result.rows.item(i).headoffice  , result.rows.item(i).customer_id , result.rows.item(i).customer_name, result.rows.item(i).rating )
-            });    
-          }
-        }
-        
-        resolve(data);
-
-      }, err => {
-        reject(err);
-        return [];
-      });
-    });
-  }
-
-
+  
   addRow(table, data){
     let query = this.insertQuery(table);
     let row_data = [];
@@ -459,6 +412,7 @@ export class SqlDbProvider {
     return Observable.forkJoin(observableArray);
   }
 
+  /* UPDATING TABLE  */
   updateTable(table, column , data): Promise<any> {
 
     let query = null; let query_data = null;
@@ -495,7 +449,7 @@ export class SqlDbProvider {
       return error;
     });
   }
-
+  /* DELETING RECORD FROM SQLITE TABLE */
   deleteRecord(table,data){
     let query = '';
     if(table == 'Study_Data')

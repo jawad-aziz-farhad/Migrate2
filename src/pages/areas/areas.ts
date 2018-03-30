@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , MenuController } from 'ionic-angular';
 import { AreaDetailPage } from '../area-detail/area-detail';
 import { Time , ParseDataProvider, ToastProvider, FormBuilderProvider,
-         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider, ParserProvider } from '../../providers';
+         AlertProvider ,LoaderProvider, OperationsProvider, SqlDbProvider, NetworkProvider } from '../../providers';
 import { SERVER_URL } from '../../config/config';
 import { Selection } from '../../bases';
 /**
@@ -29,11 +29,10 @@ export class AreasPage extends Selection {
               public toast: ToastProvider,
               public time: Time,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider,
               public alert: AlertProvider,
               public formBuilder: FormBuilderProvider,
               ) {
-    super(navCtrl,navParams,time,parseData,parser,loader,operations,sql,network,alert,formBuilder,menuCtrl,toast);         
+    super(navCtrl,navParams,time,parseData,loader,operations,sql,network,alert,formBuilder,menuCtrl,toast);         
     this.initView();         
   }
 

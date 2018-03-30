@@ -130,6 +130,8 @@ export class StudyPhotoPage {
 
   /* GOING BACK TO THE FREQUENCY PAGE */
   goBack(imagPath: any){
+    // this.parseData.getData().setPhoto(imagPath);
+    // this.parseData.setData(this.parseData.getData());
     this.parseData.getData().setPhoto(imagPath);
     this.parseData.setData(this.parseData.getData());
     this.navCtrl.pop();

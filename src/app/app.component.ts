@@ -14,7 +14,7 @@ import { HelpPage } from '../pages/help/help';
 import { SettingsPage } from '../pages/settings/settings';
 
 /* PROVIDERS  */
-import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider , ParseDataProvider, ParserProvider, ToastProvider, Time, Sync } from "../providers/index";
+import { AuthProvider , AlertProvider, NetworkProvider , SqlDbProvider , ParseDataProvider, ToastProvider, Time, Sync } from "../providers/index";
 /* STATIC VALUES */
 import { SERVER_URL , BACK_BTN_MESSAGE } from '../config/config';
 /* BASE CLASSES */
@@ -47,7 +47,6 @@ export class MyApp {
               public alertProvider: AlertProvider,
               public network: NetworkProvider,
               public parseData: ParseDataProvider,
-              public parser: ParserProvider,
               public time: Time,
               public sync: Sync) {
     this.initializeApp();
@@ -98,7 +97,7 @@ export class MyApp {
   /* CANCELING STUDY ON BACK BUTTON PRESSED */
   cancelStudy() {
     if(!this.alertProvider.isPresent){
-      let stop = new Stop(this.nav, this.alertProvider,this.parseData, this.parser, this.time);
+      let stop = new Stop(this.nav, this.alertProvider,this.parseData, this.time);
       stop.studyEndConfirmation();
     }
   }

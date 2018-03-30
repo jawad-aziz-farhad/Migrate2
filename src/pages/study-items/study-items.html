@@ -28,7 +28,7 @@
 
     <ion-toolbar color="primary" padding>
 
-      <ion-title>{{ study_data.title }}</ion-title>
+      <ion-title>{{ study_data?.title }}</ion-title>
       
       <ion-buttons end>
         <button ion-button clear (click)="openModal('EditTitlePage')">
@@ -55,7 +55,6 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Round</th>
           <th>Element</th>
           <th>Rating</th>
           <th>Frequency</th>
@@ -64,22 +63,20 @@
       </thead>
 
     <tbody>
+
+        <tr *ngFor="let item of study_data?.data; let j=index;" (click)="showSummary(item, i , j)">
+            <td>
+              <div class="number-icon">{{ item.element.numericID ? item.element.numericID : '--' }}</div>
+                {{ item.element.name }}
+            </td>
+            <td>{{ item.rating }}</td>
+            <td>{{ item.frequency }}</td>
+            <td>
+              <ion-checkbox (ionChange)="showSelectedItems(item)">
+              </ion-checkbox>
+            </td>
+          </tr>
      
-      <ng-template ngFor let-round [ngForOf]="study_data?.rounds" let-i="index">
-        <tr *ngFor="let item of round?.data; let j=index;" (click)="showSummary(item, i , j)">
-          <td>{{ convertTime(round.roundStartTime) }}</td>
-          <td>
-            <div class="number-icon">{{ item.element.numericID ? item.element.numericID : '--' }}</div>
-              {{ item.element.name }}
-          </td>
-          <td>{{ item.rating }}</td>
-          <td>{{ item.frequency }}</td>
-          <td>
-            <ion-checkbox (ionChange)="showSelectedItems(item)">
-            </ion-checkbox>
-          </td>
-        </tr>
-      </ng-template>
     </tbody>
 
   </table>
@@ -89,7 +86,7 @@
 <ion-footer>
   <ion-grid no-padding>
     <ion-row>
-      <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.rounds.length == 0">Submit Data</button>
+      <button ion-button block no-margin class="theme-btn no-radius" (click)="openModal('SubmitDataDialogPage')" [disabled]="study_data.data.length == 0">Submit Data</button>
     </ion-row>
   </ion-grid>
 </ion-footer>

@@ -33,45 +33,30 @@ export class FormBuilderProvider {
                 name: localStorage.getItem("userName"),
                 _id: localStorage.getItem("userID")
               }),
-      rounds: this.formBuilder.array([ ])
+      role: data.role._id,
+      area: data.area._id,        
+      data: this.formBuilder.array([ ])
     });
   
-    this.addRounds(data);  
+    this.addData(data);  
   }
-
-  /* ADDING ROUNDS */
-  addRounds(data){
-    const formCtrl = <FormArray>this.dataForm.controls['rounds'];
-    data.rounds.forEach(item => {
-      formCtrl.push(this.formBuilder.group({
-        roundStartTime: [item.roundStartTime, Validators.required],
-        roundEndTime: [item.roundEndTime, Validators.required],
-        data: this.formBuilder.array([ ])
-    }));
-    });
-
-    this.addData(data);
-}
  
-/* ADDING DATA TO EACH ROUND */
-addData(data) {
-  data.rounds.forEach((item, index) => {
-    const formCtrl = (<FormArray>this.dataForm.controls['rounds']).at(index).get('data') as FormArray;;
-    item.data.forEach(sub_item => {
-    formCtrl.push(this.formBuilder.group({
-       role: [sub_item.role._id],
-       element: [sub_item.element._id],
-       area: [sub_item.area._id],
-       rating: [sub_item.rating],
-       frequency: [sub_item.frequency],
-       notes: [sub_item.notes],
-       photo: [sub_item.photo],
-       observationTime: [sub_item.observationTime ]
-     }));
-   });
-  });   
+  /* ADDING DATA TO EACH ROUND */
+  addData(data) {
+    const formCtrl = <FormArray>this.dataForm.controls['data'];
+    data.data.forEach((item, index) => {
+      formCtrl.push(this.formBuilder.group({
+        task: [item.task._id],
+        element: [item.element._id],
+        rating: [item.rating],
+        frequency: [item.frequency],
+        notes: [item.notes],
+        photo: [item.photo],
+        time: [item.time * 1000]
+      }));
+    });   
 
- }
+  }
   
   getFormBuilder(): FormGroup {
     return this.dataForm;
