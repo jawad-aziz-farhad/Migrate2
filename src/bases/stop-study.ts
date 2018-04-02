@@ -16,14 +16,21 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
     */            
     studyEndConfirmation() {
         this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
-            if(action == 'yes'){              
-               this.time.destroyTimer();
-               this.parseData();
-               //this.clearStudyData();
-               this.navCtrl.push(StudyItemsPage);
+          if(action == 'yes'){              
+            
+            this.time.destroyTimer();
+            /* IF DATA IS RECORDED, MOVING USER TO STUDY ITEMS PAGE */
+            if(this.parse.getDataArray().length > 0) {
+              this.parseData();
+              this.clearStudyData();
+              this.navCtrl.push(StudyItemsPage);
             }
+            /* IF NO DATA RECORDED YET, MOVING USER TO THE ROOT PAGE (PROJECTS) */
             else
-                console.log('User dont want to cancel the Study');  
+              this.navCtrl.popToRoot();
+          }
+          else
+              console.log('User dont want to cancel the Study');  
         })
         .catch(error => console.log("ERROR: " + error));
     }

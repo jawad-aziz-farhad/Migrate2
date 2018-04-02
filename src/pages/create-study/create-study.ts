@@ -59,6 +59,8 @@ export class CreateStudyPage {
     this.studyData.setStudyEndTime(null);
     
     this.parse.setStudyData(this.studyData);
+
+    console.log("STUDY DATA: "+ JSON.stringify(this.parse.getStudyData()));
     let data = { action: action , title: this.studyTitle};
     this.viewCtrl.dismiss(data);
   }

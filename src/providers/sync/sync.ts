@@ -3,7 +3,7 @@ import { ModalController } from 'ionic-angular';
 import { SqlDbProvider , FormBuilderProvider , OperationsProvider, ParseDataProvider, LoaderProvider } from '../index';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { StudyData, Data } from '../../models';
+import { Data } from '../../models';
 import { Storage } from '@ionic/storage';
 /*
   Generated class for the SyncProvider provider.
@@ -65,12 +65,14 @@ export class Sync {
 
   /* CHECKING OFFLINE DATA  */
   checkingOfflineData(table){
+
     this.table = table;
     const data = this.sql.getAllData(table);
     
     data.then((result:any) => {
 
       if(result.length > 0 ){
+
         this.offlineAERData$.push(result);
         let endPoint = null; let requests = [];
         
@@ -386,7 +388,7 @@ export class Sync {
       locationID: null,
       userID: null,
       addedBy: {
-        date: new Date().getDate(),
+        date: new Date(),
         name: localStorage.getItem("userName"),
         _id: localStorage.getItem("userID")
       },
@@ -413,8 +415,6 @@ export class Sync {
 
   /* BUILDING ROUNDs DATA AND PUSHING IT IN ROUNDS ARRAY */
   buildRoundsData(data) {
-
-    
   }
 
   /* GETTING STUDY DATA FOR ONE OBSERVATION */

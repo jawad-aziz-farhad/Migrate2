@@ -25,16 +25,22 @@ export class ParseDataProvider {
   /* GETTING STUDY DATA */
   getStudyData(): StudyData{ return this.studyData; }
 
+  /* SETTING STUDIED DATA */
   setData(data: Data){ this.data = data; }
+  /* GETTING STUDIED DATA */
   getData(): Data { return this.data; }
 
+  /* PUSHING DATA IN ARRAY */
   setDataArray(data: Data){ this.dataArray.push(data); }
+  /* GETTING DATA ARRAY */
   getDataArray(): Array<Data> { return this.dataArray; }
-  
+
+  /* CLEARING ALL DATA OBJECTS AND ARRAY */
   clearDataArray(){ this.dataArray = []; }
   clearData(){ this.data = null; }
   clearStudyData(): void { this.data = null; }
 
+  /* SETTING UP FREQUENCY HERE SO IF USER PRESS BACK BUTTON, WE CAN GET FREQUENCY FROM THE GETTER FUNCTION */
   setFrequency(frequency) { this.frequency = frequency; }
   getFrequency(): number { return this.frequency; }
 

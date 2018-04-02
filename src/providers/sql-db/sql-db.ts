@@ -54,7 +54,7 @@ export class SqlDbProvider {
 
             let row_data = this.dataforRow(table, data, i);
         
-            if(table == 'Tasks')
+            if(table == 'Study_Data')
              console.log(query + '\n' +JSON.stringify(row_data));
             
             this.database.executeSql(query, row_data).then(result => {
@@ -114,17 +114,17 @@ export class SqlDbProvider {
         _data = [data[index]._id, data[index].name, data[index].type , data[index].rating , data[index].category ,  data[index].efficiency_study, data[index].activity_study, data[index].role_study , data[index].projectID , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date , data[index].userAdded];
       else if(table == 'Create_Task')
         _data = [data[index]._id, data[index].name, data[index].projectID, data[index].addedby, data[index].id_of_addedby, data[index].status, data[index].date]      
-      else if(table == 'Study')
-        _data = [this.parser.getStudyData().getTitle() , this.parser.getStudyData().getCustomer()._id ,this.parser.getStudyData().getSutdyStartTime(), this.parser.getStudyData().getSutdyEndTime(), this.parser.getStudyData().getCustomer().customer_id, this.parser.getStudyData().getLocationID() , localStorage.getItem("userID"), data[index].role._id , data[index].area._id ];
+      else if(table == 'Study'){
+        let data = this.parser.getStudyData();
+        _data = [data.getTitle() , data.getCustomer()._id , data.getSutdyStartTime(), data.getSutdyEndTime(), data.getCustomer().customer_id, data.getLocationID() , localStorage.getItem("userID"), data.getRole()._id , data.getArea()._id ];
+      }  
       else if(table == 'Study_Data')
-        _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time, this.studyID];  
+        _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time, localStorage.getItem("studyID")];  
       else if(table == 'Categories')
          _data = [data[index]._id , data[index].name];
       return _data;
   }
 
-
-  
   /* CHECKING THE NUMBER AND ADDING ZERO IF NUMBER IS LESS THAN 10 */
   pad(number) {
     if(typeof number == 'undefined' || number == null || number == '')
@@ -228,6 +228,7 @@ export class SqlDbProvider {
       query = "SELECT * FROM " + `${table}` + " WHERE _id=?";
    else if(table == 'Study_Data')
       query = "SELECT * FROM " + `${table}` + " WHERE Study_Id=?";
+
     else if(table == 'OfflineElement'){
       
       if(id.indexOf('element') > -1 )
@@ -265,8 +266,9 @@ export class SqlDbProvider {
    else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
     
-    if(table == 'Elements')
+    if(table == 'Study_Data')
       console.log("\nQUERY: "+ query + "\nID: "+ id); 
+
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, [id]).then((result) => {
         let data = [];
@@ -377,6 +379,9 @@ export class SqlDbProvider {
     let query = this.insertQuery(table);
     let row_data = [];
     return new Promise((resolve, reject) => {
+      if(table == 'Study')
+        row_data = this.dataforRow('Study', null, null);
+      else
       row_data = [data.projectID, data._id];
       this.database.executeSql(query, row_data).then(result => {
         resolve(true);
@@ -401,13 +406,13 @@ export class SqlDbProvider {
     const table10 = this.dropTable("assignedLocations")
     const table11 = this.dropTable("Tasks");
 
-    // const table11 = this.dropTable("Create_Area");
-    // const table12 = this.dropTable("Create_Element");
-    // const table13 = this.dropTable("Create_Role");
-    // const table14 = this.dropTable("Study");
-    // const table15 = this.dropTable("Study_Data");
+    // const table12 = this.dropTable("Create_Area");
+    // const table13 = this.dropTable("Create_Element");
+    // const table14 = this.dropTable("Create_Role");
+    // const table15 = this.dropTable("Study");
+    // const table16 = this.dropTable("Study_Data");
     
-    //const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15 ];
+   //const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15, table16 ];
     const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 , table11];
     return Observable.forkJoin(observableArray);
   }

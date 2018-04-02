@@ -50,8 +50,8 @@ export class OfflineStudyDataPage {
   
   /* GETTING OFFLINE DATA AND SYNCING IT TO THE SERVER */
   getStudies(){
-
     this.sql.getAllData(this.TABLE_NAME).then(result => {
+      console.log("STUDIES: "+ JSON.stringify(result));
       if(result && result.length > 0){
         this.getStudyData(result);
       }
@@ -75,11 +75,16 @@ export class OfflineStudyDataPage {
     const fetch = Observable.forkJoin(studies);
 
     fetch.subscribe((result: any) => {    
+
+      console.log("ALL STUDIES DATA: "+ JSON.stringify(result))
+      
       result.forEach((element, index) => {
         if(element.length > 0){
           element.forEach((sub_element, sub_index) => {
             sub_element.studyStartTime = data[index].studyStartTime;
             sub_element.title = data[index].title;
+            sub_element.area = data[index].area;
+            sub_element.role = data[index].role;
             this.items.push(sub_element);
           });
         }
@@ -131,13 +136,6 @@ export class OfflineStudyDataPage {
       result.forEach((element, index) => {
 
         if(element.length > 0){
-
-          // if(table == 'areas')
-          //   this.items[index].area = element[0].name;
-          // else if(table == 'elements')
-          //   this.items[index].element = element[0].name;
-          // else
-          //   this.items[index].role = element[0].name;
           if(table == 'areas')
             this.items[index].area = element[0];
           else if(table == 'elements')

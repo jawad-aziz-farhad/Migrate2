@@ -27,12 +27,12 @@
       
     <ion-item>
       <ion-label stacked>Area</ion-label>
-      <ion-input type="text" value="{{ parseData.getStudyData().getArea().name ? parseData.getStudyData().getArea().name : data?.area }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ parseData.getStudyData() ? parseData.getStudyData()?.getArea().name : data?.area.name }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>
       <ion-label stacked>Role</ion-label>
-      <ion-input type="text" value="{{ parseData.getStudyData().getRole().name ? parseData.getStudyData().getRole().name : data?.role }}" disabled readonly></ion-input>
+      <ion-input type="text" value="{{ parseData.getStudyData() ? parseData.getStudyData().getRole().name : data?.role.name }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>

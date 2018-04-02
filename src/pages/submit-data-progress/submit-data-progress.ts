@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { ProgressHttp } from "angular-progress-http";
 import { FormBuilder, FormGroup  } from '@angular/forms';
 import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider } from '../../providers';
-import { SERVER_URL , ERROR } from '../../config/config';
+import { SERVER_URL , NO_DATA_FOUND } from '../../config/config';
 import { Storage } from '@ionic/storage';
 
 /**
@@ -58,7 +58,7 @@ export class SubmitDataProgressPage {
 
   /* SAVING DATA */
   saveData() {  
-    this.formProvider.initFormBuilder(this.parseData.getData());
+    this.formProvider.initFormBuilder(this.parseData.getStudyData());
     let formData = this.formProvider.getFormBuilder().value;
     console.log("FORM DATA: "+ JSON.stringify(formData));
     
@@ -108,8 +108,8 @@ createTable(table) {
 
 /* INSERTING DATA TO TABLE */
 insertStudy() {
-  let data = [1];
-  this.sql.addData(this.TABLE_NAME,data).then(result => {
+  let data = this.parseData.getStudyData();
+  this.sql.addRow(this.TABLE_NAME,data).then(result => {
     if(result)
       this.getStudy();
   }).catch(error => {
@@ -119,7 +119,15 @@ insertStudy() {
 /* GETTING SAVE STUDY */
 getStudy(){
   this.sql.getAllData(this.TABLE_NAME).then(result => {
-    this.insertStudyData(result);
+    console.log("STUDIES: "+ JSON.stringify(result));
+    if(result && result.length > 0) {
+      let lastIndex = result.length - 1 ;
+      let studyID = result[lastIndex].id;
+      localStorage.setItem("studyID", studyID);
+      this.insertStudyData(result);
+    }
+    else
+      console.error(NO_DATA_FOUND);
   }).catch(error => console.error("ERROR: " +JSON.stringify(error)));
 }
 

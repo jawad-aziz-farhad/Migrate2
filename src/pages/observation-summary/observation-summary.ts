@@ -43,7 +43,14 @@ export class ObservationSummaryPage {
   /* GETTING ALL ELEMENTS  */
   getElements(){
     this.data = this.navParams.get('item');
-    this.sql.getIDData('Elements',this.data.task._id).then(result => {
+    /* CHECKING TASK ID */
+    let taskID = null;
+    if(this.data.task._id)
+      taskID = this.data.task._id;
+    else
+      taskID = this.data.task;
+
+    this.sql.getIDData('Elements', taskID).then(result => {
       this.elements = result;
       this.show = true;
     }).catch(error => console.error(error));
