@@ -54,11 +54,8 @@ export class RatingsPage {
 
   /* PARSING ROUND DATA TO NEXT PAGE */
   _parseData(rating: number) {    
-    // this.parseData.getData().setRating(rating);
-    // this.parseData.setData(this.parseData.getData());
     this.parseData.getData().setRating(rating);
     this.parseData.setData(this.parseData.getData());
-    console.log("STUDY TASKS AT RATING PAGE: " + JSON.stringify(this.parseData.getData()));
   }
 
   /* GOING TO NEXT PAGE */

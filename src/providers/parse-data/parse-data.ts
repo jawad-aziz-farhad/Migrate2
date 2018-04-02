@@ -14,6 +14,7 @@ export class ParseDataProvider {
   private studyData: StudyData;
   private data: Data;
   private dataArray: Array<Data>;
+  private frequency: number = 0;
   
   constructor(public http: Http) {
     console.log('Hello ParseDataProvider Provider');
@@ -28,10 +29,13 @@ export class ParseDataProvider {
   getData(): Data { return this.data; }
 
   setDataArray(data: Data){ this.dataArray.push(data); }
-  getStudyTasksArray(): Array<Data> { return this.dataArray; }
-
+  getDataArray(): Array<Data> { return this.dataArray; }
+  
   clearDataArray(){ this.dataArray = []; }
   clearData(){ this.data = null; }
   clearStudyData(): void { this.data = null; }
+
+  setFrequency(frequency) { this.frequency = frequency; }
+  getFrequency(): number { return this.frequency; }
 
 }

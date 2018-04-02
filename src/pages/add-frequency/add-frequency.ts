@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ModalController } from 'ionic-angu
 import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider } from '../../providers';
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
-import { StudyItemsPage } from '../study-items/study-items';
+import { Data } from '../../models';
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -55,12 +55,14 @@ export class AddFrequencyPage {
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
   concatFrequency(num){
     this.frequency = this.frequency + num;
+    this.parseData.setFrequency(this.frequency);
   } 
 
 
   /* REMOVING ENTERED FREQUENCY */ 
   removeFrequency(){
     this.frequency = this.frequency.slice(0, this.frequency.length -1 );
+    this.parseData.setFrequency(this.frequency);
   }
 
   millisToMinutesAndSeconds(millis) {
@@ -92,27 +94,32 @@ export class AddFrequencyPage {
       this.time.isNext = true;
       this.frequency = '';
 
-      let studyTasks = this.parseData.getData();
-      studyTasks.setElement(this.nextElement);
+      this.setTask();
+      
+      let data = this.parseData.getData();
+      data.setElement(this.nextElement);
+
       /* IF ELEMENT's RATING IS NOT RATED */
       if(this.nextElement.rating == 'Not Rated'){
-        studyTasks.setRating('Not Rated');
-        this.parseData.setData(studyTasks); 
+        data.setRating('Not Rated');
+        this.parseData.setData(data); 
       }
       /* IF ELEMENT's RATING IS 100 */   
       else if(this.nextElement.rating == 100){
-        studyTasks.setRating(100);    
-        this.parseData.setData(studyTasks); 
+        data.setRating(100);    
+        this.parseData.setData(data); 
       }
       else{
-        this.parseData.setData(studyTasks); 
+        this.parseData.setData(data); 
         this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 7)));
       }
 
     }
     /* IF USER SELECT TO GO TO ELEMENTS' LIST */
-    else if(value == 'elements')
+    else if(value == 'elements'){
+      this.setTask();
       this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 6)));
+    }
     /* IF USER GO TO GO TO TASKS PAGE */
     else if(value == 'tasks')
       this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 5)));
@@ -120,26 +127,36 @@ export class AddFrequencyPage {
 
   /* PARSING STUDY DATA */
   parsingData(){
-    let studyTasks = this.parseData.getData();
-    studyTasks.setTime(this.time.ticks);
+    let data = this.parseData.getData();
+    data.setTime(this.time.ticks);
     /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
-    if(!this.frequency)
-      studyTasks.setFrequency(0);
-    else
-      studyTasks.setFrequency(this.frequency);
-    /* IF NO NOTES ADDED FOR THIS OBSERVATION */
-    if(!studyTasks.getNotes())
-      studyTasks.setNotes(null);
-    /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
-    if(!studyTasks.getPhoto())
-      studyTasks.setPhoto(null);
+    if(this.parseData.getFrequency() == 0 || this.parseData.getFrequency() == null)
+      this.parseData.setFrequency(0);
 
-    this.parseData.setData(studyTasks);
-    studyTasks = this.parseData.getData();
+    data.setFrequency(this.parseData.getFrequency());
+    /* IF NO NOTES ADDED FOR THIS OBSERVATION */
+    if(!data.getNotes())
+      data.setNotes(null);
+    /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
+    if(!data.getPhoto())
+      data.setPhoto(null);
+
+    this.parseData.setData(data);
+    data = this.parseData.getData();
     this.parseData.setDataArray(this.parseData.getData());
-    /* SETTING NOTES AND PHOTO TO NULL */
-    studyTasks.setNotes(null);
-    studyTasks.setPhoto(null);
+
+    console.log("\nDATA ARRAY: "+ JSON.stringify(this.parseData.getDataArray()))
+    
+    this.parseData.clearData();
+  }
+
+  /* SETTING PREVIOUSLY SELECTED TASK FOR THE NEW ELEMENT'S STUDY */
+  setTask(){
+    let data = new Data();
+    /* GETTING LAST INDEX OF ARRAY AND TASK OF SETTING THE TASK FOR NEXT ELEMENT'S STUDY */
+    let lastIndex = this.parseData.getDataArray().length - 1;
+    data.setTask(this.parseData.getDataArray()[lastIndex].getTask());
+    this.parseData.setData(data);
   }
 
   /* ADDING NOTES FOR THE CURRENT OBSERVATION */

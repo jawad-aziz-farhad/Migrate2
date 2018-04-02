@@ -19,7 +19,7 @@
   <ion-card no-margin class="full-card">
     <my-img [src]="getImage()" [alt]="Observation-Image" [default]="DEFAULT_IMG"></my-img>
     <div class="card-title overlayed">
-      {{ !isOfflineStudy() ? parser.geAllData().title : data?.title }}
+      {{ !isOfflineStudy() ? parseData.getStudyData().title : data?.title }}
     </div>
   </ion-card>
 

@@ -42,22 +42,16 @@ export class ObservationSummaryPage {
 
   /* GETTING ALL ELEMENTS  */
   getElements(){
-    this.sql.getAllData('Elements').then(result => {
-      this.elements = result;
-      this.showObservationSummary();
-    }).catch(error => console.error(error));
-    
-  }
-  /* GETTING SUMMARY  */
-  showObservationSummary(){
-    this.data = null;
     this.data = this.navParams.get('item');
-    console.log("SELECTED ITEM: "+ JSON.stringify(this.data));
-    this.show = true;
+    this.sql.getIDData('Elements',this.data.task._id).then(result => {
+      this.elements = result;
+      this.show = true;
+    }).catch(error => console.error(error));
   }
+
   /* GETTING IMAGE PATH */
   getImage() {
-    if(typeof this.data.photo !== 'undefined' && this.data.photo !== null && this.data.photo !== ''){
+    if(this.data.photo){
       /* IF FILE IS NOT UPLOADED YET AND WE HAVE THE LOCAL FILE PATH */
       if(this.data.photo.indexOf('file://') == -1)
         this.imagePath = SERVER_URL + this.data.photo;

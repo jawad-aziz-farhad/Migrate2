@@ -3,7 +3,7 @@ import { ModalController } from 'ionic-angular';
 import { SqlDbProvider , FormBuilderProvider , OperationsProvider, ParseDataProvider, LoaderProvider } from '../index';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
-import { StudyData, StudyTasks } from '../../models';
+import { StudyData, Data } from '../../models';
 import { Storage } from '@ionic/storage';
 /*
   Generated class for the SyncProvider provider.
@@ -420,7 +420,7 @@ export class Sync {
   /* GETTING STUDY DATA FOR ONE OBSERVATION */
   getStudyData(data){
 
-    let studyData = new StudyTasks();
+    let studyData = new Data();
     studyData.setTask(data.task);
     studyData.setElement(data.element);
     studyData.setRating(data.rating);

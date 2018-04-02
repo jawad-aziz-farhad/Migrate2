@@ -38,7 +38,6 @@ export class StudyItemsPage implements OnInit {
 
 
   ngOnInit(){
-    console.log("\n\n\nSTUDY ITEMS: "+ JSON.stringify(this.parseData.getData()));
     this.getData();
   }
   
@@ -78,10 +77,7 @@ export class StudyItemsPage implements OnInit {
         }
         
         else if(component == 'EditTitlePage')
-          console.log("Dismiss the Popup.")
-        
-
-    
+          console.log("Dismissing the Popup.")
       });
     modal.present();
   }

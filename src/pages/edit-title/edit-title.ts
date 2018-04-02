@@ -29,7 +29,6 @@ export class EditTitlePage {
 
   init(){
     this.data = this.navParams.get('data');
-    console.log("Data is: "+ JSON.stringify(this.data))
     this.studyTitle = this.navParams.get('title');
     if(this.data)
       this.studyTitle = this.data.name;
@@ -47,7 +46,7 @@ export class EditTitlePage {
   }
 
   dismiss(value: string){
-    let parser = this.parser.getData();
+    let parser = this.parser.getStudyData();
     parser.setTitle(this.studyTitle);
     this.viewCtrl.dismiss();
   }

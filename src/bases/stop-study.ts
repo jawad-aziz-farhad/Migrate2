@@ -29,30 +29,28 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
     }
 
     parseData(){
-        let studyTasks = this.parse.getData();
-        studyTasks.setTime(this.time.ticks);
-        /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
-        if(!studyTasks.getFrequency())
-          studyTasks.setFrequency(0);
+        let data = this.parse.getData();
+        data.setTime(this.time.ticks);
+         /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
+        if(this.parse.getFrequency() == 0 || this.parse.getFrequency() == null)
+          this.parse.setFrequency(0);
+        /* SETTING FREQUENCY */
+        data.setFrequency(this.parse.getFrequency());
         /* IF NO NOTES ADDED FOR THIS OBSERVATION */
-        if(!studyTasks.getNotes())
-          studyTasks.setNotes(null);
+        if(!data.getNotes())
+          data.setNotes(null);
         /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
-        if(!studyTasks.getPhoto())
-          studyTasks.setPhoto(null);
+        if(!data.getPhoto())
+          data.setPhoto(null);
         
-        this.parse.setData(studyTasks);
-        studyTasks = this.parse.getData();
+        this.parse.setData(data);
+        data = this.parse.getData();
         this.parse.setDataArray(this.parse.getData());
 
         /* SETTING ALL STUDY DATA */
         this.parse.getStudyData().setStudyEndTime(new Date().getTime());
-        this.parse.getStudyData().setData(this.parse.getStudyTasksArray());
+        this.parse.getStudyData().setData(this.parse.getDataArray());
         this.parse.setData(this.parse.getData());
-
-        console.log("ALL STUDY DATA: "+ JSON.stringify(this.parse.getData()));
-               
-
     }
 
    /* CLEARING PARSER DATA */ 
