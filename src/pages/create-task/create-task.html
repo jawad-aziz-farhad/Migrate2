@@ -6,13 +6,75 @@
 -->
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>create-task</ion-title>
+  <ion-navbar color="primary">
+    <ion-toolbar color="primary">
+      <button ion-button clear class="nav-back" navPop>
+          <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
+      </button>
+      
+      <ion-title>Create Task</ion-title>
+
+      <ion-buttons end *ngIf="show">
+        <button ion-button icon-only margin-right (click)="createTask()" [disabled]="creationForm.invalid">
+          <span>Save</span>
+        </button>
+      </ion-buttons>
+  
+    </ion-toolbar>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+
+  <form [formGroup]="creationForm" *ngIf="show">
+
+    <ion-item margin-bottom no-padding>
+      <ion-label color="dark" stacked>Task Name</ion-label>
+      <ion-input type="text" placeholder="Enter Task Name" formControlName="name"></ion-input>
+
+      <p *ngIf="!creationForm.controls.name.valid && (creationForm.controls.name.dirty)">
+        Please enter Role Name.
+      </p>
+    </ion-item>
+
+   
+    <ion-item margin-bottom no-padding>
+      <ion-label>Relaxation Allowance</ion-label>
+      <ion-select formControlName="relaxationAllowance">
+        <ion-option *ngFor="let allowance of allowances; let i=index;" [value]="allowance"> {{ allowance }}</ion-option>
+      </ion-select>
+      <p *ngIf="!creationForm.controls.name.valid && (creationForm.controls.relaxationAllowance.dirty)">
+        Please select a relaxation relaxationAllowance.
+      </p>  
+    </ion-item>
+    
+    <div formArrayName="elements">
+      <ion-row *ngFor="let element of creationForm.controls.elements.controls; let i=index" [formGroupName]="i" text-center>
+        <ion-col col-10>
+          <ion-select formControlName="_id">
+            <ion-option *ngFor="let element of elements; let i=index;" [value]="element._id"> {{ element.name }}</ion-option>
+          </ion-select>
+        </ion-col>
+        <ion-col col-1>
+          <ion-toggle checked="false" formControlName="controlling" (ionChange)="changeControl(i)"></ion-toggle>
+        </ion-col>
+        <ion-col col-1 (click)="removeElement(i)">
+          <ion-icon name="close"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <ion-item>
+      <button ion-button clear (click)="addElement()">
+        <ion-icon name="add"></ion-icon>
+        Add another Element
+      </button>
+    </ion-item>
+  
+  <pre>form value: <br>{{creationForm.value | json}}</pre>
+  
+  </form>
 
 </ion-content>

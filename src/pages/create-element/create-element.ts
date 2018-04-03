@@ -122,12 +122,12 @@ export class CreateElementPage extends Creation {
   }
 
   addStudyType(id){
-     const control = <FormArray>this.creationForm.controls['studyTypes'];
-     const index = this.indexOf(id);
-     if(index == -1)
-       control.push(this.initType(id));
-     else
-      control.removeAt(index);
+    const control = <FormArray>this.creationForm.controls['studyTypes'];
+    const index = this.indexOf(id);
+    if(index == -1)
+      control.push(this.initType(id));
+    else
+    control.removeAt(index);
       
   } 
 

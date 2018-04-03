@@ -49,7 +49,7 @@ export class SubmitDataProgressPage {
   }
 
   /* CHECKING INTERNET CONNECTION's INFO */
-  checkInternetAvailability(){
+  checkInternetAvailability() {
     if(this.network.isInternetAvailable())
       this.saveData();
     else
@@ -119,7 +119,6 @@ insertStudy() {
 /* GETTING SAVE STUDY */
 getStudy(){
   this.sql.getAllData(this.TABLE_NAME).then(result => {
-    console.log("STUDIES: "+ JSON.stringify(result));
     if(result && result.length > 0) {
       let lastIndex = result.length - 1 ;
       let studyID = result[lastIndex].id;

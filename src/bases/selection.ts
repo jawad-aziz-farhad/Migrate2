@@ -3,7 +3,7 @@ import { NavController, MenuController, NavParams } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, AlertProvider, ParseDataProvider,
          OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
 import { MESSAGE, INTERNET_ERROR } from '../config/config';
-import { StudyData, Data } from '../models';
+import { Data } from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateElementPage } from '../pages/create-element/create-element';
 import { CreateRolePage } from '../pages/create-role/create-role';
@@ -11,6 +11,7 @@ import { RatingsPage } from '../pages/ratings/ratings';
 import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { Stop } from './stop-study';
 import { Observable } from 'rxjs';
+import { CreateTaskPage } from '../pages/create-task/create-task';
 
 
 export class Selection {
@@ -363,6 +364,8 @@ export class Selection {
       component = CreateElementPage
     else if(this.TABLE_NAME == 'Roles')
       component = CreateRolePage;
+    else if(this.TABLE_NAME == 'Tasks')
+      component = CreateTaskPage;  
     
     this.navCtrl.push(component, {project: this.project, data: this.temp });
   }

@@ -25,6 +25,7 @@ export class Creation {
                 public storage: Storage){
 
   }
+  
 /* SETTING CURRENT USER INFO TO THE FORM WHILE ADDING NEW ROLE */
 setUserInfo() {
   this.storage.get('currentUser').then(user => {

@@ -73,8 +73,7 @@ export class FormBuilderProvider {
   }
 
   initFormForOfflineData(data){
-
-      let formData=null;
+      let formData = null;
       /* FORM DATA FOR ROLES DOCUMENT */
       if(data.position)
         formData = {
