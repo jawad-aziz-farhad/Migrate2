@@ -76,7 +76,7 @@ export class CreateTaskPage {
                 }),
       projectID: this.project._id,
       status:"active",
-      elements: this.formBuilder.array( [this.initElements()], Validators.required )
+      elements: this.formBuilder.array([this.initElements()], Validators.required )
     });
 
     this.show = true;
@@ -103,10 +103,15 @@ export class CreateTaskPage {
   }
 
   /* CHANGING CONTROLLING ELEMENT  */
-  changeControl(index: number){
+  changeControl(event: any, index: number){
     const elements = <FormArray>this.creationForm.get('elements').value;
     for(let i=0; i<elements.length;i++){
-      
+      if(event.target.checked){
+        if(i == index)
+          elements[i].controlling = true;
+        else
+          elements[i].controlling = false;
+      }
     }
   }
 

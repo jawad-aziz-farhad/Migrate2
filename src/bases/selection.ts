@@ -2,7 +2,7 @@
 import { NavController, MenuController, NavParams } from 'ionic-angular';
 import { ToastProvider, LoaderProvider, FormBuilderProvider, AlertProvider, ParseDataProvider,
          OperationsProvider, SqlDbProvider, NetworkProvider, Time} from '../providers';
-import { MESSAGE, INTERNET_ERROR } from '../config/config';
+import { MESSAGE, INTERNET_ERROR, NO_DATA_FOUND } from '../config/config';
 import { Data } from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateElementPage } from '../pages/create-element/create-element';
@@ -123,7 +123,7 @@ export class Selection {
           this.createTable(data); 
       }
       else
-        console.error("NO DATA FOUND.");
+        this.toast.showBottomToast(NO_DATA_FOUND);
     },
     error => {
       this.loader.hideLoader();

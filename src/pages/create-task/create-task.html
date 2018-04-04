@@ -51,14 +51,14 @@
     </ion-item>
     
     <div formArrayName="elements">
-      <ion-row *ngFor="let element of creationForm.controls.elements.controls; let i=index" [formGroupName]="i" text-center>
+      <ion-row *ngFor="let elementControl of creationForm.controls.elements.controls; let arrayIndex=index" [formGroupName]="arrayIndex" text-center>
         <ion-col col-10>
           <ion-select formControlName="_id">
             <ion-option *ngFor="let element of elements; let i=index;" [value]="element._id"> {{ element.name }}</ion-option>
           </ion-select>
         </ion-col>
         <ion-col col-1>
-          <ion-toggle checked="false" formControlName="controlling" (ionChange)="changeControl(i)"></ion-toggle>
+          <ion-toggle [checked]="elementControl.controlling" formControlName="controlling" (ionChange)="changeControl($event,arrayIndex)"></ion-toggle>
         </ion-col>
         <ion-col col-1 (click)="removeElement(i)">
           <ion-icon name="close"></ion-icon>

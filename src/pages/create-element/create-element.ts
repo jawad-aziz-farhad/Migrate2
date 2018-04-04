@@ -128,7 +128,6 @@ export class CreateElementPage extends Creation {
       control.push(this.initType(id));
     else
     control.removeAt(index);
-      
   } 
 
   /* CHECKING THE VALUE INSIDE ARRAY */
