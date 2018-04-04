@@ -117,10 +117,11 @@ export class Selection {
           element.projectID = this.project._id;  
         });
         
-        if(this.TABLE_NAME.toLowerCase() == 'elements')
-          this.getElementsCategories(data);
-        else
-          this.createTable(data); 
+        // if(this.TABLE_NAME.toLowerCase() == 'elements')
+        //   this.getElementsCategories(data);
+        // else
+        //   this.createTable(data); 
+        this.createTable(data);
       }
       else
         this.toast.showBottomToast(NO_DATA_FOUND);
@@ -176,10 +177,11 @@ export class Selection {
     this._temp = {};
     this.data = data;
     this.temp = data;
-    if(this.TABLE_NAME !== 'Elements')
-      this.show = true;
-    else
-      this.groupElementsData();  
+    this.show = true;
+    // if(this.TABLE_NAME !== 'Elements')
+    //   this.show = true;
+    // else
+    //   this.groupElementsData();  
   }
 
   /* CATEGORIZING ELEMENTS ACCORDING TO THEIR STUDY TYPE */

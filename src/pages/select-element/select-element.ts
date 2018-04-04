@@ -40,4 +40,9 @@ export class SelectElementPage extends Selection  {
     this.init('Elements',this.navParams.get('task'), RatingsPage);
  }
 
+ ionViewDidLeave() {
+  console.log('ionViewDidLeave SelectElementPage');
+  this.isFiltering = this.isSearching = false;
+}
+
 }

@@ -3,7 +3,7 @@ import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angul
 import { ProgressHttp } from "angular-progress-http";
 import { FormBuilder, FormGroup  } from '@angular/forms';
 import { ParseDataProvider , NetworkProvider, OperationsProvider, HeadersProvider, SqlDbProvider , ToastProvider , FormBuilderProvider } from '../../providers';
-import { SERVER_URL , NO_DATA_FOUND } from '../../config/config';
+import { SERVER_URL , NO_DATA_FOUND, ERROR } from '../../config/config';
 import { Storage } from '@ionic/storage';
 
 /**
@@ -62,26 +62,26 @@ export class SubmitDataProgressPage {
     let formData = this.formProvider.getFormBuilder().value;
     console.log("FORM DATA: "+ JSON.stringify(formData));
     
-    // let url = SERVER_URL + 'ras_data/add';
+    let url = SERVER_URL + 'dilos_data/add';
     
-    // this.http
-    //     .withUploadProgressListener(progress => { 
-    //       console.log(`Uploading ${progress.percentage}%`); 
-    //       this.progress = progress.percentage;
-    //     })
-    //     .post(`${url}`, formData, {headers: this.headers.getHeaders()})
-    //     .map(res => res.json())
-    //     .subscribe((response) => {
-    //         console.log("RESPONSE: " +JSON.stringify(response));
-    //         if(response.success)
-    //            this.show = true;
-    //         else
-    //           console.error(ERROR);   
-    //     },
-    //     error => {
-    //       let _error = error.json();
-    //       this.operations.handleError(_error);
-    //     });
+    this.http
+        .withUploadProgressListener(progress => { 
+          console.log(`Uploading ${progress.percentage}%`); 
+          this.progress = progress.percentage;
+        })
+        .post(`${url}`, formData, {headers: this.headers.getHeaders()})
+        .map(res => res.json())
+        .subscribe((response) => {
+            console.log("RESPONSE: " +JSON.stringify(response));
+            if(response.success)
+               this.show = true;
+            else
+              console.error(ERROR);   
+        },
+        error => {
+          let _error = error.json();
+          this.operations.handleError(_error);
+        });
   }
 
 /* DROPPING TABLES IF EXISTS BEFORE SAVING DATA INTO STUDY AND STUDY_DATA TABLES*/  

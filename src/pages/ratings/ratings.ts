@@ -37,14 +37,14 @@ export class RatingsPage {
   ionViewWillEnter() {
     if(!this.time.isTimerRunning && !this.time.isNext)
       this.time.runTimer(); 
-   this.ratings = [  40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ];
+   this.ratings = [ 40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ];
    this.initView()
   }
 
   /* iNITIALIZING VIEW  */
   initView(){
-    this.temp = {};
-    this.enterRating(this.ratings[0]);
+    this.temp = this.ratings[0];
+    //this.enterRating(this.ratings[0]);
   }
   
   /* GOING TO ENTER RATING PAGE */

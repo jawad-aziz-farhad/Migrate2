@@ -49,6 +49,7 @@ export class StudyItemsPage implements OnInit {
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
     this.study_data = this.parseData.getStudyData();
+    console.log("\n\nSTUDY DATA IS: "+ JSON.stringify(this.study_data));
     this.toast.showBottomToast(STUDY_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
@@ -121,6 +122,6 @@ export class StudyItemsPage implements OnInit {
   /* CANCELLING STUDY */ 
   cancelStudy() {
     this.stop = new Stop(this.navCtrl,this.alert, this.parseData,  this.time);
-    this.stop.studyEndConfirmation();
+    this.stop.endStudy();
   }
 }

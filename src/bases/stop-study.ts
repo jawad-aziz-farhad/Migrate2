@@ -5,6 +5,8 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
 
  export class Stop {
 
+    private ticks: number = 0;
+
     constructor(private navCtrl: NavController,
                 private alert: AlertProvider,
                 private parse: ParseDataProvider,
@@ -17,7 +19,7 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
     studyEndConfirmation() {
         this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
           if(action == 'yes'){              
-            
+            this.ticks = this.time.ticks;
             this.time.destroyTimer();
             /* IF DATA IS RECORDED, MOVING USER TO STUDY ITEMS PAGE */
             if(this.parse.getDataArray().length > 0) {
@@ -35,29 +37,43 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
         .catch(error => console.log("ERROR: " + error));
     }
 
-    parseData(){
+  parseData(){
         let data = this.parse.getData();
-        data.setTime(this.time.ticks);
-         /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
-        if(this.parse.getFrequency() == 0 || this.parse.getFrequency() == null)
-          this.parse.setFrequency(0);
-        /* SETTING FREQUENCY */
-        data.setFrequency(this.parse.getFrequency());
-        /* IF NO NOTES ADDED FOR THIS OBSERVATION */
-        if(!data.getNotes())
-          data.setNotes(null);
-        /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
-        if(!data.getPhoto())
-          data.setPhoto(null);
-        
-        this.parse.setData(data);
-        data = this.parse.getData();
-        this.parse.setDataArray(this.parse.getData());
+        if(data.getTask() && data.getElement() && data.getRating()){
+          data.setTime(this.ticks);
+          /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
+          if(this.parse.getFrequency() == 0 || this.parse.getFrequency() == null)
+            this.parse.setFrequency(0);
+          /* SETTING FREQUENCY */
+          data.setFrequency(this.parse.getFrequency());
+          /* IF NO NOTES ADDED FOR THIS OBSERVATION */
+          if(!data.getNotes())
+            data.setNotes(null);
+          /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
+          if(!data.getPhoto())
+            data.setPhoto(null);
+          
+          this.parse.setData(data);
+          data = this.parse.getData();
+          this.parse.setDataArray(this.parse.getData());
+        }
 
         /* SETTING ALL STUDY DATA */
         this.parse.getStudyData().setStudyEndTime(new Date().getTime());
         this.parse.getStudyData().setData(this.parse.getDataArray());
-        this.parse.setData(this.parse.getData());
+        this.parse.setStudyData(this.parse.getStudyData());
+    }
+
+    endStudy() {
+      this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
+        if(action == 'yes'){              
+          this.time.destroyTimer();
+          this.clearStudyData();
+          this.parse.clearStudyData();
+        }
+        else
+          console.log("DISMISSING DIALOG.");
+      });
     }
 
    /* CLEARING PARSER DATA */ 
@@ -65,7 +81,4 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
     this.parse.clearData();
     this.parse.clearDataArray();
    } 
-
-
-
 }

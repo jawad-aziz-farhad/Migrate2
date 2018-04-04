@@ -145,8 +145,6 @@ export class AddFrequencyPage {
     data = this.parseData.getData();
     this.parseData.setDataArray(this.parseData.getData());
 
-    console.log("\nDATA ARRAY: "+ JSON.stringify(this.parseData.getDataArray()))
-    
     this.parseData.clearData();
   }
 

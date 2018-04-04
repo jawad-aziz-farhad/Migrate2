@@ -42,5 +42,8 @@ export class SelectTaskPage extends Selection {
     this.init('Tasks',this.navParams.get('project'), SelectElementPage);
   }
 
-
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave SelectTaskPage');
+    this.isFiltering = this.isSearching = false;
+  }
 }

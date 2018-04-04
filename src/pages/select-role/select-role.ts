@@ -34,11 +34,16 @@ export class SelectRolePage extends Selection {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad SelectAerPage');
+    console.log('ionViewDidLoad SelectRolePage');
   }
 
   ionViewWillEnter(){
     this.init('Roles',this.navParams.get('project'), SelectAreaPage);
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave SelectRolePage');
+    this.isFiltering = this.isSearching = false;
   }
   
 }

@@ -37,7 +37,7 @@ export class ParseDataProvider {
 
   /* CLEARING ALL DATA OBJECTS AND ARRAY */
   clearDataArray(){ this.dataArray = []; }
-  clearData(){ this.data = null; }
+  clearData(){ this.data = null; this.data = new Data() }
   clearStudyData(): void { this.data = null; }
 
   /* SETTING UP FREQUENCY HERE SO IF USER PRESS BACK BUTTON, WE CAN GET FREQUENCY FROM THE GETTER FUNCTION */

@@ -39,6 +39,11 @@ import { SelectTaskPage } from '../select-task/select-task';
 
   ionViewWillEnter(){
     this.init('Areas', this.navParams.get('project'), SelectTaskPage);
- }
+  }
+
+  ionViewDidLeave() {
+    console.log('ionViewDidLeave SelectAerPage');
+    this.isFiltering = this.isSearching = false;
+  }
 
 }
