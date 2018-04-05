@@ -101,7 +101,7 @@ export class StudyPhotoPage {
   /* UPLOADIN PHOTO TO SERVER */
   uploadPhoto() {
       this.loader.showLoader(MESSAGE);
-      let params = {endPoint:'ras_data/study_image' , key :'photo', file: this.photo};
+      let params = {endPoint:'dilos_data/study_image' , key :'photo', file: this.photo};
       this.operations.uploadFile(params).then(res => {
         this.loader.hideLoader();
         let response = JSON.parse(res);

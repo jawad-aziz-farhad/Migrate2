@@ -289,7 +289,7 @@ export class OperationsProvider {
   }
 
   _uploadFile(photo): Observable<any> {
-    let data = { endPoint:'ras_data/study_image' , key :'photo', file: photo};
+    let data = { endPoint:'dilos_data/study_image' , key :'photo', file: photo};
     let filename = data.file.substr(data.file.lastIndexOf('/') + 1);
     
     filename = filename.split("?");

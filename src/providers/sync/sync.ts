@@ -306,7 +306,7 @@ export class Sync {
 
   /* UPLOADING OFFLINE STUDY IMAGES  */
   uploadImages(result){
-    let params = {endPoint:'ras_data/study_image' , key :'photo', file: result[0].photo};
+    let params = {endPoint:'dilos_data/study_image' , key :'photo', file: result[0].photo};
     this.operations.uploadFile(params).then(res => {
       let response = JSON.parse(res);
       if(response.success){
@@ -360,7 +360,7 @@ export class Sync {
       let studydata = study_data[index];
       this.buildStudyData(study,studydata);
       const lastIndex = this.offlineData$.length - 1;
-      const upload = this.operations.postRequest('ras_data/add' , this.offlineData$[lastIndex]);
+      const upload = this.operations.postRequest('dilos_data/add' , this.offlineData$[lastIndex]);
       uploads.push(upload);
     });
 
@@ -413,12 +413,11 @@ export class Sync {
   }
 
   /* BUILDING DATA AND PUSHING  */
-  buildData(data) {
-    let studyData = [];
-    data.forEach((element , index) => {
-      studyData.push(this.getStudyData(element));
+  buildData(data) {    
+    let lastIndex = this.offlineData$.length - 1;
+    data.forEach((element,index) => {
+      this.offlineData$[lastIndex].data.push(this.getStudyData(element));
     });
-    return studyData;
   }
 
   /* GETTING STUDY DATA FOR ONE OBSERVATION */
