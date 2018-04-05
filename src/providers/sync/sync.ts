@@ -109,8 +109,7 @@ export class Sync {
   /* SAVING Area, Element, Role INFORMATION */
   saveAERData(requests){
 
-    const forkJoin = Observable.forkJoin(requests);
-    
+    const forkJoin = Observable.forkJoin(requests);    
     forkJoin.subscribe(result => {   
       this.onlineAERData$.push(result);
       this.checkingResult(result);
@@ -409,27 +408,31 @@ export class Sync {
     offlinedataObj.area = element.area;
     this.offlineData$.push(offlinedataObj);
 
-    this.buildRoundsData(study_data);
+    this.buildData(study_data);
 
   }
 
-  /* BUILDING ROUNDs DATA AND PUSHING IT IN ROUNDS ARRAY */
-  buildRoundsData(data) {
+  /* BUILDING DATA AND PUSHING  */
+  buildData(data) {
+    let studyData = [];
+    data.forEach((element , index) => {
+      studyData.push(this.getStudyData(element));
+    });
+    return studyData;
   }
 
   /* GETTING STUDY DATA FOR ONE OBSERVATION */
-  getStudyData(data){
+  getStudyData(studyData){
+    let data = new Data();
+    data.setTask(studyData.task);
+    data.setElement(studyData.element);
+    data.setRating(studyData.rating);
+    data.setFrequency(studyData.frequency);
+    data.setNotes(studyData.notes);
+    data.setPhoto(studyData.photo);
+    data.setTime(studyData.time)
 
-    let studyData = new Data();
-    studyData.setTask(data.task);
-    studyData.setElement(data.element);
-    studyData.setRating(data.rating);
-    studyData.setFrequency(data.frequency);
-    studyData.setNotes(data.notes);
-    studyData.setPhoto(data.photo);
-    studyData.setTime(data.time)
-
-    return studyData;
+    return data;
   }
   
   /* CLEARING SQLite DATA */

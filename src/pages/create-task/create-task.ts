@@ -54,7 +54,6 @@ export class CreateTaskPage {
   getElements(){
     this.loader.showLoader(MESSAGE); 
     this.operations.postRequest('elements/get',null).subscribe(result => {
-      console.log("ELEMENTS: "+ JSON.stringify(result));
       this.loader.hideLoader();
       this.elements = result;
       this.initFormBuilder();
@@ -79,6 +78,8 @@ export class CreateTaskPage {
       elements: this.formBuilder.array([this.initElements()], Validators.required )
     });
 
+    // const elements = <FormArray>this.creationForm.get('elements');
+    // elements.controls[0].get('controlling').setValue(true);
     this.show = true;
 
   }
@@ -103,15 +104,13 @@ export class CreateTaskPage {
   }
 
   /* CHANGING CONTROLLING ELEMENT  */
-  changeControl(event: any, index: number){
-    const elements = <FormArray>this.creationForm.get('elements').value;
+  changeControl(index: number, event){
+    const elements = <FormArray>this.creationForm.get('elements');
     for(let i=0; i<elements.length;i++){
-      if(event.target.checked){
-        if(i == index)
-          elements[i].controlling = true;
-        else
-          elements[i].controlling = false;
-      }
+      if(i == index && event.checked)
+        elements.controls[index].get('controlling').setValue(true);
+      else 
+        elements.controls[i].get('controlling').setValue(false);
     }
   }
 

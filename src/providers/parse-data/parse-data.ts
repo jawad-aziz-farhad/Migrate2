@@ -15,6 +15,7 @@ export class ParseDataProvider {
   private data: Data;
   private dataArray: Array<Data>;
   private frequency: number = 0;
+  private elements: Array<any> = [];
   
   constructor(public http: Http) {
     console.log('Hello ParseDataProvider Provider');
@@ -43,5 +44,8 @@ export class ParseDataProvider {
   /* SETTING UP FREQUENCY HERE SO IF USER PRESS BACK BUTTON, WE CAN GET FREQUENCY FROM THE GETTER FUNCTION */
   setFrequency(frequency) { this.frequency = frequency; }
   getFrequency(): number { return this.frequency; }
+
+  setElements(elements: Array<any>){this.elements = elements;}
+  getElements(): Array<any> { return this.elements;}
 
 }

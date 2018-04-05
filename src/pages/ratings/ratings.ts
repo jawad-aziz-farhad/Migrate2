@@ -60,7 +60,10 @@ export class RatingsPage {
 
   /* GOING TO NEXT PAGE */
   gotoNextPage(page: any){
-    this.navCtrl.push(page, { elements: this.navParams.get("elements")});
+    let data = this.navParams.get("elements");
+    if(!data)
+      data = this.parseData.getElements();
+    this.navCtrl.push(page, { elements: data});
   }
 
   /* ENTERING RATING FROM CURRENT FORM */

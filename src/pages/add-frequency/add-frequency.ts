@@ -4,6 +4,7 @@ import { Time , OperationsProvider  , ToastProvider,  ParseDataProvider } from '
 import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { Data } from '../../models';
+import { RatingsPage } from '../ratings/ratings';
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -42,7 +43,10 @@ export class AddFrequencyPage {
     this.frequency = '';
     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
     this.elements = this.navParams.get("elements");
+    this.setNextElement();
+  }
 
+  setNextElement(){
     let element = this.parseData.getData().getElement();
     let index  = this.elements.indexOf(element);
     if(index == this.elements.length - 1)
@@ -61,7 +65,7 @@ export class AddFrequencyPage {
 
   /* REMOVING ENTERED FREQUENCY */ 
   removeFrequency(){
-    this.frequency = this.frequency.slice(0, this.frequency.length -1 );
+    this.frequency = this.frequency.slice(0, this.frequency.length -1);
     this.parseData.setFrequency(this.frequency);
   }
 
@@ -98,20 +102,27 @@ export class AddFrequencyPage {
       
       let data = this.parseData.getData();
       data.setElement(this.nextElement);
-
-      /* IF ELEMENT's RATING IS NOT RATED */
-      if(this.nextElement.rating == 'Not Rated'){
-        data.setRating('Not Rated');
-        this.parseData.setData(data); 
-      }
-      /* IF ELEMENT's RATING IS 100 */   
-      else if(this.nextElement.rating == 100){
-        data.setRating(100);    
-        this.parseData.setData(data); 
+      
+      /* IF ELEMENT's RATING IS NOT RATED OR IF ELEMENT's RATING IS 100 */
+      let rating = this.nextElement.rating;
+      if(rating == 1 || rating == 2){
+        if(rating == 1)
+            data.setRating('Not Rated');
+        else
+            data.setRating(100);
+        this.parseData.setData(data);         
+        this.setNextElement();
       }
       else{
-        this.parseData.setData(data); 
-        this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 7)));
+        /* IF RATINGS PAGE IS NOT IN THE STACK */
+        if(this.navCtrl.length() == 8){
+          let index = this.navCtrl.length() - 1;
+          this.navCtrl.insert(index, RatingsPage);
+        }
+        
+        this.parseData.setData(data);
+        this.parseData.setElements(this.elements);
+        this.navCtrl.pop();
       }
 
     }

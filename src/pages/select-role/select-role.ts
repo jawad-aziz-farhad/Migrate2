@@ -30,9 +30,9 @@ export class SelectRolePage extends Selection {
               formBuilder: FormBuilderProvider,
               menuCtrl: MenuController,
               toast: ToastProvider) {
-    super(navCtrl, navParams ,time,parseData,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
+    super(navCtrl,navParams,time,parseData,loader,operations,sql,network,alert, formBuilder,menuCtrl,toast);
   }
-
+  
   ionViewDidLoad() {
     console.log('ionViewDidLoad SelectRolePage');
   }
