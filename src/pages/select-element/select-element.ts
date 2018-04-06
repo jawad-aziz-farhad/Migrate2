@@ -37,6 +37,7 @@ export class SelectElementPage extends Selection  {
   }
 
   ionViewWillEnter(){
+    this.time.destroyTimer();
     this.init('Elements',this.navParams.get('task'), RatingsPage);
  }
 

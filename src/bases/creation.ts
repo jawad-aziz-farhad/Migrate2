@@ -61,8 +61,7 @@ setUserInfo() {
           result = true;
       });
       resolve(result);
-    });
-    
+    });    
   }
   
   entryName(name) {
@@ -74,9 +73,8 @@ setUserInfo() {
     this.loader.showLoader(MESSAGE)
     this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
       this.loader.hideLoader();
-
-      if(res.success)  
-        this.dropTable(res);              
+      if(res.success)
+        this.dropTable(res);
       else
         this.toast.showToast(ERROR);      
     },
@@ -91,7 +89,6 @@ setUserInfo() {
     this.sql.dropTable(this.TABLE_NAME).then(result => {
       if(result)
         this.createTable();
-        //this.insertData(data)
     }).catch(error =>  console.error('ERROR: ' + JSON.stringify(error)));
   }
 
@@ -116,7 +113,7 @@ setUserInfo() {
     this.sql.createTable(this.TABLE_NAME_2).then(result => {
       this.create_Offline_Entry();
     }).catch(error =>{
-        console.log('ERROR: ' + JSON.stringify(error));
+      console.log('ERROR: ' + JSON.stringify(error));
     });
   } 
 
@@ -139,7 +136,6 @@ setUserInfo() {
   }
 
   getData(): Array<any> {
-
     let name     = this.creationForm.get('name').value;
     let username = this.creationForm.get('addedBy.name').value;
     let userid   = this.creationForm.get('addedBy._id').value;
@@ -177,15 +173,13 @@ setUserInfo() {
     }
 
     let data = [{ _id: _id, name: name, position: position, type: type , rating: rating , category: category,  
-                   efficiency_study: efficiency_study, activity_study: activity_study, role_study: role_study,
+                   efficiency_study: efficiency_study, activity_study: activity_study, role_study: role_study, taskID: this.project._id,
                    projectID: this.project._id, addedby:username ,id_of_addedby: userid, status: 'active', popularity: 0,
                    date: date, userAdded : userAdded
                 }];
 
     return data;           
   }
-
-
   /* GOING BACK TO PREVIOUS PAGE */
   goBack(){
     let message = this.TABLE_NAME.slice(0,-1) + ' added succesfully.';  

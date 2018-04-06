@@ -38,6 +38,7 @@ export class SelectRolePage extends Selection {
   }
 
   ionViewWillEnter(){
+    this.time.destroyTimer();
     this.init('Roles',this.navParams.get('project'), SelectAreaPage);
   }
 

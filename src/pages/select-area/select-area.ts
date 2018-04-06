@@ -38,6 +38,7 @@ import { SelectTaskPage } from '../select-task/select-task';
   }
 
   ionViewWillEnter(){
+    this.time.destroyTimer();
     this.init('Areas', this.navParams.get('project'), SelectTaskPage);
   }
 

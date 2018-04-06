@@ -79,7 +79,7 @@ export class Sync {
         result.forEach((element,index) => {
 
           this.formBuilder.initFormForOfflineData(element);
-          const data = this.formBuilder.getFormForOfflineData().value;
+          const data = this.formBuilder.getFormForOfflineData();
           
           if(element.position)
             endPoint = 'roles/add';

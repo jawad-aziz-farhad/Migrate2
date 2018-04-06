@@ -139,7 +139,7 @@ export class AddFrequencyPage {
   /* PARSING STUDY DATA */
   parsingData(){
     let data = this.parseData.getData();
-    data.setTime(this.time.ticks);
+    data.setTime(this.time.ticks * 1000);
     /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
     if(this.parseData.getFrequency() == 0 || this.parseData.getFrequency() == null)
       this.parseData.setFrequency(0);

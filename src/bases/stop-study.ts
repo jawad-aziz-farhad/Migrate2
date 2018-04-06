@@ -40,7 +40,7 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
   parseData(){
         let data = this.parse.getData();
         if(data.getTask() && data.getElement() && data.getRating()){
-          data.setTime(this.ticks);
+          data.setTime(this.ticks * 1000);
           /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
           if(this.parse.getFrequency() == 0 || this.parse.getFrequency() == null)
             this.parse.setFrequency(0);

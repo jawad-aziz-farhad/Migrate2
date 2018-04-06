@@ -459,7 +459,8 @@ export class SqlDbProvider {
     let query = '';
     if(table == 'Study_Data')
       query = "DELETE FROM " + `${table}` + " WHERE id=?";
-    
+    else if(table == 'Elements')
+      query =  "DELETE FROM " + `${table}` + " WHERE taskID=?";
     return this.database.executeSql(query, [data.id]).then(result => {
       return result;
     }).catch(error => {

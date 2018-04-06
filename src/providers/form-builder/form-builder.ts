@@ -72,65 +72,128 @@ export class FormBuilderProvider {
     return this.dataForm;
   }
 
-  initFormForOfflineData(data){
-      let formData = null;
-      /* FORM DATA FOR ROLES DOCUMENT */
-      if(data.position)
-        formData = {
-          name: data.name,
-          position: data.position,
-          addedBy:  this.formBuilder.group({
-            _id: data.id_of_addedby,
-            name :data.addedby,
-            date : data.dateadded
-          }),
-          status: data.status,
-          projectID: data.projectID
-        }
+  //initFormForOfflineData(data){
+    //   let formData = null;
+    //   /* FORM DATA FOR ROLES DOCUMENT */
+    //   if(data.position)
+    //     formData = {
+    //       name: data.name,
+    //       position: data.position,
+    //       addedBy:  this.formBuilder.group({
+    //         _id: data.id_of_addedby,
+    //         name :data.addedby,
+    //         date : data.dateadded
+    //       }),
+    //       status: data.status,
+    //       projectID: data.projectID
+    //     }
       
-      /* FORM DATA FOR ELEMENTS DOCUMENT */
-      else if(data.types){
-        let studyTypes = [];
-        if(data.efficiency_study == 1)
-          studyTypes.push[1];
-        if(data.activity_study)
-          studyTypes.push[2];
-        if(data.role_study)
-          studyTypes.push(3);
+    //   /* FORM DATA FOR ELEMENTS DOCUMENT */
+    //   else if(data.types){
+    //     let studyTypes = [];
+    //     if(data.efficiency_study == 1)
+    //       studyTypes.push[1];
+    //     if(data.activity_study)
+    //       studyTypes.push[2];
+    //     if(data.role_study)
+    //       studyTypes.push(3);
 
-        formData = {
-          name: data.name ,
-          studyTypes: studyTypes,
-          type: data.type,
-          rating: data.rating,
-          category: data.category,
-          addedBy:  this.formBuilder.group({
-                                  _id: data.id_of_addedby,
-                                  name :data.addedby,
-                                  date : data.dateadded
-                                }),
-          projectID: data.projectID,
-          status: data.status,
-          userAdded: data.userAdded
-        }
-      }
-      /* FORM DATA FOR AREAS DOCUMENT */
-      else
-      formData = 
-      { name: data.name,
+    //     formData = {
+    //       name: data.name ,
+    //       studyTypes: studyTypes,
+    //       type: data.type,
+    //       rating: data.rating,
+    //       category: data.category,
+    //       addedBy:  this.formBuilder.group({
+    //                               _id: data.id_of_addedby,
+    //                               name :data.addedby,
+    //                               date : data.dateadded
+    //                             }),
+    //       projectID: data.projectID,
+    //       status: data.status,
+    //       userAdded: data.userAdded
+    //     }
+    //   }
+    //   /* FORM DATA FOR AREAS DOCUMENT */
+    //   else
+    //   formData = 
+    //   { name: data.name,
+    //     addedBy:  this.formBuilder.group({
+    //                   _id: data.id_of_addedby,
+    //                   name :data.addedby,
+    //                   date : data.dateadded
+    //                 }),
+    //     projectID: data.projectID,
+    //     status:  data.status
+    //   }
+
+    // this.dataForm = this.formBuilder.group(formData);
+  // }
+
+  // getFormForOfflineData(){
+  //   return this.dataForm;
+  // }
+
+
+  /* SETTING VALUES TO FORM FOR OFFLINE ENTRIES */
+  initFormForOfflineData(data) {    
+    /* FORM DATA FOR ROLES DOCUMENT */
+    if(data.position)
+      this.dataForm = this.formBuilder.group({
+        name: [data.name],
+        position: [data.position],
         addedBy:  this.formBuilder.group({
-                      _id: data.id_of_addedby,
-                      name :data.addedby,
-                      date : data.dateadded
-                    }),
-        projectID: data.projectID,
-        status:  data.status
-      }
+          _id: [data.id_of_addedby],
+          name :[data.addedby],
+          date : [data.date]
+        }),
+        status: [data.status],
+        projectID: [data.projectID]
+      })
+    
+    /* FORM DATA FOR ELEMENTS DOCUMENT */
+    else if(data._id.indexOf('element') > -1) { 
+      let studyTypes = [];
+      if(data.efficiency_study == 1)
+        studyTypes.push(1);
+      if(data.activity_study == 1)
+        studyTypes.push(2);
+      if(data.role_study == 1)
+        studyTypes.push(3);
 
-    this.dataForm = this.formBuilder.group(formData);
+      this.dataForm = this.formBuilder.group({
+        name: [data.name],
+        studyTypes: this.formBuilder.array(studyTypes),
+        type: [data.type],
+        rating: [data.rating],
+        category: [data.category],
+        addedBy:  this.formBuilder.group({
+                    _id: [ data.userId ],
+                    name :[data.addedby],
+                    date : [data.date]
+                  }),
+        projectID: [data.projectID],
+        status: [data.status],
+        userAdded:[ data.userAdded ]
+      })
+    }
+    /* FORM DATA FOR AREAS DOCUMENT */
+    else{
+    this.dataForm = this.formBuilder.group({ 
+                    name: [data.name],
+                    addedBy: this.formBuilder.group({
+                                      _id: [data.id_of_addedby],
+                                      name :[data.addedby],
+                                      date : [data.date]
+                                    }),
+                    projectID: [data.projectID],
+                    status:  [data.status]
+                  })
   }
-
+    
+  }
+  /* GETTING OFFLINE FORM */
   getFormForOfflineData(){
-    return this.dataForm;
+    return this.dataForm.value;
   }
 }

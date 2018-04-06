@@ -30,6 +30,7 @@ export class Selection {
   protected searchInput: any;
 
   private stop: Stop;
+  private elementIDs = [];
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -91,19 +92,31 @@ export class Selection {
     data.then((result: any) => {
       if(result.length > 0)
         this.populateData(result);
-      else
-        this.pullServerData();  
+      else{
+        if(this.network.isInternetAvailable())
+          this.pullServerData();  
+        else
+          this.toast.showBottomToast(INTERNET_ERROR);
+      }
     }).catch(error => this.handleError(error));
-     
   }           
  
   /* PULLING DATA FROM SERVER */
   pullServerData(){    
-
     this.loader.showLoader(MESSAGE);
     this.data = this.groupedData = [];
-    let endPoint = this.TABLE_NAME.toLowerCase() + '/getByProjectID';
-    let data = { projectID: this.project._id};
+    let endPoint = null; let data = null;
+    /* SETTING END POINT AND DATA FOR TABLES OTHER THAN ELEMENTS */
+    if(this.TABLE_NAME !== 'Elements'){
+      data = { projectID: this.project._id };
+      endPoint = this.TABLE_NAME.toLowerCase() + '/getByProjectID';
+    }
+    /* SETTING END POINT AND DATA FOR TABLE ELEMENTS */
+    else{
+      data = { taskID: this.project._id };
+      endPoint = 'elements/getByTaskID';
+    }
+    
     const request = this.operations.postRequest(endPoint , data)
     
     request.subscribe(data => {   
@@ -114,13 +127,12 @@ export class Selection {
      
       if(data.length > 0){
         data.forEach((element,index) => {
-          element.projectID = this.project._id;  
+          if(this.TABLE_NAME == 'Elements')
+            element.taskID = this.project._id;  
+          else
+            element.projectID = this.project._id;  
         });
         
-        // if(this.TABLE_NAME.toLowerCase() == 'elements')
-        //   this.getElementsCategories(data);
-        // else
-        //   this.createTable(data); 
         this.createTable(data);
       }
       else
@@ -130,30 +142,6 @@ export class Selection {
       this.loader.hideLoader();
       this.operations.handleError(error);
     });
-  }
-
-  getElementsCategories(data){
-    
-    let requests = [];
-    if(data && data.length > 0) {
-
-      data.forEach((element,index) => {
-        let request = this.operations.postRequest('categories/getByID', {id: element.category});
-        requests.push(request);
-      });
-
-      Observable.forkJoin(requests).subscribe((result: any) => {
-
-        data.forEach((element,index) => {
-          element.category = result[index]._id; 
-          element.studyType = result[index].studyType;
-          element.type = result[index].type;
-        });
-
-        this.createTable(data);
-      },
-      error => console.error("ERROR: " + JSON.stringify(error)));
-    }
   }
 
   /* CREATIN TABLE */
