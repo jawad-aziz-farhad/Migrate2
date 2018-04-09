@@ -67,11 +67,11 @@ export class HeaderComponent {
 
     popover.onDidDismiss(data => {
        
-        if(data.value == 'privacy_policy')
+        if(data && data.value == 'privacy_policy')
           this.navCtrl.push(PrivacyPolicyPage);
-        else if(data.value == 'terms_of_services')
+        else if(data && data.value == 'terms_of_services')
           this.navCtrl.push(TermsOfServicesPage);
-        else  if(data.value == 'version_info')
+        else  if(data && data.value == 'version_info')
         this.showVersion();
         else 
            console.error(ERROR);   

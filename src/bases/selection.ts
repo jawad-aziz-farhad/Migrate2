@@ -90,6 +90,8 @@ export class Selection {
   pullSQLData(){
     const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
     data.then((result: any) => {
+      if(this.TABLE_NAME == 'Elements')
+        console.log("\n\nELEMENT's RESULT IS: \n"+ JSON.stringify(result));
       if(result.length > 0)
         this.populateData(result);
       else{

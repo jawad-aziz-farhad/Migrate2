@@ -151,7 +151,7 @@ export class SqlDbProvider {
       else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT)'; 
       else if(table == 'Elements')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT, taskID TEXT)'; 
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT, taskID TEXT , UNIQUE(_id, taskID) ON CONFLICT REPLACE)'; 
       else if(table == 'Study')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT, role TEXT, area TEXT)';
       else if(table == 'Study_Data')
@@ -266,7 +266,7 @@ export class SqlDbProvider {
    else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
     
-    if(table == 'Study_Data')
+    if(table == 'Elements')
       console.log("\nQUERY: "+ query + "\nID: "+ id); 
 
     return new Promise((resolve, reject) => {
@@ -341,6 +341,8 @@ export class SqlDbProvider {
             data.push({id: result.rows.item(i).id , task: result.rows.item(i).task , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , time: result.rows.item(i).time, Study_Id: result.rows.item(i).Study_Id })
         }
       
+      if(table == 'Elements')
+        console.log("TOTAL ELEMENTS FOUND : "+ data.length);  
       return data;
   }
  

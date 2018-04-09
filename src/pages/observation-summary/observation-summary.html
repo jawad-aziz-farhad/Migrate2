@@ -44,7 +44,8 @@
   
     <ion-item>
       <ion-label stacked>Rating</ion-label>
-      <ion-input type="number" pattern="\\d*" value="{{ data?.rating }}" (input)="edit($event.target.value , 'rating')" [disabled]="data?.rating == 'Not Rated'"></ion-input>
+
+      <ion-input [type]="data?.rating == 'Not Rated' ? 'text' : 'number'" pattern="\\d*" value="{{ data?.rating }}" (input)="edit($event.target.value , 'rating')" [disabled]="data?.rating == 'Not Rated'"></ion-input>
     </ion-item>
 
     <ion-item>
