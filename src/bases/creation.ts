@@ -70,6 +70,10 @@ setUserInfo() {
       
   /* ADD A NEW ROLE */
   createEntry() {
+    if(this.TABLE_NAME == 'Elements'){
+      let category = this.creationForm.get('category').value;
+      this.creationForm.get('category').setValue(category._id);
+    }
     this.loader.showLoader(MESSAGE)
     this.operations.postRequest(this.END_POINT, this.creationForm.value).subscribe( res => {
       this.loader.hideLoader();
@@ -143,7 +147,7 @@ setUserInfo() {
     let _id = null; let rating = null; 
     let userAdded = null; let category = null;let type  = null;
     let position = null; let efficiency_study = 0; 
-    let activity_study = 0; let role_study = 0;
+    let activity_study = 0; let role_study = 0; let studyType = null;
 
     if(this.TABLE_NAME == 'Areas')
         _id = date + '-area';
@@ -151,7 +155,9 @@ setUserInfo() {
               _id = date + '-element';
         rating    = this.creationForm.get('rating').value;
         userAdded = this.creationForm.get('userAdded').value;
-        category  = this.creationForm.get('category').value;
+        let _category  = this.creationForm.get('category').value;
+        category  = _category._id
+        studyType = _category.studyType;
         type      = this.creationForm.get('type').value;
         
         const typesArray = <FormArray>this.creationForm.get('studyTypes').value;
@@ -172,7 +178,7 @@ setUserInfo() {
         position = this.creationForm.get('position').value;
     }
 
-    let data = [{ _id: _id, name: name, position: position, type: type , rating: rating , category: category,  
+    let data = [{ _id: _id, name: name, position: position, type: type , rating: rating , category: category,  studyType: studyType,
                    efficiency_study: efficiency_study, activity_study: activity_study, role_study: role_study, taskID: this.project._id,
                    projectID: this.project._id, addedby:username ,id_of_addedby: userid, status: 'active', popularity: 0,
                    date: date, userAdded : userAdded

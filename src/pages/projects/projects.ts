@@ -92,7 +92,6 @@ export class ProjectsPage {
     this.show = false;
     this.projects = [];
     this.operations.getdata().subscribe((res: any) => {
-      console.log("\n\nPROJECTS DATA: "+ JSON.stringify(res))
       this.projects = res;
       if(res.length > 0) 
         this.createTable(res, this.TABLE_NAME);

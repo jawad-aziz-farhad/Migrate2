@@ -100,7 +100,7 @@ export class CreateElementPage extends Creation {
         studyTypes: this.formBuilder.array([], Validators.required),
         type: ['', Validators.required],
         rating: ['', Validators.required],
-        category: [this.categories[0]._id, Validators.required],
+        category: [this.categories[0], Validators.required],
         addedBy:  this.formBuilder.group({
                     _id: '',
                     name :'',

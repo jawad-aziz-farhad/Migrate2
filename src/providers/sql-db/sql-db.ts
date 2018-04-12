@@ -54,7 +54,7 @@ export class SqlDbProvider {
 
             let row_data = this.dataforRow(table, data, i);
         
-            if(table == 'Study_Data')
+            if(table == 'Elements')
              console.log(query + '\n' +JSON.stringify(row_data));
             
             this.database.executeSql(query, row_data).then(result => {
@@ -121,7 +121,7 @@ export class SqlDbProvider {
       else if(table == 'Study_Data')
         _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time, localStorage.getItem("studyID")];  
       else if(table == 'Categories')
-         _data = [data[index]._id , data[index].name];
+         _data = [data[index]._id , data[index].name , data[index].studyType];
       return _data;
   }
 
@@ -165,7 +165,7 @@ export class SqlDbProvider {
       else if(table == 'Create_Element')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, type TEXT, rating TEXT, category TEXT,  efficiency_study NUMBER, activity_study NUMBER, role_study NUMBER, types TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT, userAdded boolean)';  
       else if(table == 'Categories')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT)';
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT , studyType  INT)';
         return this.database.executeSql(query, {}).then(() => {
           return table + ' created successfully.';
         }).catch(error => {
@@ -199,7 +199,7 @@ export class SqlDbProvider {
     else if(table == 'Create_Element')  
       query = 'INSERT INTO ' + table + '(_id ,name , type , rating , category  , efficiency_study , activity_study , role_study , projectID , addedby, id_of_addedby, status, date, userAdded )  VALUES (? , ? , ?  , ? , ?, ?, ?, ?, ? , ? , ? , ? , ?, ? )';
     else if(table == 'Categories')  
-      query = 'INSERT INTO ' + table + '(_id , name) VALUES (? , ? )';
+      query = 'INSERT INTO ' + table + '(_id , name, studyType) VALUES (? , ? , ?)';
     return query;  
   }
   
@@ -266,9 +266,6 @@ export class SqlDbProvider {
    else
      query = "SELECT * FROM " + `${table}`  + " WHERE projectID=?";
     
-    if(table == 'Elements')
-      console.log("\nQUERY: "+ query + "\nID: "+ id); 
-
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, [id]).then((result) => {
         let data = [];
@@ -283,9 +280,7 @@ export class SqlDbProvider {
  }
 
  getLikeData(table) {
-
-    let query = "SELECT * FROM " + `${table}`  + " WHERE photo LIKE ?";
-   
+    let query = "SELECT * FROM " + `${table}`  + " WHERE photo LIKE ?";   
     return new Promise((resolve, reject) => {
       this.database.executeSql(query, ['%file%']).then((result) => {
       let data = [];
@@ -334,15 +329,13 @@ export class SqlDbProvider {
           else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
             data.push(result.rows.item(i)._id);
           else if(table == 'Categories')
-            data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name });
+            data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name, studyType: result.rows.item(i).studyType });
           else if(table == 'Study')
             data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID, userID: result.rows.item(i).userID , role: result.rows.item(i).role, area : result.rows.item(i).area });
           else if(table == 'Study_Data')
             data.push({id: result.rows.item(i).id , task: result.rows.item(i).task , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , time: result.rows.item(i).time, Study_Id: result.rows.item(i).Study_Id })
         }
       
-      if(table == 'Elements')
-        console.log("TOTAL ELEMENTS FOUND : "+ data.length);  
       return data;
   }
  

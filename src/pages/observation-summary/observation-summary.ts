@@ -199,5 +199,20 @@ export class ObservationSummaryPage {
     
   }
 
+  getRating(element: any){
+    let rating = null
+    /* IF SELECTED ELEMENT HAS RATING OF 1 */
+    if(element.rating == 1)
+      rating = 'Not Rated';
+    /* IF SELECTED ELEMENT OR PROJECT HAS RATING 2 */
+    else if(rating == '2')
+      rating = 100;
+    else
+      rating == 0;
+    
+    return rating;
+      
+  }
+
   
 }

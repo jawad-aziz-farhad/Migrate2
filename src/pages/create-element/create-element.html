@@ -46,7 +46,7 @@
         <ion-item>
           <ion-label><h3>Categories</h3></ion-label>
           <ion-select formControlName="category">
-            <ion-option *ngFor="let category of categories; let i=index;" [value]="category._id"> {{ category.name }}</ion-option>
+            <ion-option *ngFor="let category of categories; let i=index;" [value]="category"> {{ category.name }}</ion-option>
           </ion-select>
         </ion-item>       
       </ion-list>
@@ -90,6 +90,8 @@
         <ion-checkbox (ionChange)="addStudyType(study_type.id)"></ion-checkbox>
       </ion-item>
     </ion-list>
+
+    <!-- <pre>Form value: <br>{{creationForm.value | json}}</pre> -->
     
     </form>
 

@@ -116,7 +116,6 @@ export class OperationsProvider {
   postRequest(endPoint, data) {    
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
-    console.log("END POINT: "+ this.END_POINT);
     /* FILTERING ELEMENTS FOR GETTING ONLY THOSE ELEMENTS WHICH HAVE STUDY TYPE EFFICIENCY STUDY */
     if(endPoint.indexOf('tasks/getByProjectID') > -1)
       return this.http.post(`${this.END_POINT}`, data ,{ headers: headers })
