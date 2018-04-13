@@ -14,6 +14,7 @@ export let OFFLINE_STUDY_DATA_MSG = "Study Data will be saved when internet is a
 export let INTERNET_ERROR = "Sorry! No Internet connection available right now."
 export let SYNC_DONE = "All the data synced successfully.";
 export let SYNC_DATA_MSG = 'Syncing Data...';
+export let STUDY_END_MESSAGE = 'Are you sure that you want to end this Study ?';
 export let STUDY_CANCELING_MESSAGE = 'Are you sure that you want to cancel this Study ?'
 export let ALERT_TITLE = "Efficiency Study";
 export let BACK_BTN_MESSAGE= "Press back again to exit the App.";

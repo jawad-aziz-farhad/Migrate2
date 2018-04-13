@@ -1,5 +1,5 @@
 import {  NavController } from 'ionic-angular';
-import { STUDY_CANCELING_MESSAGE, ALERT_TITLE } from '../config/config';
+import { STUDY_CANCELING_MESSAGE, ALERT_TITLE, STUDY_END_MESSAGE } from '../config/config';
 import { Time , AlertProvider, ParseDataProvider } from '../providers';
 import { StudyItemsPage } from '../pages/study-items/study-items';
 
@@ -17,7 +17,7 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
       * AND NAVIGATING BACK TO ROOT PAGE
     */            
     studyEndConfirmation() {
-        this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
+        this.alert.presentConfirm(ALERT_TITLE , STUDY_END_MESSAGE).then(action => {
           if(action == 'yes'){              
             this.ticks = this.time.ticks;
             this.time.destroyTimer();
