@@ -6,7 +6,8 @@ import { ParseDataProvider , OperationsProvider, LoaderProvider , ToastProvider 
 import { MESSAGE , ERROR , FILE_UPLOADED_MESSAGE , FILE_SAVED_LOCALLY } from '../../config/config';
 import { File } from '@ionic-native/file';
 import { FilePath } from '@ionic-native/file-path';
-
+import { normalizeURL } from 'ionic-angular';
+declare var window: any;
 /**
  * Generated class for the StudyPhotoPage page.
  *
@@ -35,7 +36,7 @@ export class StudyPhotoPage {
               public loader: LoaderProvider,
               public network: NetworkProvider,
               public file: File, 
-              public filePath: FilePath,
+              public filePath: FilePath
               ) {
      
   }
@@ -57,7 +58,9 @@ export class StudyPhotoPage {
   /* TAKING A PHOTO USING MOBILE CAMERA */
   takePhoto() {
     this.camera.getPicture(this.getCameraOptions()).then((imageData) => {
-     this.resolvePath(imageData);
+     this.isPhotoTaken = true;
+     this.photo = normalizeURL(imageData); 
+     console.log("PHOTO PATH: "+ this.photo)
     }, (err) => {
         console.error('IMAGE CAPTURE ERROR: ' + err);
     });
@@ -74,19 +77,21 @@ export class StudyPhotoPage {
     return options;
   }
 
+
   /* GETTING CAMERA OPTIONS */
   getCameraOptions(): CameraOptions{
     return this.setCameraOptions();
   }
 
   /* RESOLVING IMAGE PATH */
-  resolvePath(imagePath) {
+  resolvePath(imagePath) {     
     this.filePath.resolveNativePath(imagePath).then(filePath => {
+      console.log("PHOTO PATH: "+ filePath);
       this.isPhotoTaken = true;
-      this.photo = filePath;   
+      this.photo = filePath; 
     });
   }
-  
+
   /* CHECKING INTERNET CONNECTION BEFORE UPLOADING IMAGE TO THE SERVER */
   checkInternetConnection() {
     if(!this.network.isInternetAvailable()){

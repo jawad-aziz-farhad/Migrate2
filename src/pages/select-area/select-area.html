@@ -9,9 +9,13 @@
 
   <ion-toolbar color="primary" *ngIf="!isSearching">
 
-    <button ion-button navPop clear class="absolute nav-back">
+    <button *ngIf="parseData.getDataArray().length == 0" ion-button navPop clear class="absolute nav-back">
       <ion-icon name="arrow-back" class="ion-md-new-back"></ion-icon>
     </button>
+
+    <button *ngIf="parseData.getDataArray().length > 0" ion-button (click)="cancelStudy()" class="men_btn">
+      <ion-icon name="menu" class="ion-md-new-toggle"></ion-icon>
+    </button> 
     
     <ion-title>Select {{ TABLE_NAME | slice:0:-1 }}</ion-title>
       
