@@ -107,7 +107,7 @@ export class AddFrequencyPage {
       let rating = this.nextElement.rating;
       if(rating == 1 || rating == 2){
         if(rating == 1)
-            data.setRating('Not Rated');
+          data.setRating('Not Rated');
         else
             data.setRating(100);
         this.parseData.setData(data);         

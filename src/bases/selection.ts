@@ -265,7 +265,7 @@ export class Selection {
   goNext() {
     
     if(this.TABLE_NAME == 'Elements') {
-
+      
       if(this.project.rating == 2 || this._temp.rating == 1 || this._temp.rating == 2){
         let rating = null
         /* IF SELECTED ELEMENT HAS RATING OF 1 */
@@ -273,7 +273,8 @@ export class Selection {
           rating = 'Not Rated';
         /* IF SELECTED ELEMENT OR PROJECT HAS RATING 2 */
         else
-          rating = 100;  
+          rating = 100;
+        
         this.parseData.getData().setRating(rating);
         this.parseData.setData(this.parseData.getData());
         this.nextComponent = AddFrequencyPage;
@@ -283,7 +284,8 @@ export class Selection {
         this.nextComponent =  RatingsPage ;
 
       this.time.runTimer();  
-    }    
+    }
+
     this.isSearching = false;
     let data = null;
     if(this.TABLE_NAME == 'Tasks')
@@ -304,7 +306,6 @@ export class Selection {
   }
 
   handleError(error){
-    //this.loader.hideLoader();
     if(error.code && error.code == 5)
       this.pullServerData();
     console.error('ERROR: ' + error);

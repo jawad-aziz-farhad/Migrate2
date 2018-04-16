@@ -59,6 +59,7 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
         this.statusBar.styleDefault();
         this.splashScreen.hide();
+        console.log(this.screenOrientation.type); 
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
         this.registerBackButton();
         this.checkSession();
@@ -131,10 +132,10 @@ export class MyApp {
   checkandGo(){
     if(this.network.isInternetAvailable()){
       this.sql.dropAllTables().subscribe( result => {
-                this.rootPage = ProjectsPage
-              },
-              error =>  console.error(error),
-              () => this.rootPage = ProjectsPage);      
+        this.rootPage = ProjectsPage
+    },
+    error =>  console.error(error),
+    () => this.rootPage = ProjectsPage);      
     }     
 
     else

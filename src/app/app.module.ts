@@ -43,7 +43,7 @@ import { SettingsPage } from '../pages/settings/settings';
 import { PrivacyPolicyPage } from '../pages/privacy-policy/privacy-policy';
 import { TermsOfServicesPage } from '../pages/terms-of-services/terms-of-services';
 import { PopOverPage } from '../pages/pop-over/pop-over';
-
+import { ActionButtons } from '../pages/actionbuttons/actionbuttons';
 /* PROVIDERS  */
 import { AuthProvider } from '../providers/auth/auth';
 import { HeadersProvider } from '../providers/headers/headers';
@@ -57,7 +57,6 @@ import { Time } from '../providers/time/time';
 import { SqlDbProvider } from '../providers/sql-db/sql-db';
 import { FormBuilderProvider } from '../providers/form-builder/form-builder';
 import { Sync } from '../providers/sync/sync';
-
 import { JwtHelper, AuthConfig, AuthHttp } from "angular2-jwt";
 import { CustomFormsModule } from 'ng2-validation'
 
@@ -65,7 +64,6 @@ import { CustomFormsModule } from 'ng2-validation'
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Storage, IonicStorageModule } from "@ionic/storage";
-import { Deeplinks } from '@ionic-native/deeplinks';
 import { Camera } from '@ionic-native/camera';
 import { File } from '@ionic-native/file';
 import { FilePath } from '@ionic-native/file-path';
@@ -115,7 +113,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SettingsPage,
     PrivacyPolicyPage,
     TermsOfServicesPage,
-    PopOverPage
+    PopOverPage,
+    ActionButtons
   ],
   imports: [
     BrowserModule,
@@ -165,12 +164,12 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SettingsPage,
     PrivacyPolicyPage,
     TermsOfServicesPage,
-    PopOverPage
+    PopOverPage,
+    ActionButtons
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    Deeplinks,
     Camera,
     File,
     FilePath,

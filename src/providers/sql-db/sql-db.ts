@@ -101,7 +101,7 @@ export class SqlDbProvider {
       else if(table == 'Areas')
         _data = [data[index].name, data[index]._id , data[index].popularity, null , null , data[index].projectID, null , null, null];
       else if(table == 'Elements')
-        _data = [data[index].name, data[index]._id , data[index].popularity, data[index].rating, data[index].numericID, data[index].projectID, data[index].category, data[index].studyType, data[index].type, data[index].taskID];
+        _data = [data[index].name, data[index]._id , data[index].popularity, data[index].rating, data[index].numericID, data[index].projectID, data[index].category, data[index].studyType, data[index].type, data[index].taskID , data[index].count];
       else if(table == 'Roles')
         _data = [data[index].name, data[index]._id , data[index].popularity, null , null ,data[index].projectID, null , null, null]; 
       else if(table == 'Tasks')
@@ -122,7 +122,9 @@ export class SqlDbProvider {
         _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time, localStorage.getItem("studyID")];  
       else if(table == 'Categories')
          _data = [data[index]._id , data[index].name , data[index].studyType];
+
       return _data;
+      
   }
 
   /* CHECKING THE NUMBER AND ADDING ZERO IF NUMBER IS LESS THAN 10 */
@@ -151,7 +153,7 @@ export class SqlDbProvider {
       else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT)'; 
       else if(table == 'Elements')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT, taskID TEXT , UNIQUE(_id, taskID) ON CONFLICT REPLACE)'; 
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT, taskID TEXT , count INT , UNIQUE(_id, taskID) ON CONFLICT REPLACE)'; 
       else if(table == 'Study')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT, role TEXT, area TEXT)';
       else if(table == 'Study_Data')
@@ -187,7 +189,7 @@ export class SqlDbProvider {
     else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
       query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, studyType ,type) VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?)';
     else if(table == 'Elements')
-      query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, studyType ,type, taskID) VALUES (?, ? , ?, ?, ?, ?, ?, ?, ?, ?)';
+      query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, studyType ,type, taskID , count) VALUES (?, ?, ? , ?, ?, ?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
       query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID, role, area) VALUES (?, ? , ?, ? , ? , ? , ? ,? , ?)';           
     else if(table == 'Study_Data')
@@ -314,7 +316,7 @@ export class SqlDbProvider {
             data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, popularity: result.rows.item(i).popularity, projectID: result.rows.item(i).projectID});
           else if(table == 'Elements')
              data.push({_id: result.rows.item(i)._id ,name: result.rows.item(i).name , popularity: result.rows.item(i).popularity, rating: result.rows.item(i).rating,numericID: result.rows.item(i).numericID, 
-                        projectID: result.rows.item(i).projectID , category: result.rows.item(i).category,studyType: result.rows.item(i).studyType, type: result.rows.item(i).type, taskID: result.rows.item(i).taskID});
+                        projectID: result.rows.item(i).projectID , category: result.rows.item(i).category,studyType: result.rows.item(i).studyType, type: result.rows.item(i).type, taskID: result.rows.item(i).taskID, count: result.rows.item(i).count});
            else if(table == 'Create_Role')
             data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, position: result.rows.item(i).position , projectID: result.rows.item(i).projectID, addedby: result.rows.item(i).addedby, id_of_addedby: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date});
           else if(table == 'Create_Area' || table == 'Create_Task') 

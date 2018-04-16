@@ -1,0 +1,21 @@
+<!-- Generated template for the ButtonsComponent component -->
+<ion-row>   
+  <ion-col col-6>
+    <button ion-button block no-margin class="theme-btn no-radius" [disabled]="(parseData.getData() && parseData.getData().getNotes())" (click)="addNotes()">Add Notes</button> 
+  </ion-col>
+  <ion-col col-6>
+    <button ion-button block no-margin class="theme-btn no-radius" [disabled]="(parseData.getData() && parseData.getData().getPhoto())" (click)="addPhoto()">Add Photo</button> 
+  </ion-col>
+</ion-row>
+
+<ion-row>
+  <ion-col>
+    <button ion-button block no-margin class="theme-btn no-radius" (click)="go('tasks')">Go to tasks</button> 
+  </ion-col>
+  <ion-col>
+    <button ion-button block no-margin class="theme-btn no-radius" (click)="go('elements')">Go to elements</button> 
+  </ion-col>
+  <ion-col *ngIf="nextElement">
+    <button ion-button block no-margin class="theme-btn no-radius" (click)="go('nextElement')">Go to {{ nextElement.name }}</button> 
+  </ion-col>
+</ion-row>
