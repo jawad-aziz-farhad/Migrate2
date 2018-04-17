@@ -54,6 +54,7 @@ export class StudyItemsPage implements OnInit {
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
   showSummary(item, index){
+    console.log("\n ITEM AT STUDY ITEM's PAGE: "+ JSON.stringify(item));    
     this.navCtrl.push(ObservationSummaryPage, {item: item, index: index});
   }
 

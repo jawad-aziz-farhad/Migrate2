@@ -39,13 +39,35 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
 
   parseData(){
         let data = this.parse.getData();
-        if(data.getTask() && data.getElement() && data.getRating()){
-          data.setTime(this.ticks * 1000);
-          /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
-          if(this.parse.getFrequency() == 0 || this.parse.getFrequency() == null)
-            this.parse.setFrequency(0);
-          /* SETTING FREQUENCY */
-          data.setFrequency(this.parse.getFrequency());
+        if(data.getTask() && data.getElement()){
+           data.setTime(this.ticks * 1000);
+           
+           /* IF ELEMENT's RATING IS 3(FILED USER's INPUT) */
+           if(data.getElement().rating == 3){
+            /* IF USER HAS NOT ENTERED RATING, SETTING IT TO 0 */
+            if(this.parse.getRating() == 0 || this.parse.getRating() == null)
+              this.parse.setRating(0);
+            /* SETTING RATING */
+              data.setRating(this.parse.getRating());
+          }
+          /* IF ELEMENT's RATING IS 1 or 2 */
+          else{
+            if(data.getElement().rating == 1)
+              data.setRating('Not Rated');
+            else if(data.getElement().rating == 2)
+              data.setRating(100);  
+          }
+
+          if(data.getElement().count == 1){
+            /* IF USER HAS NOT ENTERED FREQUENCY, SETTING IT TO 0 */
+            if(this.parse.getFrequency() == 0 || this.parse.getFrequency() == null)
+              this.parse.setFrequency(0);
+            /* SETTING FREQUENCY */
+            data.setFrequency(this.parse.getFrequency());
+          }
+          else
+            data.setFrequency(1);
+            
           /* IF NO NOTES ADDED FOR THIS OBSERVATION */
           if(!data.getNotes())
             data.setNotes(null);

@@ -41,7 +41,7 @@ export class RatingsPage {
   ionViewWillEnter() {
     if(!this.time.isTimerRunning && !this.time.isNext)
       this.time.runTimer(); 
-   this.ratings = [ 40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'NR' ];
+   this.ratings = [ 40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'Not Rated' ];
    this.initView()
   }
 
@@ -56,7 +56,8 @@ export class RatingsPage {
   }
 
   /* PARSING ROUND DATA TO NEXT PAGE */
-  _parseData(rating: number) {    
+  _parseData(rating: number) { 
+    this.parseData.setRating(rating);   
     this.parseData.getData().setRating(rating);
     this.parseData.setData(this.parseData.getData());
   }
@@ -207,7 +208,6 @@ export class RatingsPage {
       this.nextElement = null;
     else
       this.nextElement = this.elements[index + 1];
-    console.log("LAST INDEX IS: "+ index + "\n NEXT ELEMENT IS: "+ JSON.stringify(this.nextElement));
   }
 
   /* SETTING PREVIOUSLY SELECTED TASK FOR THE NEW ELEMENT'S STUDY */

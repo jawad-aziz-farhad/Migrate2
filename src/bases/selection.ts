@@ -12,6 +12,7 @@ import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { Stop } from './stop-study';
 import { Observable } from 'rxjs';
 import { CreateTaskPage } from '../pages/create-task/create-task';
+import { ActionButtons } from '../pages/actionbuttons/actionbuttons';
 
 
 export class Selection {
@@ -19,6 +20,7 @@ export class Selection {
   protected TABLE_NAME: string = '';
   protected TABLE_NAME_1: string = '';
   protected project: any;
+  protected task: any;
   protected temp: any;
   protected _temp: any;
   protected isFiltering: boolean;
@@ -88,7 +90,12 @@ export class Selection {
 
   /* PULLING SQLite DATA */
   pullSQLData(){
-    const data = this.sql.getIDData(this.TABLE_NAME,this.project._id);
+    let id = null;
+    if(this.TABLE_NAME == 'Elements')
+      id = this.task._id;
+    else
+      id = this.project._id;  
+    const data = this.sql.getIDData(this.TABLE_NAME, id);
     data.then((result: any) => {
       if(result.length > 0)
         this.populateData(result);
@@ -102,10 +109,13 @@ export class Selection {
   }           
  
   /* PULLING DATA FROM SERVER */
-  pullServerData(){    
+  pullServerData(){
+
     this.loader.showLoader(MESSAGE);
     this.data = this.groupedData = [];
     let endPoint = null; let data = null;
+    
+    
     /* SETTING END POINT AND DATA FOR TABLES OTHER THAN ELEMENTS */
     if(this.TABLE_NAME !== 'Elements'){
       data = { projectID: this.project._id };
@@ -113,7 +123,7 @@ export class Selection {
     }
     /* SETTING END POINT AND DATA FOR TABLE ELEMENTS */
     else{
-      data = { taskID: this.project._id };
+      data = { taskID: this.task._id };
       endPoint = 'elements/getByTaskID';
     }
     
@@ -128,7 +138,7 @@ export class Selection {
       if(data.length > 0){
         data.forEach((element,index) => {
           if(this.TABLE_NAME == 'Elements')
-            element.taskID = this.project._id;  
+            element.taskID = this.task._id;  
           else
             element.projectID = this.project._id;  
         });
@@ -166,63 +176,7 @@ export class Selection {
     this.data = data;
     this.temp = data;
     this.show = true;
-    // if(this.TABLE_NAME !== 'Elements')
-    //   this.show = true;
-    // else
-    //   this.groupElementsData();  
   }
-
-  /* CATEGORIZING ELEMENTS ACCORDING TO THEIR STUDY TYPE */
-  groupElementsData(){
-    
-    let data = this.data;
-    data.sort(function(a,b) {return (a.studyType > b.studyType) ? 1 : ((b.studyType > a.studyType) ? -1 : 0); });
-    let currentItems = [];
-    let trackingItems = [];
-    let currentValue = false;
-    this.groupedData = [];
-    let studyTypes = [ null, 'Customer' , 'Task and Process' , 'NVA' ];
-
-    data.forEach((element,index) => {
-
-      if(currentValue !== element.studyType && element.type !== 2) {
-
-        currentValue = element.studyType;
-
-        let newGroup = {
-          letter: studyTypes[element.studyType],
-          items: []
-        };        
-        currentItems = newGroup.items;
-        this.groupedData.push(newGroup);
-      }
-      
-      if(element.type != 2) 
-        currentItems.push(element);
-      else
-        trackingItems.push(element);
-
-    });
-
-    if(trackingItems.length > 0) {
-
-      /* MAKING A NEW GROUP OF ELEMENTS HAVING TYPE 2 AND MOVING THIS GROUP TO 0 INDEX OF ARRAY */
-      let newGroup = {
-        letter: "Tracking",
-        items: []
-      };   
-
-      trackingItems.forEach((element,index) => {
-        newGroup.items.push(element);
-      });
-
-      this.groupedData.splice(0, 0 , newGroup);
-    
-    }
-
-    this.show = true;
-  }
-
 
   /* SELECTED ELEMENT FOR STUDY */
   selectItem(item){
@@ -234,18 +188,23 @@ export class Selection {
   _parseData(item: any){
 
     if(this.TABLE_NAME == 'Elements' || this.TABLE_NAME == 'Tasks'){
-      let studyTasks = null;
-      if(this.TABLE_NAME == 'Tasks')
-        studyTasks = new Data();
-      else
-        studyTasks = this.parseData.getData();
-      
-      if(this.TABLE_NAME == 'Elements')
-        studyTasks.setElement(item); 
-      else if(this.TABLE_NAME == 'Tasks')
-        studyTasks.setTask(item);
+      let data = null;
+      // if(this.TABLE_NAME == 'Tasks')
+      //   studyTasks = new Data();
+      // else
+      //   studyTasks = this.parseData.getData();
 
-      this.parseData.setData(studyTasks);
+      if(this.parseData.getData())
+        data = this.parseData.getData();
+      else
+        data = new Data();
+
+      if(this.TABLE_NAME == 'Elements')
+        data.setElement(item); 
+      else if(this.TABLE_NAME == 'Tasks')
+        data.setTask(item);
+
+      this.parseData.setData(data);
     }
     else{
       let study_data = this.parseData.getStudyData();   
@@ -264,8 +223,8 @@ export class Selection {
   /* GOING TO THE NEXT PAGE */
   goNext() {
     
-    if(this.TABLE_NAME == 'Elements') {
-      
+    if(this.TABLE_NAME == 'Elements') {      
+      console.log("\nELEMENT RATING: "+ this._temp.rating + "\nPROJECT RATING: "+ this.project.rating)
       if(this.project.rating == 2 || this._temp.rating == 1 || this._temp.rating == 2){
         let rating = null
         /* IF SELECTED ELEMENT HAS RATING OF 1 */
@@ -274,10 +233,18 @@ export class Selection {
         /* IF SELECTED ELEMENT OR PROJECT HAS RATING 2 */
         else
           rating = 100;
+
+        let data = this.parseData.getData();
+        data.setRating(rating);
+
+        if(this._temp.count == 2){
+          data.setFrequency(1);
+          this.nextComponent = ActionButtons;
+        }
+        else
+          this.nextComponent = AddFrequencyPage;
         
-        this.parseData.getData().setRating(rating);
-        this.parseData.setData(this.parseData.getData());
-        this.nextComponent = AddFrequencyPage;
+          this.parseData.setData(data);
       }
 
       else

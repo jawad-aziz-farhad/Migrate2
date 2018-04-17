@@ -5,6 +5,7 @@ import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { Data } from '../../models';
 import { RatingsPage } from '../ratings/ratings';
+import { Action_Buttons } from '../../bases';
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -32,11 +33,20 @@ export class AddFrequencyPage {
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
                public toast: ToastProvider) {
+    // super(navCtrl,navParams,parseData,time);            
+    // this.init(this.parseData.getData(), 'frequencyPage');             
     this.init();
    }
    
    ionViewDidLoad() {     
      console.log('SelectElementPage');
+   }
+
+   ionViewWillEnter(){
+    this.frequency = '';
+    this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
+    this.elements = this.navParams.get("elements");
+    this.setNextElement();
    }
 
   init(){
@@ -53,7 +63,6 @@ export class AddFrequencyPage {
       this.nextElement = null;
     else
       this.nextElement = this.elements[index + 1];
-    console.log("LAST INDEX IS: "+ index + "\n NEXT ELEMENT IS: "+ JSON.stringify(this.nextElement));
   }
   
   /* CONCATINATING FREQUENCY WITH THE PREVIOUS ONE*/
@@ -119,7 +128,10 @@ export class AddFrequencyPage {
           let index = this.navCtrl.length() - 1;
           this.navCtrl.insert(index, RatingsPage);
         }
-        
+        /* IF NEXT ELEMENT's FREQUENCY IS DISABLED, SETTING IT TO ONE */
+        if(this.nextElement.count == 2)
+          data.setFrequency(1);
+
         this.parseData.setData(data);
         this.parseData.setElements(this.elements);
         this.navCtrl.pop();

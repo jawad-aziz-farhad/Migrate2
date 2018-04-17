@@ -15,6 +15,7 @@ export class ParseDataProvider {
   private data: Data;
   private dataArray: Array<Data>;
   private frequency: number = 0;
+  private rating: number = 0;
   private elements: Array<any> = [];
   
   constructor(public http: Http) {
@@ -38,14 +39,19 @@ export class ParseDataProvider {
 
   /* CLEARING ALL DATA OBJECTS AND ARRAY */
   clearDataArray(){ this.dataArray = []; }
-  clearData(){ this.data = null; this.data = new Data() }
+  clearData(){ this.data = null; this.data = new Data(); this.rating = this.frequency = null; }
   clearStudyData(): void { this.data = null; }
+
+  setElements(elements: Array<any>){this.elements = elements;}
+  getElements(): Array<any> { return this.elements;}
 
   /* SETTING UP FREQUENCY HERE SO IF USER PRESS BACK BUTTON, WE CAN GET FREQUENCY FROM THE GETTER FUNCTION */
   setFrequency(frequency) { this.frequency = frequency; }
   getFrequency(): number { return this.frequency; }
 
-  setElements(elements: Array<any>){this.elements = elements;}
-  getElements(): Array<any> { return this.elements;}
+  /* SETTING UP RATING HERE SO IF USER PRESS BACK BUTTON, WE CAN GET RATING FROM THE GETTER FUNCTION */
+  setRating(rating) { this.rating = rating; }
+  getRating(): number { return this.rating; }
+
 
 }

@@ -43,6 +43,7 @@ export class ObservationSummaryPage {
   /* GETTING ALL ELEMENTS  */
   getElements(){
     this.data = this.navParams.get('item');
+    console.log("\n ITEM AT OBSERVATION PAGE: "+ JSON.stringify(this.data));
     /* CHECKING TASK ID */
     let taskID = null;
     if(this.data.task._id)
