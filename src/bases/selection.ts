@@ -189,11 +189,7 @@ export class Selection {
 
     if(this.TABLE_NAME == 'Elements' || this.TABLE_NAME == 'Tasks'){
       let data = null;
-      // if(this.TABLE_NAME == 'Tasks')
-      //   studyTasks = new Data();
-      // else
-      //   studyTasks = this.parseData.getData();
-
+     
       if(this.parseData.getData())
         data = this.parseData.getData();
       else
@@ -201,8 +197,10 @@ export class Selection {
 
       if(this.TABLE_NAME == 'Elements')
         data.setElement(item); 
-      else if(this.TABLE_NAME == 'Tasks')
+      else if(this.TABLE_NAME == 'Tasks'){
+        data.setStartTime(new Date().getTime());
         data.setTask(item);
+      }
 
       this.parseData.setData(data);
     }
@@ -211,8 +209,9 @@ export class Selection {
      
       if(this.TABLE_NAME == 'Areas')
         study_data.setArea(item);
-      else if(this.TABLE_NAME == 'Roles')
+      else if(this.TABLE_NAME == 'Roles'){
         study_data.setRole(item);
+      }
       
       this.parseData.setStudyData(study_data);
     }

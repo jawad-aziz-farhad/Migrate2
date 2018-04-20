@@ -4,20 +4,17 @@
   See http://ionicframework.com/docs/components/#navigation for more info on
   Ionic pages and navigation.
 -->
- <ion-header class="blue-header"> 
+ <ion-header class="blue-header" no-border> 
   <in-study-header title="Enter Frequency" (cancel)="onCancelStudy($event)"></in-study-header>
+  <timer></timer>
  </ion-header>
 
 
 <ion-content class="white-bg">
-    <div class="blue-header">
-      <timer></timer>
-    </div>
 
     <ion-item no-padding>
       <ion-input class="big-input" placeholder="Enter Frequency" text-right type="number" pattern="\\d*" [value]="frequency"></ion-input>
     </ion-item>
-    
     <ion-grid class="grid-border-col-3" no-padding>
       <ion-row justify-content-center>
           <ion-col *ngFor="let num of numbers?.reverse()" col-4>

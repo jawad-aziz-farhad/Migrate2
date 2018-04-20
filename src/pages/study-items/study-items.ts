@@ -100,18 +100,15 @@ export class StudyItemsPage implements OnInit {
   /* REMOVING ITEM FROM LIST */
   removeItems() {    
     let data = this.study_data.data;
-      for (let i = data.length - 1; i >= 0; i -= 1) {       
-      for(let j= data[i].data.length - 1; j>=0; j-=1){
-        const index = this.itemsSelected.indexOf(data[i].data[j])
+    for (let i = data.length - 1; i >= 0; i -= 1) {       
+        const index = this.itemsSelected.indexOf(data[i]);
         if(index > -1){
-          data[i].data.splice(j,1);
+          data.splice(i,1);
           this.totalItemsSelected--;
         }
-        if(data[i].data.length == 0)
+        if(data.length == 0)
           data.splice(i,1);
       }
-    }
-    
     this.itemsSelected = [];
   }
 

@@ -119,7 +119,7 @@ export class SqlDbProvider {
         _data = [data.getTitle() , data.getCustomer()._id , data.getSutdyStartTime(), data.getSutdyEndTime(), data.getCustomer().customer_id, data.getLocationID() , localStorage.getItem("userID"), data.getRole()._id , data.getArea()._id ];
       }  
       else if(table == 'Study_Data')
-        _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time, localStorage.getItem("studyID")];  
+        _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time,  data[index].startTime ,  data[index].endTime ,  data[index].duration ,localStorage.getItem("studyID")];  
       else if(table == 'Categories')
          _data = [data[index]._id , data[index].name , data[index].studyType];
 
@@ -157,7 +157,7 @@ export class SqlDbProvider {
       else if(table == 'Study')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT, role TEXT, area TEXT)';
       else if(table == 'Study_Data')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, time BIGINT, Study_Id INTEGER, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, time BIGINT, startTime, endTime , duration, Study_Id INTEGER, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
       else if(table == 'Create_Role')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, position TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT)';
       else if(table == 'Create_Area')
@@ -193,7 +193,7 @@ export class SqlDbProvider {
     else if(table == 'Study')
       query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID, role, area) VALUES (?, ? , ?, ? , ? , ? , ? ,? , ?)';           
     else if(table == 'Study_Data')
-      query = 'INSERT INTO ' + table + '(task, element , rating, frequency, notes, photo, time, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ?)';   
+      query = 'INSERT INTO ' + table + '(task, element , rating, frequency, notes, photo, time, startTime, endTime , duration, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)';   
     else if(table == 'Create_Role')
       query = 'INSERT INTO ' + table + '(_id ,name , position, projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Area' || table == 'Create_Task')
@@ -335,7 +335,7 @@ export class SqlDbProvider {
           else if(table == 'Study')
             data.push({id: result.rows.item(i).id, title: result.rows.item(i).title, projectID: result.rows.item(i).projectID, studyStartTime: result.rows.item(i).studyStartTime, studyEndTime: result.rows.item(i).studyEndTime, customerID: result.rows.item(i).customerID, locationID: result.rows.item(i).locationID, userID: result.rows.item(i).userID , role: result.rows.item(i).role, area : result.rows.item(i).area });
           else if(table == 'Study_Data')
-            data.push({id: result.rows.item(i).id , task: result.rows.item(i).task , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , time: result.rows.item(i).time, Study_Id: result.rows.item(i).Study_Id })
+            data.push({id: result.rows.item(i).id , task: result.rows.item(i).task , element: result.rows.item(i).element , rating: result.rows.item(i).rating ,frequency: result.rows.item(i).frequency , notes: result.rows.item(i).notes , photo: result.rows.item(i).photo , time: result.rows.item(i).time, startTime: result.rows.item(i).startTime, endTime: result.rows.item(i).endTime, duration: result.rows.item(i).duration, Study_Id: result.rows.item(i).Study_Id })
         }
       
       return data;

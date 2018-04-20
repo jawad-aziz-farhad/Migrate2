@@ -25,7 +25,7 @@ export class ParseDataProvider {
   /* SETTING STUDY DATA */
   setStudyData(data: StudyData) { this.studyData = data }
   /* GETTING STUDY DATA */
-  getStudyData(): StudyData{ return this.studyData; }
+  getStudyData(): StudyData { return this.studyData; }
 
   /* SETTING STUDIED DATA */
   setData(data: Data){ this.data = data; }

@@ -5,8 +5,8 @@ import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { ActionButtons } from '../pages/actionbuttons/actionbuttons';
 import { RatingsPage } from '../pages/ratings/ratings';
 
-export class Action_Buttons {
-
+export class Actions {
+    
     protected data: any;
     protected elements: Array<any> [];
     protected nextElement: any;
@@ -184,5 +184,4 @@ export class Action_Buttons {
         data.setTask(this.parseData.getData().getTask());
         this.parseData.setData(data);
     }
-    
 }

@@ -7,13 +7,11 @@
 
 <ion-header class="blue-header" no-border> 
   <in-study-header title="Select Rating" (cancel)="onCancelStudy($event)"></in-study-header>
+  <timer></timer>
 </ion-header>
 
 <ion-content>
-  <div class="blue-header">
-    <timer></timer>
-  </div> 
-
+ 
   <ion-grid class="grid-border-col-4" no-padding>
     <ion-row>
       <ion-col *ngFor="let rating of ratings; let i= index;" (click)="selectRating(rating)" col-3>
@@ -28,6 +26,6 @@
 </ion-content>
 
  <ion-footer no-border>
-    <buttons *ngIf="isElementDisabled()" [nextElement]="getNextElement()" (goFor)="go($event)"></buttons>
+    <buttons *ngIf="_isElementDisabled" [nextElement]="getNextElement()" (goFor)="go($event)"></buttons>
     <!--<button ion-button block no-margin class="theme-btn no-radius" (click)="goToEnterRating()">Enter Rating</button> -->
 </ion-footer> 

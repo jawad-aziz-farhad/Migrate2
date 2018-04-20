@@ -74,9 +74,12 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
           /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
           if(!data.getPhoto())
             data.setPhoto(null);
-          
+
+          let duration = new Date().getTime() - data.getstartTime();
+          data.setduration(duration);
+          data.setendTime(new Date().getTime());  
           this.parse.setData(data);
-          data = this.parse.getData();
+          
           this.parse.setDataArray(this.parse.getData());
         }
 
@@ -86,12 +89,13 @@ import { StudyItemsPage } from '../pages/study-items/study-items';
         this.parse.setStudyData(this.parse.getStudyData());
     }
 
-    endStudy() {
+  endStudy() {
       this.alert.presentConfirm(ALERT_TITLE , STUDY_CANCELING_MESSAGE).then(action => {
         if(action == 'yes'){              
           this.time.destroyTimer();
           this.clearStudyData();
           this.parse.clearStudyData();
+          this.navCtrl.popToRoot();
         }
         else
           console.log("DISMISSING DIALOG.");

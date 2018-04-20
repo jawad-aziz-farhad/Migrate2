@@ -49,7 +49,7 @@
 
     <ion-item>
       <ion-label stacked>Frequency</ion-label>
-      <ion-input type="number" pattern="\\d*" value="{{ data?.frequency }}" (input)="edit($event.target.value , 'frequency')" [disabled]="|| data?.frequency == 1"></ion-input>
+      <ion-input type="number" pattern="\\d*" value="{{ data?.frequency }}" (input)="edit($event.target.value , 'frequency')" [disabled]="data?.frequency == 1"></ion-input>
     </ion-item>
 
     

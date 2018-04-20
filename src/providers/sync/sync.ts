@@ -430,7 +430,9 @@ export class Sync {
     data.setNotes(studyData.notes);
     data.setPhoto(studyData.photo);
     data.setTime(studyData.time)
-
+    data.setStartTime(studyData.startTime);
+    data.setendTime(studyData.endTime);
+    data.setduration(studyData.duration);
     return data;
   }
   

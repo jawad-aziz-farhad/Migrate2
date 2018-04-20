@@ -3,8 +3,7 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ParseDataProvider , Time } from '../../providers';
 import { AddFrequencyPage } from '../add-frequency/add-frequency';
 import { Data } from '../../models';
-import { Action_Buttons } from '../../bases'
-
+import { Actions } from '../../bases/actions';
 /**
  * Generated class for the ActionbuttonsPage page.
  *
@@ -17,18 +16,18 @@ import { Action_Buttons } from '../../bases'
   selector: 'page-actionbuttons',
   templateUrl: 'actionbuttons.html',
 })
-export class ActionButtons {
+export class ActionButtons  {
 
-  private elements: Array<any> = [];
-  private nextElement: any;
-  private data: any;
+  public elements: Array<any> = [];
+  public nextElement: any;
+  public data: any;
 
   constructor(public navCtrl: NavController, 
               public navParams: NavParams,
               public parseData: ParseDataProvider,
               public time: Time) {
-    // super(navCtrl,navParams,parseData,time);            
-    // this.init(this.parseData.getData(), 'actionButtons');
+     //super(navCtrl,navParams,parseData,time);            
+     //this.init(this.parseData.getData(), 'actionButtons');
     this.init();            
   }
 
@@ -133,7 +132,10 @@ export class ActionButtons {
     /* IF NO PHOTO ADDED FOR THIS OBSERVATION */
     if(!data.getPhoto())
       data.setPhoto(null);
-
+    
+    let duration = new Date().getTime() - data.getstartTime();
+    data.setduration(duration);
+    data.setendTime(new Date().getTime());  
     this.parseData.setData(data);
     data = this.parseData.getData();
     this.parseData.setDataArray(this.parseData.getData());
@@ -147,6 +149,7 @@ export class ActionButtons {
     /* GETTING LAST INDEX OF ARRAY AND TASK OF SETTING THE TASK FOR NEXT ELEMENT'S STUDY */
     let lastIndex = this.parseData.getDataArray().length - 1;
     data.setTask(this.parseData.getDataArray()[lastIndex].getTask());
+    data.setStartTime(new Date().getTime());
     this.parseData.setData(data);
   }
 

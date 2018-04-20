@@ -5,7 +5,7 @@ import { StudyPhotoPage } from '../study-photo/study-photo';
 import { StudyNotesPage } from '../study-notes/study-notes';
 import { Data } from '../../models';
 import { RatingsPage } from '../ratings/ratings';
-import { Action_Buttons } from '../../bases';
+import { Actions } from '../../bases/actions';
 /**
  * Generated class for the AddFrequencyPage page.
  *
@@ -33,7 +33,7 @@ export class AddFrequencyPage {
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
                public toast: ToastProvider) {
-    // super(navCtrl,navParams,parseData,time);            
+    //super(navCtrl,navParams,parseData,time);            
     // this.init(this.parseData.getData(), 'frequencyPage');             
     this.init();
    }
@@ -164,8 +164,11 @@ export class AddFrequencyPage {
     if(!data.getPhoto())
       data.setPhoto(null);
 
+    let duration = new Date().getTime() - data.getstartTime();
+    data.setduration(duration);
+    data.setendTime(new Date().getTime());
     this.parseData.setData(data);
-    data = this.parseData.getData();
+
     this.parseData.setDataArray(this.parseData.getData());
 
     this.parseData.clearData();
@@ -177,6 +180,7 @@ export class AddFrequencyPage {
     /* GETTING LAST INDEX OF ARRAY AND TASK OF SETTING THE TASK FOR NEXT ELEMENT'S STUDY */
     let lastIndex = this.parseData.getDataArray().length - 1;
     data.setTask(this.parseData.getDataArray()[lastIndex].getTask());
+    data.setStartTime(new Date().getTime());
     this.parseData.setData(data);
   }
 
