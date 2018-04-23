@@ -3,6 +3,8 @@ import { IonicPage, NavController, NavParams , ViewController } from 'ionic-angu
 import { StudyData } from '../../models';
 import { ParseDataProvider , Time} from '../../providers'
 import { Keyboard } from '@ionic-native/keyboard';
+import { NativeKeyboard } from '@ionic-native/native-keyboard';
+
 /**
  * Generated class for the CreateStudyPage page.
  *
@@ -29,10 +31,15 @@ export class CreateStudyPage {
               public viewCtrl: ViewController,
               public keyboard: Keyboard,
               public parse: ParseDataProvider,
-              public time: Time) {
+              public time: Time,
+              private nativeKeyboard: NativeKeyboard) {
+    
   }
 
   ionViewDidLoad() {
+  }
+
+  ionViewWillEnter(){
     this.studyTitle = '';
     this.customer = this.navParams.get('customer');
     this.location = this.navParams.get('location');
@@ -42,14 +49,12 @@ export class CreateStudyPage {
   setFocus(){
     let element = this.elementRef.nativeElement.querySelector('input');
     setTimeout(() => {
-      this.renderer.invokeElementMethod(element, 'focus', []);   
-      this.keyboard.show();
+      this.renderer.invokeElementMethod(element, 'focus', []);
     }, 500);
   }
 
   /* DISMISSING ALERT */
   dismiss(action: string) {
-
     /* SETTING ALL DATA OBJECTS */
     this.studyData = new StudyData();
     this.studyData.setTitle(this.studyTitle);
@@ -60,7 +65,6 @@ export class CreateStudyPage {
     
     this.parse.setStudyData(this.studyData);
 
-    console.log("STUDY DATA: "+ JSON.stringify(this.parse.getStudyData()));
     let data = { action: action , title: this.studyTitle};
     this.viewCtrl.dismiss(data);
   }

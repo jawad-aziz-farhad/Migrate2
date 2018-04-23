@@ -137,7 +137,6 @@ export class OperationsProvider {
   /* GETTING ELEMENTS RELATED TO EACH TASK */
   getTaskElements(tasks): Observable<any> {
 
-    console.log("TASKS: "+ JSON.stringify(tasks));
     return new Observable(observer => {
     
       if(tasks.length == 0) {
@@ -181,7 +180,6 @@ export class OperationsProvider {
   getElementsCategories(observer, data){    
     let requests = [];
     data.forEach((element,index) => {
-      console.log("ELEMENTS DATA AT INDEX: "+ index + "\n IS: "+ JSON.stringify(element.elements_data))
       if(element && element.elements_data && element.elements_data.length > 0) {
         element.elements_data.forEach((sub_element,sub_index) => {
           let request = this.postRequest('categories/getByID', {id: sub_element.category});

@@ -44,7 +44,8 @@ export class LoginPage {
     this.pushPage = ResetPasswordPage;
     this.loginForm = this.formsBuilder.group({
       email: ['',  Validators.compose([Validators.maxLength(30), Validators.pattern(EMAIL_REGEXP), Validators.required])],
-      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+      password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
+      studyType: [3]
     })
   }
 

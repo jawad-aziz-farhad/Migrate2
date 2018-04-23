@@ -6,6 +6,8 @@ import { Time , OperationsProvider , ParseDataProvider } from '../../providers';
 import { Data } from '../../models';
 import { ActionButtons } from '../actionbuttons/actionbuttons';
 import { Actions } from '../../bases/actions';
+import { StudyNotesPage } from '../study-notes/study-notes';
+import { StudyPhotoPage } from '../study-photo/study-photo';
 /**
  * Generated class for the RatingsPage page.
  *
@@ -96,10 +98,11 @@ export class RatingsPage {
     }
   }
 
-  isElementDisabled(){
+  isElementDisabled() {
     let data = this.parseData.getData();
-    if(data && data.getElement().count == 2)
+    if(data && data.getElement().count == 2){
       this._isElementDisabled = true;
+    }
     else
       this._isElementDisabled = false;  
   }
@@ -133,7 +136,6 @@ export class RatingsPage {
       this.setTask();      
       let data = this.parseData.getData();
       data.setElement(this.nextElement);
-      this.isElementDisabled();
       /* IF ELEMENT's RATING IS NOT RATED OR IF ELEMENT's RATING IS 100 */
       let rating = this.nextElement.rating;
       let count  = this.nextElement.count;
@@ -144,7 +146,8 @@ export class RatingsPage {
           data.setRating('Not Rated');
         else
             data.setRating(100);
-        this.parseData.setData(data);  
+        this.parseData.setData(data);
+
         if(count == 2)       
           this.navCtrl.push(ActionButtons);
         else
@@ -155,8 +158,8 @@ export class RatingsPage {
       { 
         this.temp = this.ratings[0];
         this.parseData.setData(data);
+        this.isElementDisabled();
       }
-
     }
     /* IF USER SELECT TO GO TO ELEMENTS' LIST */
     else if(value == 'elements'){
@@ -200,7 +203,6 @@ export class RatingsPage {
       this.nextElement = null;
     else
       this.nextElement = this.elements[index + 1];
-    
       
   }
 
@@ -212,7 +214,15 @@ export class RatingsPage {
     data.setTask(this.parseData.getDataArray()[lastIndex].getTask());
     data.setStartTime(new Date().getTime());
     this.parseData.setData(data);
-    console.log("\n\nTASK SET");
+  }
+
+   /* ADDING NOTES FOR THE CURRENT OBSERVATION */
+   addNotes(){
+    this.navCtrl.push(StudyNotesPage);
+  }
+  /* ADDING PHOTO FOR THE CURRENT OBSERVATION */
+  addPhoto(){
+    this.navCtrl.push(StudyPhotoPage);
   }
 
   

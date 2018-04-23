@@ -33,8 +33,6 @@ export class AddFrequencyPage {
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
                public toast: ToastProvider) {
-    //super(navCtrl,navParams,parseData,time);            
-    // this.init(this.parseData.getData(), 'frequencyPage');             
     this.init();
    }
    

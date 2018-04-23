@@ -125,4 +125,7 @@
     <engine name="android" spec="7.0.0" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-screen-orientation" spec="^3.0.1" />
+    <plugin name="cordova-plugin-native-keyboard" spec="^1.5.3">
+        <variable name="LICENSE" value="TRIAL" />
+    </plugin>
 </widget>
