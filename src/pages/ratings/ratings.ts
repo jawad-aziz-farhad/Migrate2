@@ -33,8 +33,7 @@ export class RatingsPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams , 
               public parseData: ParseDataProvider,
-              public time: Time) {   
-   // super(navCtrl, navParams, parseData, time);            
+              public time: Time) {             
   }
 
 
@@ -48,14 +47,14 @@ export class RatingsPage {
 
   /* iNITIALIZING VIEW  */
   initView(){
-    if(!this.time.isTimerRunning && !this.time.isNext)
-    this.time.runTimer(); 
+    // if(!this.time.isTimerRunning && !this.time.isNext)
+    //   this.time.runTimer(); 
     this.ratings = [ 40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'Not Rated' ];
     this.temp = this.ratings[0];
     this.isElementDisabled();  
   }
   
-  selectRating(rating){
+  selectRating(rating) {
     this.temp = rating;
     /* IF ELEMENT IS NOT DISABLED, GOING TO THE FREQUENCY PAGE */
     if(!this._isElementDisabled){
@@ -128,10 +127,12 @@ export class RatingsPage {
     /* STOPPING TIMER  */
     this.time.stopTimer();
 
+    this.time.isNext = true; 
+    
     /* IF USER SELECTS THE NEXT ELEMENT */
     if(value == 'nextElement') {
 
-      this.time.isNext = true;
+      //this.time.isNext = true;
       
       this.setTask();      
       let data = this.parseData.getData();
@@ -145,7 +146,7 @@ export class RatingsPage {
         if(rating == 1)
           data.setRating('Not Rated');
         else
-            data.setRating(100);
+          data.setRating(100);
         this.parseData.setData(data);
 
         if(count == 2)       
@@ -169,6 +170,8 @@ export class RatingsPage {
     /* IF USER GO TO GO TO TASKS PAGE */
     else if(value == 'tasks')
       this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 5)));
+   
+    
   }
 
   /* PARSING STUDY DATA */
@@ -177,6 +180,7 @@ export class RatingsPage {
     data.setRating(this.temp);
     data.setTime(this.time.ticks * 1000);
     data.setFrequency(1);
+
     /* IF NO NOTES ADDED FOR THIS OBSERVATION */
     if(!data.getNotes())
       data.setNotes(null);
@@ -192,7 +196,6 @@ export class RatingsPage {
     this.parseData.setDataArray(this.parseData.getData());
 
     this.parseData.clearData();
-    console.log("DATA CLEARED.");
   }
 
   /* SETTING NEXT ELEMENT */

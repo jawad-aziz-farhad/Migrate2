@@ -67,11 +67,12 @@ export class ActionButtons  {
     /* STOPPING TIMER  */
     this.time.stopTimer();
 
+    this.time.isNext = true; 
+
     /* IF USER SELECTS THE NEXT ELEMENT */
     if(value == 'nextElement') {
 
-      this.time.isNext = true;
-      
+      // this.time.isNext = true;      
       this.setTask();
       
       let data = this.data;
@@ -118,7 +119,6 @@ export class ActionButtons  {
       this.nextElement = null;
     else
       this.nextElement = this.elements[index + 1];
-    console.log("LAST INDEX IS: "+ index + "\n NEXT ELEMENT IS: "+ JSON.stringify(this.nextElement));
   }
 
   /* PARSING STUDY DATA */

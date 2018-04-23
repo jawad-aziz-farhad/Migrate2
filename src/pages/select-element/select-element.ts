@@ -38,7 +38,6 @@ export class SelectElementPage extends Selection  {
 
   ionViewWillEnter(){
     console.log('ionViewWillEnter SelectElementPage');
-    this.time.destroyTimer();
     this.task = this.navParams.get('task');
     this.init('Elements',this.navParams.get('project'), RatingsPage);
  }

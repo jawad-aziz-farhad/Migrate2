@@ -39,7 +39,6 @@ export class SelectTaskPage extends Selection {
   }
 
   ionViewWillEnter(){
-    this.time.destroyTimer();
     this.init('Tasks',this.navParams.get('project'), SelectElementPage);
   }
 

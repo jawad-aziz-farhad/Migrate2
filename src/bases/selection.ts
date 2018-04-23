@@ -223,7 +223,6 @@ export class Selection {
   goNext() {
     
     if(this.TABLE_NAME == 'Elements') {      
-      console.log("\nELEMENT RATING: "+ this._temp.rating + "\nPROJECT RATING: "+ this.project.rating)
       if(this.project.rating == 2 || this._temp.rating == 1 || this._temp.rating == 2){
         let rating = null
         /* IF SELECTED ELEMENT HAS RATING OF 1 */
@@ -243,13 +242,14 @@ export class Selection {
         else
           this.nextComponent = AddFrequencyPage;
         
-          this.parseData.setData(data);
+        this.parseData.setData(data);
       }
 
       else
         this.nextComponent =  RatingsPage ;
-
-      this.time.runTimer();  
+        
+      if(!this.time.isTimerRunning && !this.time.isNext)
+        this.time.runTimer();  
     }
 
     this.isSearching = false;

@@ -50,12 +50,12 @@ export class Action_Buttons {
         
         /* STOPPING TIMER  */
         this.time.stopTimer();
-    
+        
+        this.time.isNext = true;
+
         /* IF USER SELECTS THE NEXT ELEMENT */
         if(value == 'nextElement') {
     
-          this.time.isNext = true;
-          
           this.setTask();
           
           let data = this.data;

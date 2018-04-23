@@ -409,10 +409,10 @@ export class SqlDbProvider {
     // const table15 = this.dropTable("Study");
     // const table16 = this.dropTable("Study_Data");
     
-   //const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15, table16 ];
+    // const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15, table16 ];
     const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 , table11];
     return Observable.forkJoin(observableArray);
-  }
+  } 
 
   /* UPDATING TABLE  */
   updateTable(table, column , data): Promise<any> {

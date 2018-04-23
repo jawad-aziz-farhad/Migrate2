@@ -41,7 +41,6 @@ export class AddFrequencyPage {
    }
 
    ionViewWillEnter(){
-    this.frequency = '';
     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
     this.elements = this.navParams.get("elements");
     this.setNextElement();
@@ -95,14 +94,15 @@ export class AddFrequencyPage {
 
   go(value: string): void {
 
-    this.parsingData();
-    
+    this.parsingData();    
     /* STOPPING TIMER  */
     this.time.stopTimer();
+    
+    this.time.isNext = true;
 
     /* IF USER SELECTS THE NEXT ELEMENT */
     if(value == 'nextElement'){
-      this.time.isNext = true;
+     // this.time.isNext = true;
       this.frequency = '';
 
       this.setTask();
