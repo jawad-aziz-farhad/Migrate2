@@ -256,8 +256,10 @@ export class Selection {
     let data = null;
     if(this.TABLE_NAME == 'Tasks')
       data = {task: this.parseData.getData().getTask() , project: this.project };
-    else if(this.TABLE_NAME == 'Elements')
-      data = {project: this.project, elements: this.data }  
+    else if(this.TABLE_NAME == 'Elements'){
+      this.parseData.setElements(this.data);
+      data = { project: this.project }  
+    }
     else
       data = { project: this.project };
     this.navCtrl.push(this.nextComponent, data);

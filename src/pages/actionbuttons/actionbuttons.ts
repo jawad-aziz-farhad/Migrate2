@@ -112,7 +112,7 @@ export class ActionButtons  {
   }
 
   /* SETTING NEXT ELEMENT */
-  setNextElement(){
+  setNextElement() {
     let element = this.data.getElement();
     let index  = this.elements.indexOf(element);
     if(index == this.elements.length - 1)

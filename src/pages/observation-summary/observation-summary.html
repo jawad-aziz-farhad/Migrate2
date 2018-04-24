@@ -55,7 +55,7 @@
     
     <ion-item>
       <ion-label stacked>Observation Time:</ion-label>
-      <ion-input value="{{ data?.time }}" disabled readonly></ion-input>
+      <ion-input value="{{ convertTime(data?.time) }}" disabled readonly></ion-input>
     </ion-item>
   
     <ion-item *ngIf="data.notes">
