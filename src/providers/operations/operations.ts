@@ -28,7 +28,8 @@ export class OperationsProvider {
               public toast: ToastProvider) {
     console.log('Hello OperationsProvider Provider');
   }
-  
+
+  /* GETTING ALL THE REQURIED DATA ON APP LAUNCH */
   getdata(){
 
     let URL = SERVER_URL + 'projects/get';
@@ -116,13 +117,11 @@ export class OperationsProvider {
   }
 
   postRequest(endPoint, data) {
-
     /* ADDING STUDY TYPE TO FETCH DATA RELATED TO STUDY TYPE */
     if(data)
       data.studyType = 3;
     else
       data = { studyType: 3 };  
-    console.log("POST REQUEST DATA IS %0 ", data);
      
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
@@ -140,9 +139,11 @@ export class OperationsProvider {
 
   offlineRequest(endPoint,data){
     /* ADDING STUDY TYPE TO FETCH DATA RELATED TO STUDY TYPE */
-    data.studyType = 3;
-    console.log("DATA IS %0 ", data);
-
+    if(data)
+     data.studyType = 3;
+    else
+     data = { studyType: 3 };  
+    
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
     return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catch_Error);

@@ -74,8 +74,12 @@ export class ObservationSummaryPage {
 
   /* CONVERTING MILLISECONDS TO LOCALE TIME */
   convertTime(time: any){
-    return new Date(time).toLocaleString(); 
+    let minutes = Math.floor(time / 60000);
+    let seconds = ((time % 60000) / 1000).toFixed(0);
+    time = (minutes < 10  ? '0' : '') + minutes + ":" + (parseInt(seconds) < 10 ? '0' : '') + seconds;
+    return time;
   }
+  
 
   /* ASKING FOR CONFIRMATION FROM USER */
   deletConfirmation(){
