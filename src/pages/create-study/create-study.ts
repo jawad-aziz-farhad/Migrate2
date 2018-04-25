@@ -3,7 +3,6 @@ import { IonicPage, NavController, NavParams , ViewController } from 'ionic-angu
 import { StudyData } from '../../models';
 import { ParseDataProvider , Time} from '../../providers'
 import { Keyboard } from '@ionic-native/keyboard';
-import { NativeKeyboard } from '@ionic-native/native-keyboard';
 
 /**
  * Generated class for the CreateStudyPage page.
@@ -31,8 +30,7 @@ export class CreateStudyPage {
               public viewCtrl: ViewController,
               public keyboard: Keyboard,
               public parse: ParseDataProvider,
-              public time: Time,
-              private nativeKeyboard: NativeKeyboard) {
+              public time: Time) {
     
   }
 

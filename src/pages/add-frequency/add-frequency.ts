@@ -33,7 +33,7 @@ export class AddFrequencyPage {
                public modalCtrl: ModalController,
                public parseData: ParseDataProvider,
                public toast: ToastProvider) {
-    this.init();
+    this.frequency = '';   
    }
    
    ionViewDidLoad() {     
@@ -41,15 +41,12 @@ export class AddFrequencyPage {
    }
 
    ionViewWillEnter(){
-    this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
-    this.elements = this.navParams.get("elements");
-    this.setNextElement();
+    this.init();
    }
 
-  init(){
-    this.frequency = '';
+  init() {    
     this.numbers = [0, 1 , 2 , 3 , 4 , 5 , 6 , 7, 8 , 9];
-    this.elements = this.navParams.get("elements");
+    this.elements = this.parseData.getElements();
     this.setNextElement();
   }
 
@@ -67,8 +64,6 @@ export class AddFrequencyPage {
     this.frequency = this.frequency + num;
     this.parseData.setFrequency(this.frequency);
   } 
-
-
   /* REMOVING ENTERED FREQUENCY */ 
   removeFrequency(){
     this.frequency = this.frequency.slice(0, this.frequency.length -1);
@@ -112,7 +107,7 @@ export class AddFrequencyPage {
       
       /* IF ELEMENT's RATING IS NOT RATED OR IF ELEMENT's RATING IS 100 */
       let rating = this.nextElement.rating;
-      if(rating == 1 || rating == 2){
+      if(rating == 1 || rating == 2) {
         if(rating == 1)
           data.setRating('Not Rated');
         else
@@ -131,7 +126,6 @@ export class AddFrequencyPage {
           data.setFrequency(1);
 
         this.parseData.setData(data);
-        this.parseData.setElements(this.elements);
         this.navCtrl.pop();
       }
 

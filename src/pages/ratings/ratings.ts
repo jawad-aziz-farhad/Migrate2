@@ -33,12 +33,11 @@ export class RatingsPage {
   constructor(public navCtrl: NavController, 
               public navParams: NavParams , 
               public parseData: ParseDataProvider,
-              public time: Time) {             
+              public time: Time) {     
   }
 
-
   ionViewDidLoad() {       
-    console.log('SelectElementPage');
+    console.log('Ratings Page ViewDilLoad.');
   }
 
   ionViewWillEnter() {
@@ -47,11 +46,31 @@ export class RatingsPage {
 
   /* iNITIALIZING VIEW  */
   initView(){
-    // if(!this.time.isTimerRunning && !this.time.isNext)
-    //   this.time.runTimer(); 
     this.ratings = [ 40 , 50 , 55 , 60 , 65, 70 , 75 , 80 , 85 , 90 , 95 , 100 , 105 , 110 , 115 , 120 , 125 , 130 , 135 , 'Not Rated' ];
     this.temp = this.ratings[0];
+    this.elements = this.parseData.getElements();
     this.isElementDisabled();  
+    this.setNextElement();
+  }
+
+  /* checking the disbalitty of SELECTED Item */
+  isElementDisabled() {
+    let data = this.parseData.getData();
+    if(data && data.getElement().count == 2){
+      this._isElementDisabled = true;
+    }
+    else
+      this._isElementDisabled = false;  
+  }
+
+  /* SETTING UP NEXT ELEMENT */
+  setNextElement(){
+    let element = this.parseData.getData().getElement();
+    let index  = this.elements.indexOf(element);
+    if(index == this.elements.length - 1)
+      this.nextElement = null;
+    else
+      this.nextElement = this.elements[index + 1];
   }
   
   selectRating(rating) {
@@ -74,7 +93,7 @@ export class RatingsPage {
 
   /* GOING TO NEXT PAGE */
   gotoNextPage(page: any){
-    let data = this.navParams.get("elements");
+    let data = this.parseData.getElements();
     if(!data)
       data = this.parseData.getElements();
     this.navCtrl.push(page, { elements: data});
@@ -97,28 +116,6 @@ export class RatingsPage {
     }
   }
 
-  isElementDisabled() {
-    let data = this.parseData.getData();
-    if(data && data.getElement().count == 2){
-      this._isElementDisabled = true;
-    }
-    else
-      this._isElementDisabled = false;  
-  }
-
-  getNextElement() {
-    let nextElement = null;
-    let elements = this.navParams.get('elements');
-    let element  = this.parseData.getData().getElement();
-    let index    = elements.indexOf(element);
-    if(index == elements.length - 1)
-      nextElement = null;
-    else
-      nextElement = elements[index + 1];
-
-    return nextElement;
-  }
-
   /*GOING TO THE PAGE BASED ON THE PASSED VALUE TO FUNCTION */
   go(value: string): void {
     
@@ -134,13 +131,12 @@ export class RatingsPage {
 
       //this.time.isNext = true;
       
-      this.setTask();      
+      this.setTask();     
       let data = this.parseData.getData();
       data.setElement(this.nextElement);
       /* IF ELEMENT's RATING IS NOT RATED OR IF ELEMENT's RATING IS 100 */
       let rating = this.nextElement.rating;
       let count  = this.nextElement.count;
-
       /* IF NEXT ELEMENT's COUNT IS EQUAL TO 2 AND RATING IS 1 OR 2, GOING TO ACTIONBUTTONS PAGE */
       if(rating == 1 || rating == 2){
         if(rating == 1)
@@ -150,9 +146,9 @@ export class RatingsPage {
         this.parseData.setData(data);
 
         if(count == 2)       
-          this.navCtrl.push(ActionButtons);
+          this.navCtrl.push(ActionButtons, {elements: this.elements});
         else
-          this.navCtrl.push(AddFrequencyPage);  
+          this.navCtrl.push(AddFrequencyPage, {elements: this.elements});  
       }
       /* STAYING ON THIS PAGE */
       else
@@ -160,6 +156,7 @@ export class RatingsPage {
         this.temp = this.ratings[0];
         this.parseData.setData(data);
         this.isElementDisabled();
+        this.setNextElement();
       }
     }
     /* IF USER SELECT TO GO TO ELEMENTS' LIST */
@@ -196,17 +193,6 @@ export class RatingsPage {
     this.parseData.setDataArray(this.parseData.getData());
 
     this.parseData.clearData();
-  }
-
-  /* SETTING NEXT ELEMENT */
-  setNextElement(){
-    let element = this.parseData.getData().getElement();
-    let index  = this.elements.indexOf(element);
-    if(index == this.elements.length - 1)
-      this.nextElement = null;
-    else
-      this.nextElement = this.elements[index + 1];
-      
   }
 
   /* SETTING PREVIOUSLY SELECTED TASK FOR THE NEW ELEMENT'S STUDY */

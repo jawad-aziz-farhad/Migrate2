@@ -43,7 +43,6 @@ export class ObservationSummaryPage {
   /* GETTING ALL ELEMENTS  */
   getElements(){
     this.data = this.navParams.get('item');
-    console.log("\n ITEM AT OBSERVATION PAGE: "+ JSON.stringify(this.data));
     /* CHECKING TASK ID */
     let taskID = null;
     if(this.data.task._id)
@@ -74,14 +73,7 @@ export class ObservationSummaryPage {
   }
 
   /* CONVERTING MILLISECONDS TO LOCALE TIME */
-  convertTime(){
-    let time = null;
-    const index = this.navParams.get('index');
-    if(typeof index !== 'undefined')
-      time = this.parseData.getStudyData().getSutdyStartTime();
-    else
-      time = this.data.studyStartTime;
-      
+  convertTime(time: any){
     return new Date(time).toLocaleString(); 
   }
 
