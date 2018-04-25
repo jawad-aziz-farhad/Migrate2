@@ -30,10 +30,12 @@ export class OperationsProvider {
   }
   
   getdata(){
+
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
-    
-    return this.http.post(`${URL}`, null ,{ headers: headers }).catch(this.catchError)
+    let data = { studyType: 3 };
+
+    return this.http.post(`${URL}`, data ,{ headers: headers }).catch(this.catchError)
                     .flatMap(response => {    
       
       let res = response.json();
@@ -113,7 +115,15 @@ export class OperationsProvider {
     return Observable.forkJoin(requests);
   }
 
-  postRequest(endPoint, data) {    
+  postRequest(endPoint, data) {
+
+    /* ADDING STUDY TYPE TO FETCH DATA RELATED TO STUDY TYPE */
+    if(data)
+      data.studyType = 3;
+    else
+      data = { studyType: 3 };  
+    console.log("POST REQUEST DATA IS %0 ", data);
+     
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
     /* FILTERING ELEMENTS FOR GETTING ONLY THOSE ELEMENTS WHICH HAVE STUDY TYPE EFFICIENCY STUDY */
@@ -129,6 +139,10 @@ export class OperationsProvider {
   }
 
   offlineRequest(endPoint,data){
+    /* ADDING STUDY TYPE TO FETCH DATA RELATED TO STUDY TYPE */
+    data.studyType = 3;
+    console.log("DATA IS %0 ", data);
+
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
     return this.http.post(`${this.END_POINT}`, data ,{ headers: headers }).map(res => res.json()).catch(this.catch_Error);
