@@ -93,8 +93,8 @@ export class SqlDbProvider {
                 data[index].schedule[4].closingHour + ':' + data[index].schedule[4].closingMinute + ' ' + data[index].schedule[4].closingTimeFormat,
                 data[index].schedule[5].closingHour + ':' + data[index].schedule[5].closingMinute + ' ' + data[index].schedule[5].closingTimeFormat,
                 data[index].schedule[6].closingHour + ':' + data[index].schedule[6].closingMinute + ' ' + data[index].schedule[6].closingTimeFormat
-              ]
-      else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')        
+      ]
+      else if(table == 'Areas_IDs' || table == 'Elements_IDs')        
         _data = [localStorage.getItem('projectID'), data[index]];     
       else if(table == 'assignedLocations')
         _data = [data[index], localStorage.getItem("projectID")];
@@ -102,21 +102,17 @@ export class SqlDbProvider {
         _data = [data[index].name, data[index]._id , data[index].popularity, null , null , data[index].projectID, null , null, null];
       else if(table == 'Elements')
         _data = [data[index].name, data[index]._id , data[index].popularity, data[index].rating, data[index].numericID, data[index].projectID, data[index].category, data[index].studyType, data[index].type, data[index].taskID , data[index].count];
-      else if(table == 'Roles')
-        _data = [data[index].name, data[index]._id , data[index].popularity, null , null ,data[index].projectID, null , null, null]; 
       else if(table == 'Tasks')
         _data = [data[index].name, data[index]._id, data[index].popularity, null, null, data[index].projectID, null, null, null]
       else if(table == 'Create_Area')
         _data = [data[index]._id, data[index].name, data[index].projectID, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date];   
-      else if(table == 'Create_Role')
-        _data = [data[index]._id, data[index].name, data[index].position , data[index].projectID, data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date];   
       else if(table == 'Create_Element')
         _data = [data[index]._id, data[index].name, data[index].type , data[index].rating , data[index].category ,  data[index].efficiency_study, data[index].activity_study, data[index].role_study , data[index].projectID , data[index].addedby , data[index].id_of_addedby , data[index].status, data[index].date , data[index].userAdded];
       else if(table == 'Create_Task')
         _data = [data[index]._id, data[index].name, data[index].projectID, data[index].addedby, data[index].id_of_addedby, data[index].status, data[index].date]      
       else if(table == 'Study'){
         let data = this.parser.getStudyData();
-        _data = [data.getTitle() , data.getCustomer()._id , data.getSutdyStartTime(), data.getSutdyEndTime(), data.getCustomer().customer_id, data.getLocationID() , localStorage.getItem("userID"), data.getRole()._id , data.getArea()._id ];
+        _data = [data.getTitle() , data.getCustomer()._id , data.getSutdyStartTime(), data.getSutdyEndTime(), data.getCustomer().customer_id, data.getLocationID() , localStorage.getItem("userID"), data.getArea()._id ];
       }  
       else if(table == 'Study_Data')
         _data = [data[index].task._id ,data[index].element._id , data[index].rating , data[index].frequency , data[index].notes ,data[index].photo , data[index].time,  data[index].startTime ,  data[index].endTime ,  data[index].duration ,localStorage.getItem("studyID")];  
@@ -144,22 +140,20 @@ export class SqlDbProvider {
       let query = '';
       if(table == 'Projects')
         query = 'CREATE TABLE IF NOT EXISTS Projects(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT , name TEXT,logo TEXT,headoffice TEXT, customer_id TEXT, customer_name TEXT, rating NUMBER)';
-      else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+      else if(table == 'Areas_IDs' || table == 'Elements_IDs')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, projectID TEXT, _id TEXT)';
       else if(table == 'Locations')
         query = 'CREATE TABLE IF NOT EXISTS Locations(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT NOT NULL, projectID TEXT,  customer_id TEXT , locationname TEXT, addresslineone TEXT , addresslinetwo TEXT , addresslinethree TEXT , addresslinefour TEXT , addresslinefive TEXT , contactname TEXT , telephone TEXT, monday_time_from TEXT, tuesday_time_from TEXT, wednesday_time_from TEXT, thursday_time_from TEXT, friday_time_from TEXT, saturday_time_from TEXT, sunday_time_from TEXT,monday_time_to TEXT, tuesday_time_to TEXT, wednesday_time_to TEXT, thursday_time_to TEXT, friday_time_to TEXT, saturday_time_to TEXT, sunday_time_to TEXT )';  
       else if(table == 'assignedLocations')
         query = 'CREATE TABLE IF NOT EXISTS assignedLocations (id INTEGER PRIMARY KEY AUTOINCREMENT, locationID TEXT NOT NULL, projectID TEXT)';
-      else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
+      else if(table == 'Areas' || table == 'Tasks')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT)'; 
       else if(table == 'Elements')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, _id TEXT, popularity INT, rating TEXT, numericID BIGINT, projectID TEXT, category TEXT, studyType INT, type INT, taskID TEXT , count INT , UNIQUE(_id, taskID) ON CONFLICT REPLACE)'; 
       else if(table == 'Study')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT, role TEXT, area TEXT)';
+        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, projectID TEXT, studyStartTime BIGINT, studyEndTime BIGINT, customerID TEXT, locationID TEXT, userID TEXT, area TEXT)';
       else if(table == 'Study_Data')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, task TEXT, element TEXT, rating INT,frequency INT, notes TEXT, photo TEXT, time BIGINT, startTime, endTime , duration, Study_Id INTEGER, FOREIGN KEY(Study_Id) REFERENCES Study(id))';   
-      else if(table == 'Create_Role')
-        query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, position TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT)';
       else if(table == 'Create_Area')
         query = 'CREATE TABLE IF NOT EXISTS ' + `${table}` +'(id INTEGER PRIMARY KEY AUTOINCREMENT, _id TEXT, name TEXT, projectID TEXT, addedby TEXT, id_of_addedby TEXT, status TEXT, date TEXT)';
       else if(table == 'Create_Task')
@@ -180,22 +174,20 @@ export class SqlDbProvider {
     let query = '';
     if(table == 'Projects')
       query = 'INSERT INTO Projects (_id, name, logo, headoffice, customer_id, customer_name, rating) VALUES (? , ? , ? , ? , ?, ?, ?)';
-    else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+    else if(table == 'Areas_IDs' || table == 'Elements_IDs')
       query = 'INSERT INTO ' + table + '(projectID , _id) VALUES (?, ?)';
     else if(table == 'Locations')
       query = 'INSERT INTO Locations (_id , projectID ,customer_id , locationname, addresslineone, addresslinetwo, addresslinethree, addresslinefour, addresslinefive, contactname, telephone, monday_time_from, tuesday_time_from, wednesday_time_from, thursday_time_from, friday_time_from, saturday_time_from, sunday_time_from, monday_time_to, tuesday_time_to, wednesday_time_to, thursday_time_to, friday_time_to, saturday_time_to, sunday_time_to) VALUES (? , ? , ? ,? , ? , ?, ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?, ? , ? , ? , ? , ? , ? , ?)';  
     else if(table == 'assignedLocations')
       query = 'INSERT INTO assignedLocations (locationID , projectID) VALUES (? , ?)';
-    else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
+    else if(table == 'Areas' || table == 'Tasks')
       query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, studyType ,type) VALUES (? , ?, ?, ?, ?, ?, ?, ?, ?)';
     else if(table == 'Elements')
       query = 'INSERT INTO ' + table + '(name, _id, popularity, rating, numericID, projectID, category, studyType ,type, taskID , count) VALUES (?, ?, ? , ?, ?, ?, ?, ?, ?, ?, ?)';
     else if(table == 'Study')
-      query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID, role, area) VALUES (?, ? , ?, ? , ? , ? , ? ,? , ?)';           
+      query = 'INSERT INTO ' + table + '(title , projectID , studyStartTime , studyEndTime, customerID, locationID, userID, area) VALUES (? , ?, ? , ? , ? , ? ,? , ?)';           
     else if(table == 'Study_Data')
       query = 'INSERT INTO ' + table + '(task, element , rating, frequency, notes, photo, time, startTime, endTime , duration, Study_Id) VALUES (? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?)';   
-    else if(table == 'Create_Role')
-      query = 'INSERT INTO ' + table + '(_id ,name , position, projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Area' || table == 'Create_Task')
       query = 'INSERT INTO ' + table + '(_id ,name , projectID , addedby, id_of_addedby, status, date) VALUES (? , ? , ? , ?, ?, ?, ?)' ;
     else if(table == 'Create_Element')  
@@ -219,14 +211,14 @@ export class SqlDbProvider {
     });
   }
 
-  /* GETTING IDS OF ROLES, ELEMENTS, AREAS TO FETCH DATA  */
+  /* GETTING ELEMENTS, AREAS TO FETCH DATA  */
   getIDData(table, id): Promise<any> {
     let query = '';
-    if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
+    if(table == 'Areas' || table == 'Tasks')
       query = "SELECT * FROM " + `${table}` + " WHERE projectID=?";
     else if(table == 'Elements')
       query = "SELECT * FROM " + `${table}` + " WHERE taskID=?";  
-    else if(table == 'Create_Area' || table == 'Create_Element' || table == 'Create_Role')
+    else if(table == 'Create_Area' || table == 'Create_Element')
       query = "SELECT * FROM " + `${table}` + " WHERE _id=?";
    else if(table == 'Study_Data')
       query = "SELECT * FROM " + `${table}` + " WHERE Study_Id=?";
@@ -248,15 +240,6 @@ export class SqlDbProvider {
         table = 'Areas';
       query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
     }      
-
-    else if(table == 'OfflineRole'){
-
-      if(id.indexOf('role') > -1 )
-        table = 'Create_Role';
-      else  
-        table = 'Roles';
-      query =  "SELECT * FROM " + `${table}` +" WHERE _id=?";
-    } 
     else if(table == 'OfflineTask'){
 
       if(id.indexOf('task') > -1 )
@@ -312,13 +295,11 @@ export class SqlDbProvider {
                       });
           else if(table == 'assignedLocations')
             data.push(result.rows.item(i).locationID);
-          else if(table == 'Areas' || table == 'Roles' || table == 'Tasks')
+          else if(table == 'Areas' || table == 'Tasks')
             data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, popularity: result.rows.item(i).popularity, projectID: result.rows.item(i).projectID});
           else if(table == 'Elements')
              data.push({_id: result.rows.item(i)._id ,name: result.rows.item(i).name , popularity: result.rows.item(i).popularity, rating: result.rows.item(i).rating,numericID: result.rows.item(i).numericID, 
                         projectID: result.rows.item(i).projectID , category: result.rows.item(i).category,studyType: result.rows.item(i).studyType, type: result.rows.item(i).type, taskID: result.rows.item(i).taskID, count: result.rows.item(i).count});
-           else if(table == 'Create_Role')
-            data.push({_id: result.rows.item(i)._id , name: result.rows.item(i).name, position: result.rows.item(i).position , projectID: result.rows.item(i).projectID, addedby: result.rows.item(i).addedby, id_of_addedby: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date});
           else if(table == 'Create_Area' || table == 'Create_Task') 
             data.push({_id: result.rows.item(i)._id ,name: result.rows.item(i).name, projectID: result.rows.item(i).projectID, 
                        addedby: result.rows.item(i).addedby, id_of_addedby: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date});  
@@ -328,7 +309,7 @@ export class SqlDbProvider {
                       type: result.rows.item(i).type, rating: result.rows.item(i).rating, category: result.rows.item(i).category, 
                       projectID: result.rows.item(i).projectID, addedby: result.rows.item(i).addedby, 
                       userId: result.rows.item(i).id_of_addedby, status: result.rows.item(i).status ,date: result.rows.item(i).date, userAdded: result.rows.item(i).userAdded});
-          else if(table == 'Areas_IDs'  || table == 'Roles_IDs' || table == 'Elements_IDs')
+          else if(table == 'Areas_IDs' || table == 'Elements_IDs')
             data.push(result.rows.item(i)._id);
           else if(table == 'Categories')
             data.push({ _id: result.rows.item(i)._id, name : result.rows.item(i).name, studyType: result.rows.item(i).studyType });
@@ -392,25 +373,22 @@ export class SqlDbProvider {
   dropAllTables(): Observable<any> {
 
     const table1 = this.dropTable("Projects");
-    const table2 = this.dropTable("Roles");
-    const table3 = this.dropTable("Roles_IDs");
-    const table4 = this.dropTable("Areas");
-    const table5 = this.dropTable("Areas_IDs");
-    const table6 = this.dropTable("Elements");
-    const table7 = this.dropTable("Elements_IDs");
-    const table8 = this.dropTable("Locations");
-    const table9 = this.dropTable("Categories");
-    const table10 = this.dropTable("assignedLocations")
-    const table11 = this.dropTable("Tasks");
+    const table2 = this.dropTable("Areas");
+    const table3 = this.dropTable("Areas_IDs");
+    const table4 = this.dropTable("Elements");
+    const table5 = this.dropTable("Elements_IDs");
+    const table6 = this.dropTable("Locations");
+    const table7 = this.dropTable("Categories");
+    const table8 = this.dropTable("assignedLocations")
+    const table9 = this.dropTable("Tasks");
 
     // const table12 = this.dropTable("Create_Area");
     // const table13 = this.dropTable("Create_Element");
-    // const table14 = this.dropTable("Create_Role");
     // const table15 = this.dropTable("Study");
     // const table16 = this.dropTable("Study_Data");
     
     // const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10, table11 , table12, table13, table14, table15, table16 ];
-    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9, table10 , table11];
+    const observableArray = [table1, table2, table3, table4, table5, table6, table7, table8, table9];
     return Observable.forkJoin(observableArray);
   } 
 
@@ -419,7 +397,7 @@ export class SqlDbProvider {
 
     let query = null; let query_data = null;
     
-    if(table == 'Areas' || table == 'Roles' || table == 'Elements' || table == 'Tasks'){
+    if(table == 'Areas' || table == 'Elements' || table == 'Tasks'){
       query = "UPDATE "+ `${table}` + " SET _id=? , name=? ,numericID=?  WHERE _id=?"
       query_data = [data._id, data.name , data.numericID , data.offline];
     }

@@ -2,7 +2,6 @@ import { Data } from "./data.interface";
 
 export class StudyData {
     
-    private role: any;
     private area: any;
     private data: Array<Data>;
     private title: string;
@@ -14,7 +13,6 @@ export class StudyData {
     constructor(){}
    
     /* SETTING UP VALUES OF STUDY DATA */
-    setRole(role: any){ this.role = role; }
     setArea(area: any){ this.area = area;}
     setData(data: Array<Data>) { this.data = data; }
     setCustomer(customer: any){ this.customer = customer;}
@@ -25,7 +23,6 @@ export class StudyData {
 
     /* GETTING VALUES OF STUDY DATA */
     getArea(): any { return this.area; }
-    getRole(): any { return this.role;}
     getData(): Array<Data> { return this.data; }
     getCustomer():any { return this.customer; }
     getTitle(): string   { return this.title; }

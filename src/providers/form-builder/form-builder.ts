@@ -33,7 +33,6 @@ export class FormBuilderProvider {
                 name: localStorage.getItem("userName"),
                 _id: localStorage.getItem("userID")
               }),
-      role: data.role._id,
       area: data.area._id,        
       data: this.formBuilder.array([ ])
     });
@@ -78,22 +77,7 @@ export class FormBuilderProvider {
 
   /* SETTING VALUES TO FORM FOR OFFLINE ENTRIES */
   initFormForOfflineData(data) {    
-    /* FORM DATA FOR ROLES DOCUMENT */
-    if(data.position)
-      this.dataForm = this.formBuilder.group({
-        name: [data.name],
-        position: [data.position],
-        addedBy:  this.formBuilder.group({
-          _id: [data.id_of_addedby],
-          name :[data.addedby],
-          date : [data.date]
-        }),
-        status: [data.status],
-        projectID: [data.projectID]
-      })
-    
-    /* FORM DATA FOR ELEMENTS DOCUMENT */
-    else if(data._id.indexOf('element') > -1) { 
+    if(data._id.indexOf('element') > -1) { 
       let studyTypes = [];
       if(data.efficiency_study == 1)
         studyTypes.push(1);

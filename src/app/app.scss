@@ -23,13 +23,12 @@
 /* =====================
    Variables
    ===================== */
-
-    $skyblue:           #C797F4;
-    $lightblue:         #6F19A3;
-    $dark-blue:         #6F24A3;
-    $theme-color:       #874FC1;
-    $extra-light-grey:  #b3b3b3;
-    $body-bg:           #fafafa;
+   $skyblue:           #5bc0f5;
+   $lightblue:         #216ff3;
+   $dark-blue:         #2d4159;
+   $theme-color:       #42a5f5;
+   $extra-light-grey:  #b3b3b3;
+   $body-bg:           #fafafa;
    
    $font-light:    100;
    $font-regular:  400;
@@ -397,13 +396,13 @@
            border-left: 3px solid #FF1D25 !important;
        }
        ion-item:nth-child(4n+2){
-           border-left: 3px solid #FF931E !important;
+           border-left: 3px solid $theme-color !important;
        }
        ion-item:nth-child(4n+3){
            border-left: 3px solid #7AC943 !important;
        }
        ion-item:nth-child(4n+4){
-           border-left: 3px solid #8860D0 !important;
+           border-left: 3px solid $theme-color !important;
        }
        
        ion-avatar{
@@ -746,7 +745,7 @@
        font-size: 40px;
        text-align: center;
        margin: 20px auto;
-       color: #F77E1C;
+       color: $theme-color;
    }
    
    .t-data{
@@ -920,7 +919,7 @@
     font-weight: 500;
     line-height: 3.5rem;
     text-transform: uppercase;
-    color: #ff9800;
+    color: $theme-color;
     background-color: transparent;
     opacity: 1.7;
     -webkit-transition: 100ms all linear;

@@ -133,11 +133,11 @@ export class AddFrequencyPage {
     /* IF USER SELECT TO GO TO ELEMENTS' LIST */
     else if(value == 'elements'){
       this.setTask();
-      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 6)));
+      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 5)));
     }
     /* IF USER GO TO GO TO TASKS PAGE */
     else if(value == 'tasks')
-      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 5)));
+      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 4)));
   }
 
   /* PARSING STUDY DATA */

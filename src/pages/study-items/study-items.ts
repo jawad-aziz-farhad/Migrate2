@@ -49,12 +49,10 @@ export class StudyItemsPage implements OnInit {
     this.totalItemsSelected = 0;
     this.itemsSelected = [];
     this.study_data = this.parseData.getStudyData();
-    console.log("\n\nSTUDY DATA IS: "+ JSON.stringify(this.study_data));
     this.toast.showBottomToast(STUDY_ENDED);
   }
   /* SHOWING SUMMARY OF SINGLE ITEM */
   showSummary(item, index){
-    console.log("\n ITEM AT STUDY ITEM's PAGE: "+ JSON.stringify(item));    
     this.navCtrl.push(ObservationSummaryPage, {item: item, index: index});
   }
 

@@ -34,7 +34,7 @@ export class OperationsProvider {
 
     let URL = SERVER_URL + 'projects/get';
     let headers = this.headers.getHeaders();
-    let data = { studyType: 3 };
+    let data = { studyType: 2 };
 
     return this.http.post(`${URL}`, data ,{ headers: headers }).catch(this.catchError)
                     .flatMap(response => {    
@@ -60,7 +60,7 @@ export class OperationsProvider {
                     if(item && _index >= 1 && item.length > 0){
                       item.forEach((subitem,subindex) => {                        
                         subitem.projectID = project._id;       
-                        if(_index == 4 && subindex == 0 && subitem.elements_data && subitem.elements_data.length > 0){
+                        if(_index == 3 && subindex == 0 && subitem.elements_data && subitem.elements_data.length > 0){
                           subitem.elements_data.forEach((element,sub_index)=> {
                             element.projectID = project._id;
                           });
@@ -72,11 +72,10 @@ export class OperationsProvider {
               res[index].customer = result[0];
               res[index].customer_locations = result[1];
               res[index].areas_data = result[2];
-              res[index].roles_data = result[3];
-              res[index].tasks_data = result[4];
+              res[index].tasks_data = result[3];
               /* IF TASKS EXISTS AND ELEMENT'S DATA ALSOE EXISTS */
-              if(result[4].length > 0 && result[4][0].elements_data)
-                res[index].elements_data = result[4][0].elements_data;
+              if(result[3].length > 0 && result[3][0].elements_data)
+                res[index].elements_data = result[3][0].elements_data;
               else
                 res[index].elements_data = [];
 
@@ -107,9 +106,6 @@ export class OperationsProvider {
     request = this.postRequest('areas/getByProjectID',{projectID: this.checkRequestData(project._id)});
     requests.push(request);
   
-    request = this.postRequest('roles/getByProjectID',{projectID: this.checkRequestData(project._id)});
-    requests.push(request);
-
     request = this.postRequest('tasks/getByProjectID',{projectID: this.checkRequestData(project._id)});
     requests.push(request);
     
@@ -119,13 +115,13 @@ export class OperationsProvider {
   postRequest(endPoint, data) {
     /* ADDING STUDY TYPE TO FETCH DATA RELATED TO STUDY TYPE */
     if(data)
-      data.studyType = 3;
+      data.studyType = 2;
     else
-      data = { studyType: 3 };  
+      data = { studyType: 2 };  
      
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();
-    /* FILTERING ELEMENTS FOR GETTING ONLY THOSE ELEMENTS WHICH HAVE STUDY TYPE ROLE STUDY */
+    /* FILTERING ELEMENTS FOR GETTING ONLY THOSE ELEMENTS WHICH HAVE STUDY TYPE Activity STUDY */
     if(endPoint.indexOf('tasks/getByProjectID') > -1)
       return this.http.post(`${this.END_POINT}`, data ,{ headers: headers })
                               .map(res => res.json())
@@ -140,9 +136,9 @@ export class OperationsProvider {
   offlineRequest(endPoint,data){
     /* ADDING STUDY TYPE TO FETCH DATA RELATED TO STUDY TYPE */
     if(data)
-     data.studyType = 3;
+     data.studyType = 2;
     else
-     data = { studyType: 3 };  
+     data = { studyType: 2 };  
     
     this.END_POINT = SERVER_URL + endPoint;
     let headers = this.headers.getHeaders();

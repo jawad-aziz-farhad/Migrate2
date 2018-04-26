@@ -2,7 +2,7 @@
     
   <ion-navbar color="primary">
     <ion-title>
-      Observation - Summary
+      Observation Summary
     </ion-title>
     
     <ion-buttons end>
@@ -28,11 +28,6 @@
     <ion-item>
       <ion-label stacked>Area</ion-label>
       <ion-input type="text" value="{{ parseData.getStudyData() ? parseData.getStudyData()?.getArea().name : data?.area.name }}" disabled readonly></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label stacked>Role</ion-label>
-      <ion-input type="text" value="{{ parseData.getStudyData() ? parseData.getStudyData().getRole().name : data?.role.name }}" disabled readonly></ion-input>
     </ion-item>
 
     <ion-item>

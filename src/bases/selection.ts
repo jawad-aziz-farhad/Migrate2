@@ -6,7 +6,6 @@ import { MESSAGE, INTERNET_ERROR, NO_DATA_FOUND } from '../config/config';
 import { Data } from '../models';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateElementPage } from '../pages/create-element/create-element';
-import { CreateRolePage } from '../pages/create-role/create-role';
 import { RatingsPage } from '../pages/ratings/ratings';
 import { AddFrequencyPage } from '../pages/add-frequency/add-frequency';
 import { Stop } from './stop-study';
@@ -205,14 +204,10 @@ export class Selection {
       this.parseData.setData(data);
     }
     else{
-      let study_data = this.parseData.getStudyData();   
+      let study_data = this.parseData.getStudyData();  
      
       if(this.TABLE_NAME == 'Areas')
         study_data.setArea(item);
-      else if(this.TABLE_NAME == 'Roles'){
-        study_data.setRole(item);
-      }
-      
       this.parseData.setStudyData(study_data);
     }
 
@@ -321,8 +316,6 @@ export class Selection {
       component = CreateAreaPage;
     else if(this.TABLE_NAME == 'Elements')
       component = CreateElementPage
-    else if(this.TABLE_NAME == 'Roles')
-      component = CreateRolePage;
     else if(this.TABLE_NAME == 'Tasks')
       component = CreateTaskPage;  
     

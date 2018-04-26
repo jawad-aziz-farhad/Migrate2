@@ -166,7 +166,7 @@ export class RatingsPage {
     }
     /* IF USER GO TO GO TO TASKS PAGE */
     else if(value == 'tasks')
-      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 5)));
+      this.navCtrl.popTo(this.navCtrl.getByIndex(this.navCtrl.length() - (this.navCtrl.length() - 4)));
    
     
   }

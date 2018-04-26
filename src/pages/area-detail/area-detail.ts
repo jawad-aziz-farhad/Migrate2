@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams , ModalController } from 'ionic-angular';
-import { SelectRolePage } from '../select-role/select-role';
+import { SelectAreaPage } from '../select-area/select-area';
 import { StudyData } from '../../models';
 import { ParseDataProvider , SqlDbProvider, LoaderProvider, OperationsProvider  } from '../../providers';
 import { SERVER_URL  } from '../../config/config';
@@ -66,7 +66,7 @@ openModal() {
   
     modal.onDidDismiss(data => {
       if(data && data.action == 'start'){
-        this.navCtrl.push(SelectRolePage, { project: this.project }); 
+        this.navCtrl.push(SelectAreaPage, { project: this.project }); 
       }  
       else
         console.log('USER DONT WANT TO START STUDY.');       

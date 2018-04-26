@@ -16,7 +16,6 @@ import { LoginPage } from '../pages/login/login';
 import { ResetpassPage } from '../pages/resetpass/resetpass';
 import { ResetsuccessPage } from '../pages/resetsuccess/resetsuccess';
 import { CreateElementPage } from '../pages/create-element/create-element';
-import { CreateRolePage } from '../pages/create-role/create-role';
 import { CreateAreaPage } from '../pages/create-area/create-area';
 import { CreateTaskPage } from '../pages/create-task/create-task';
 import { AreasPage } from '../pages/areas/areas';
@@ -25,7 +24,6 @@ import { ProjectsPage } from '../pages/projects/projects';
 import { ResetPasswordPage } from '../pages/reset-password/reset-password';
 import { SelectAreaPage } from '../pages/select-area/select-area';
 import { SelectElementPage } from '../pages/select-element/select-element';
-import { SelectRolePage } from '../pages/select-role/select-role';
 import { SelectTaskPage } from '../pages/select-task/select-task';
 import { RatingsPage } from '../pages/ratings/ratings';
 import { EnterRatingPage } from '../pages/enter-rating/enter-rating';
@@ -88,7 +86,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     ResetsuccessPage,  
     CreateAreaPage,
     CreateElementPage,
-    CreateRolePage,
     CreateTaskPage,
     AreasPage,
     AreaDetailPage,
@@ -96,7 +93,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     ResetPasswordPage,
     SelectAreaPage,
     SelectElementPage,
-    SelectRolePage,
     SelectTaskPage,
     StudyNotesPage,
     StudyPhotoPage,
@@ -139,7 +135,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     ResetsuccessPage,
     CreateAreaPage,
     CreateElementPage,
-    CreateRolePage,
     CreateTaskPage,
     AreasPage,
     AreaDetailPage,
@@ -148,7 +143,6 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions, stor
     SelectAreaPage,
     SelectElementPage,
     SelectTaskPage,
-    SelectRolePage,
     StudyNotesPage,
     StudyPhotoPage,
     RatingsPage,
